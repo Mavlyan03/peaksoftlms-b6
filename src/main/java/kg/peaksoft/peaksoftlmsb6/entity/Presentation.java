@@ -14,6 +14,7 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @NoArgsConstructor
 public class Presentation {
+
     @Id
     @SequenceGenerator(name = "presentation_seq", sequenceName = "presentation_seq", allocationSize = 1)
     @GeneratedValue(generator = "presentation_gen", strategy = GenerationType.SEQUENCE)
@@ -25,6 +26,7 @@ public class Presentation {
     private String presentationDescription;
 
     private String presentationLink;
+
     @OneToOne(cascade = {
             MERGE,
             REFRESH,

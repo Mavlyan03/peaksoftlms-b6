@@ -34,7 +34,5 @@ public class Test {
 
     private Boolean isEnable;
 
-    @OneToMany(cascade = ALL)
-    private List<Results> result;
 
 }
