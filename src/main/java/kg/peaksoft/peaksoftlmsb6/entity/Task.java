@@ -21,15 +21,13 @@ public class Task {
     @GeneratedValue(generator = "task_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String taskName;
 
-    @OneToMany(cascade = ALL, mappedBy = "task")
+    @OneToMany(cascade = ALL)
     private List<Content> contents;
 
     @OneToOne(cascade = {
             MERGE,
-            PERSIST,
             REFRESH,
             DETACH})
     private Lesson lesson;

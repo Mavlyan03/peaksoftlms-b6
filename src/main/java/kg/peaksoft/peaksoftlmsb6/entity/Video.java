@@ -23,7 +23,7 @@ public class Video {
     @Column
     private String videoName;
 
-    @Column
+    @Column(length = 100000)
     private String videoDescription;
 
     @Column

@@ -17,8 +17,7 @@ public class Option {
     @GeneratedValue(generator = "option_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
-    private String optionName;
+    private String optionValue;
 
     private Boolean isTrue;
 }

@@ -19,17 +19,14 @@ public class Presentation {
     @GeneratedValue(generator = "presentation_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String presentationName;
 
-    @Column
+    @Column(length = 10000)
     private String presentationDescription;
 
-    @Column
     private String presentationLink;
     @OneToOne(cascade = {
             MERGE,
-            PERSIST,
             REFRESH,
             DETACH})
     private Lesson lesson;

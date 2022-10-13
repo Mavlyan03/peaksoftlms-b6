@@ -19,12 +19,10 @@ public class User {
     @GeneratedValue(generator = "user_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String email;
-    @Column
+
     private String password;
 
-    @Column
     private Boolean isBlock;
 
     @Enumerated(EnumType.STRING)

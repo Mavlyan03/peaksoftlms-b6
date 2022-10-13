@@ -21,20 +21,16 @@ public class Results {
     @GeneratedValue(generator = "result_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private LocalDate dateOfPass;
 
     private int percent;
 
     @OneToOne(cascade = {
             MERGE,
-            PERSIST,
-            REFRESH,
             DETACH})
     private Student student;
 
     @ManyToOne(cascade = {
-            PERSIST,
             MERGE,
             REFRESH,
             DETACH})

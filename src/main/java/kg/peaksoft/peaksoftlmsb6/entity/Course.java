@@ -22,26 +22,26 @@ public class Course {
     @GeneratedValue(generator = "course_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String courseName;
 
-    @Column
+    @Column(length = 10000)
     private String courseDescription;
 
-    @Column
     private LocalDate dateOfStart;
 
-    @Column
     private String courseImage;
 
     @ManyToOne(cascade = {
             DETACH,
             MERGE,
-            PERSIST,
             REFRESH})
     private Group group;
 
-    @ManyToMany(cascade = ALL, mappedBy = "courses")
+    @ManyToMany(cascade = {
+            DETACH,
+            MERGE,
+            PERSIST,
+            REFRESH}, mappedBy = "courses")
     private List<Instructor> instructors;
 
     @OneToMany(cascade = ALL, mappedBy = "course")

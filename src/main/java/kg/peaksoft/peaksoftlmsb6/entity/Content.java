@@ -21,18 +21,16 @@ public class Content {
     @GeneratedValue(generator = "content_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String contentName;
 
     @Enumerated(EnumType.STRING)
     private ContentFormat contentFormat;
 
-    private String content;
+    private String contentValue;
 
     @ManyToOne(cascade = {
             DETACH,
             MERGE,
-            PERSIST,
             REFRESH})
     private Task task;
 }

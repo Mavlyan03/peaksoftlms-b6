@@ -21,10 +21,10 @@ public class Link {
     @GeneratedValue(generator = "link_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String linkText;
 
     private String link;
+
     @OneToOne(cascade = {
             MERGE,
             PERSIST,

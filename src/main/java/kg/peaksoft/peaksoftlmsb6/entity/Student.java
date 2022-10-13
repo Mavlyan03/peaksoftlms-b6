@@ -21,23 +21,18 @@ public class Student {
     @GeneratedValue(generator = "student_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String firstName;
 
-    @Column
     private String lastName;
 
-    @Column
     private String phoneNumber;
 
-    @Column
     private String email;
 
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
+
     @ManyToOne(cascade = {
-            PERSIST,
-            REFRESH,
             MERGE,
             DETACH})
     private Group group;

@@ -20,7 +20,6 @@ public class Lesson {
     @GeneratedValue(generator = "lesson_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String lessonName;
 
     @OneToOne(cascade = ALL, mappedBy = "lesson")
@@ -40,7 +39,6 @@ public class Lesson {
     @ManyToOne(cascade = {
             DETACH,
             MERGE,
-            PERSIST,
             REFRESH})
     private Course course;
 }

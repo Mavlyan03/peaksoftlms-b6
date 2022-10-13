@@ -22,8 +22,7 @@ public class Question {
     @GeneratedValue(generator = "question_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
-    private String questionName;
+    private String question;
 
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;

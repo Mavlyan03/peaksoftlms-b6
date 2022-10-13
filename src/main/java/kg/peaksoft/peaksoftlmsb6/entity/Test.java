@@ -21,7 +21,6 @@ public class Test {
     @GeneratedValue(generator = "test_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String testName;
 
     @OneToMany(cascade = ALL)
@@ -29,14 +28,13 @@ public class Test {
 
     @OneToOne(cascade = {
             MERGE,
-            PERSIST,
             REFRESH,
             DETACH})
     private Lesson lesson;
 
     private Boolean isEnable;
 
-    @OneToMany(cascade = ALL, mappedBy = "test")
+    @OneToMany(cascade = ALL)
     private List<Results> result;
 
 }

@@ -22,21 +22,17 @@ public class Group {
     @GeneratedValue(generator = "group_gen", strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column
     private String groupName;
 
-    @Column
+    @Column(length = 100000)
     private String groupDescription;
 
-    @Column
     private LocalDate dateOfStart;
 
-    @Column
     private String groupImage;
 
     @OneToMany(cascade = {
             MERGE,
-            PERSIST,
             REFRESH,
             DETACH}, mappedBy = "group")
     private List<Course> courses;
