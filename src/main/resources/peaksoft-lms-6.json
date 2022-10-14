@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "peaksoft-lms-6ce4a",
+  "private_key_id": "074a8eac01b66f1b736ec966b9eb482b9f680d2f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDAFRPuqsjt1Q1Y\nZ9NXW5kkH0t8u/0O6GoRDLoj8FG3Y9KfpfTKWVckTJOyN88/NjlMBRiaFCBhNDoV\n7k8UAmEusTsuNabrtJHopI6BUKk2XIjU9UTIXT6QXKi4zX0T0NviVj3+CYpXdULK\nES0nJhkm87d43h+BEY9OiHbLkauVPgLF4iZNwIQ4xD9a5DitbAAb0m/QKTgMsLkg\n/cjaZ4IMSTiGgrQ0OxBTQm3aCio0AHyHiITKXCmY+X6/f4pDCth6026r4dawPxqW\n7V++fQWNNhxdelbEEQ70X+1HyB0HkGj9KgKnRcE9omeLr80VS0nH9BGI7bhFimTk\nQeMQGKUlAgMBAAECggEABq91HyRwk96LdV0/vNWiUeCI9xFv8Fnkfy1rOR7/KRvf\nU9Ep4PUVFF1Z8qUAoJmZiuzOe2Zh7iAsOWEu/WpLyZ0/iw8w/RkuzuMTVqrhCNRV\nqtvShgrAx7OB59S3Gr51OL55r+LTHtIk/fV1Fdy8mV94LkvE2vAqhbg4MkOirjIH\n0ThcjbzTcHo8IH/Hua0CyZ1AcMLB6Pe/d7w3JTDElQnoSq0XFe/ndvt3KMP+phOS\n/u7H6aO5CjdndxXAf3y6Udg6G95v5s719THwm6cb3C1s4tIhqVcIebTybwSg3UI2\nP55v4KYTMvSAHbC5mR2kUn9WJRQs+hI+UujQ67fCQQKBgQD1Fq9zvQ0I9sKun93z\nvI5mvJJBshOesJPzyultpn8XFVHvlwXE2z56PwfkefsKlEZQfNMs2awtz3MOyF+s\niwnqt8KiuhhTBKxijsPN5UU4JoSMcjav5cVJqQA7Xou2Gn5ch6P9BIK8EpLIVTxe\nGWvDdvJsr+N6yUHrEPGDiuc+0QKBgQDIokV3LwRhaRlnH16uuVc0vhT3Aq18NeE9\nQenVfVEnwn+4pw5NK4i335mUr0b34tEPJDXA8RCmnD77TUs792OaFdTCDq5+B/R/\nrJfNmfOCD8teSPm/19Ih6iJJ4FzZo6md0V057RB6HCr/mR7HU/KqxqnOjSKzTQJJ\nb7+5zoQeFQKBgQDErpTUi6VXSTeIjZC/ldStS60PfYnTMp846OCU9yVMb/aWEBs4\nFD26OrTpvJ4iqkUXOGT7vB85kB4kgdaNj/LAYwGWN0Nn8/snCKzHobL/0aFTWCDc\n3caKS059Vm1GEVLQjKWkWadUqI8Up5pPZZUegmkfobMrCTGWI729M45J0QKBgFTt\nA1SAzWziTQNuruhswbIsp7krI/5I3E/Ov8lDo3+d/+xMomwd+mBCwMLEMtko5G9x\nV2OVZwPvbWV4gVkfzcRia029YzUr7t3AU/2Ophmuz9nYMAd5tpPuhJca5pKliV2p\nSroDVA8sLzNEQFgFe9m4ABbTfRXCii5FpDVlal1FAoGAdRqdC8oRw2K5IIe/Lg1Q\n6wfAt+oweabBXosUSHITu4WMs0AotmtNzd7+AuTSJzvfnMpIpIxCTc0fGO3HANKI\nnvHrJrzn+ALRLpcTWSvZDn0BsVSW1AZp159YzbJvfjmpT1MTqro2SzayVvvVrTrw\nj0vH/SwKctZNzKTrwRydJ9o=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-lnwm3@peaksoft-lms-6ce4a.iam.gserviceaccount.com",
+  "client_id": "118286580208709211778",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-lnwm3%40peaksoft-lms-6ce4a.iam.gserviceaccount.com"
+}
