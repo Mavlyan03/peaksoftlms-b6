@@ -12,6 +12,7 @@ public class PeaksoftlmsB6Application {
 	public static void main(String[] args) {
 		SpringApplication.run(PeaksoftlmsB6Application.class, args);
 		System.out.println("Welcome colleagues, project name is Peaksoft-LMS!");
+		System.out.println("HELLO WORD!");
 	}
 
 	@GetMapping("/")
