@@ -1,6 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.security;
 
 
+import kg.peaksoft.peaksoftlmsb6.exception.BadCredentialsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,7 +25,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getName());
 
         if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
-            throw new RuntimeException("bad credentials");
+            throw new BadCredentialsException("Bad credentials");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
