@@ -16,8 +16,8 @@ import static javax.persistence.CascadeType.*;
 public class Video {
 
     @Id
-    @SequenceGenerator(name = "video_seq", sequenceName = "video_seq", allocationSize = 1)
-    @GeneratedValue(generator = "video_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "video_seq", sequenceName = "video_seq", allocationSize = 1, initialValue = 2)
+    @GeneratedValue(generator = "video_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column

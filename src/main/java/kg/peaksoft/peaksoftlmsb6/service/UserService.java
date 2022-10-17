@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.ForgotPasswordRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LoginRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AuthResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
@@ -37,7 +38,6 @@ public class UserService  {
                 new UsernamePasswordAuthenticationToken(
                         userRequest.getEmail(),
                         userRequest.getPassword()));
-
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new BadCredentialsException("bad credentials"));
         String token = jwtTokenUtil.generateToken(user.getEmail());
@@ -58,12 +58,10 @@ public class UserService  {
         return new SimpleResponse("Email send");
     }
 
-
-    public SimpleResponse resetPassword(Long id, String newPassword) {
-        User user = userRepository.findById(id).orElseThrow(
+    public SimpleResponse resetPassword(ForgotPasswordRequest request) {
+        User user = userRepository.findById(request.getId()).orElseThrow(
                 () -> new NotFoundException("User with id not found"));
-
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         return new SimpleResponse("password updated");
     }
 
