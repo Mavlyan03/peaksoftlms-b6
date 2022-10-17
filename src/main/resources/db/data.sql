@@ -1,5 +1,5 @@
 INSERT INTO users(id,email, is_block, password, role)
-VALUES (1,'admin@gmail.com',false,'$2a$12$SCgRYEIAgGcmXflHCT5AiOro3cnt7i3dAsRGzhGu5Up3LeR4ANHYm', 'ADMIN'),
+VALUES (1,'datkascnu@gmail.com',false,'$2a$12$jM6wsk2WdTW/dLszB/uFuexiNmhW9uTNmzqvv3XqdwLbe5z0symIK', 'ADMIN'),
        (2,'instructor@gmail.com',false,'$2a$12$c2vzSJ1UIpODKy4dLqa50OMKTBnMQM7dx6lexC013ykPi9bJEAq4q','INSTRUCTOR'),
        (3,'student@gmail.com',false,'$2a$12$qvTo/yV6sm2euRGC5cm2.Ou1sfiHTEFv2iKyZPnDnI2UK2cEV3Ife', 'STUDENT');
 
@@ -8,8 +8,6 @@ values (1,'2022/11/10','Group Description', 'Group image link', 'Group name');
 
 insert into courses(id,course_description, course_image, course_name, date_of_start,group_id)
 values (1,'Course Description','link image','course name', '2022/11/10' ,1);
-
-
 
 insert into instructors(id,first_name, last_name, phone_number,specialization, user_id)
 values (1,'Instructor firs name', 'Instructor last name','555231245', 'Java',2);
