@@ -18,8 +18,8 @@ import static javax.persistence.CascadeType.*;
 public class Group {
 
     @Id
-    @SequenceGenerator(name = "group_seq", sequenceName = "group_seq", allocationSize = 1)
-    @GeneratedValue(generator = "group_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "group_seq", sequenceName = "group_seq", allocationSize = 1, initialValue = 2)
+    @GeneratedValue(generator = "group_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String groupName;

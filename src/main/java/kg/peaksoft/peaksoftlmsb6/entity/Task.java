@@ -17,8 +17,8 @@ import static javax.persistence.CascadeType.*;
 public class Task {
 
     @Id
-    @SequenceGenerator(name = "task_seq", sequenceName = "task_seq", allocationSize = 1)
-    @GeneratedValue(generator = "task_gen", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "task_seq", sequenceName = "task_seq", allocationSize = 1, initialValue = 2)
+    @GeneratedValue(generator = "task_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String taskName;
