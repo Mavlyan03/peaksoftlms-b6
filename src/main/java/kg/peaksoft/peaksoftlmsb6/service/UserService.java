@@ -1,4 +1,4 @@
-package kg.peaksoft.peaksoftlmsb6.service.serviceImpl;
+package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ForgotPasswordRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LoginRequest;

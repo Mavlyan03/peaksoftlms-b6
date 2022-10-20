@@ -1,7 +1,7 @@
-insert into users(id,email, is_block, password, role)
-VALUES (1,'datkascnu@gmail.com',false,'$2a$12$jM6wsk2WdTW/dLszB/uFuexiNmhW9uTNmzqvv3XqdwLbe5z0symIK', 'ADMIN'),
-       (2,'instructor@gmail.com',false,'$2a$12$c2vzSJ1UIpODKy4dLqa50OMKTBnMQM7dx6lexC013ykPi9bJEAq4q','INSTRUCTOR'),
-       (3,'student@gmail.com',false,'$2a$12$qvTo/yV6sm2euRGC5cm2.Ou1sfiHTEFv2iKyZPnDnI2UK2cEV3Ife', 'STUDENT');
+insert into users(id,email, password, role)
+VALUES (1,'datkascnu@gmail.com','$2a$12$jM6wsk2WdTW/dLszB/uFuexiNmhW9uTNmzqvv3XqdwLbe5z0symIK', 'ADMIN'),
+       (2,'instructor@gmail.com','$2a$12$c2vzSJ1UIpODKy4dLqa50OMKTBnMQM7dx6lexC013ykPi9bJEAq4q','INSTRUCTOR'),
+       (3,'student@gmail.com','$2a$12$qvTo/yV6sm2euRGC5cm2.Ou1sfiHTEFv2iKyZPnDnI2UK2cEV3Ife', 'STUDENT');
 
 insert into groups(id,date_of_start, group_description, group_image, group_name)
 values (1,'2022/11/10','Group Description', 'Group image link', 'Group name');
