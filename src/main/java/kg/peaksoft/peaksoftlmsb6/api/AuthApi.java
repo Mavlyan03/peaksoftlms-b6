@@ -20,7 +20,7 @@ import javax.mail.MessagingException;
 public class AuthApi {
     private final UserService authService;
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     @Operation(description = "User can login by email and password")
     public AuthResponse login(@RequestBody LoginRequest request){
         return authService.login(request);
