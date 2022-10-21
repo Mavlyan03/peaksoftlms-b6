@@ -10,9 +10,8 @@ import java.util.List;
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse(" +
-            "i.id," +
-            "i.firstName," +
-            "i.lastName," +
+            "i.id,"+
+            "concat(i.firstName,' ',i.lastName) ," +
             "i.phoneNumber," +
             "i.specialization," +
             "i.user.email) from Instructor i")

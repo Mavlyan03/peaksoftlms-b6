@@ -14,8 +14,7 @@ import lombok.Setter;
 
 public class InstructorResponse {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String phoneNumber;
     private String specialization;
     private String email;
