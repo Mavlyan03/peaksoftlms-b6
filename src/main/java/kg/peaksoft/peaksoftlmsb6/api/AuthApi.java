@@ -6,7 +6,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.ForgotPasswordRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LoginRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AuthResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
-import kg.peaksoft.peaksoftlmsb6.service.serviceImpl.UserService;
+import kg.peaksoft.peaksoftlmsb6.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
