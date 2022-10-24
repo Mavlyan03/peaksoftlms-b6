@@ -16,39 +16,37 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/instructor")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Instructor CRUD", description = "ADMIN can do a CRUD operations")
+@Tag(name = "Instructor CRUD", description = "ADMIN instructor crud api endpoints")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class InstructorApi {
-
     private final InstructorService instructorService;
 
-
     @PostMapping()
-    @Operation(summary = "Saves new instructor",
-            description = "You can save a new instructor")
-    public SimpleResponse addInstructor(@RequestBody InstructorRequest request){
+    @Operation(summary = "Save instructor",
+            description = "Admin save instructor by request")
+    public InstructorResponse addInstructor(@RequestBody InstructorRequest request) {
         return instructorService.addInstructor(request);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Updates instructor",
-            description = " You can update instructor by id")
-    public SimpleResponse updateInstructor(@PathVariable Long id,
-                                               @RequestBody InstructorRequest request){
-       return instructorService.updateInstructor(id,request);
+            description = "Admin update instructor by id")
+    public InstructorResponse updateInstructor(@PathVariable Long id,
+                                           @RequestBody InstructorRequest request) {
+        return instructorService.updateInstructor(id, request);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deletes instructor ",
-            description = "You can delete the instructor by id")
-    public SimpleResponse deleteInstructor(@PathVariable Long id){
+            description = "Admin delete the instructor by id")
+    public SimpleResponse deleteInstructor(@PathVariable Long id) {
         return instructorService.deleteInstructorById(id);
     }
 
     @GetMapping
     @Operation(summary = "Gets all instructors",
-            description = "You can get all instructors")
-    public List<InstructorResponse> getAllInstructors(){
+            description = "Admin get all instructors")
+    public List<InstructorResponse> getAllInstructors() {
         return instructorService.getAllInstructors();
     }
 

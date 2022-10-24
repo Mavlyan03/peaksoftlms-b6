@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.*;
@@ -34,5 +35,10 @@ public class Test {
 
     private Boolean isEnable;
 
-
+    public void addQuestion(Question question) {
+        if(this.question == null) {
+            this.question = new ArrayList<>();
+        }
+        this.question.add(question);
+    }
 }

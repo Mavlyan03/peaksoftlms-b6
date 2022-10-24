@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.*;
@@ -52,4 +53,11 @@ public class Instructor {
 
     @OneToOne(cascade = ALL)
     private User user;
+
+    public void addCourse(Course course) {
+        if(this.courses == null) {
+            this.courses = new ArrayList<>();
+        }
+        this.courses.add(course);
+    }
 }

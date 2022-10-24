@@ -3,9 +3,14 @@ package kg.peaksoft.peaksoftlmsb6.repository;
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
@@ -16,4 +21,29 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
             "i.specialization," +
             "i.user.email) from Instructor i")
     List<InstructorResponse> getAllInstructors();
+
+    @Query("select i from Instructor i where i.user.id = ?1")
+    Optional<Instructor> findByUserId(Long id);
+
+    @Modifying
+    @Transactional
+    @Query("update Instructor set " +
+            "firstName = :firstName," +
+            "lastName = :lastName," +
+            "specialization = :specialization," +
+            "phoneNumber = :phoneNumber " +
+            "where id = :id")
+    void update(@Param("id") Long id,
+                @Param("firstName") String firstName,
+                @Param("lastName") String lastName,
+                @Param("specialization") String specialization,
+                @Param("phoneNumber") String phoneNumber);
+
+    @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse(" +
+            "i.id," +
+            "concat(i.firstName,' ',i.lastName)," +
+            "i.specialization," +
+            "i.phoneNumber," +
+            "i.user.email) from Instructor i where i.id = ?1")
+    InstructorResponse getInstructor(Long id);
 }
