@@ -24,30 +24,30 @@ public class InstructorApi {
 
 
     @PostMapping()
-    @Operation(description = "ADMIN add new instructor with fields first name," +
-            "last name, phone number, specialization and email")
+    @Operation(summary = "Saves new instructor",
+            description = "You can save a new instructor")
     public SimpleResponse addInstructor(@RequestBody InstructorRequest request){
         return instructorService.addInstructor(request);
     }
 
     @PutMapping("/{id}")
-    @Operation(description = "ADMIN update instructor with fields first name," +
-            "last name, phone number, specialization and email")
+    @Operation(summary = "Updates instructor",
+            description = " You can update instructor by id")
     public SimpleResponse updateInstructor(@PathVariable Long id,
                                                @RequestBody InstructorRequest request){
        return instructorService.updateInstructor(id,request);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(description = "ADMIN delete instructor by id with fields first name," +
-            "last name, phone number, specialization and email")
+    @Operation(summary = "Deletes instructor ",
+            description = "You can delete the instructor by id")
     public SimpleResponse deleteInstructor(@PathVariable Long id){
         return instructorService.deleteInstructorById(id);
     }
 
     @GetMapping
-    @Operation(description = "ADMIN get instructors with fields first name," +
-            "last name, phone number, specialization and email")
+    @Operation(summary = "Gets all instructors",
+            description = "You can get all instructors")
     public List<InstructorResponse> getAllInstructors(){
         return instructorService.getAllInstructors();
     }
