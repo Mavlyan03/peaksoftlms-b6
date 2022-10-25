@@ -1,7 +1,5 @@
 package kg.peaksoft.peaksoftlmsb6.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,11 +11,10 @@ import javax.persistence.Enumerated;
 @Getter
 @Setter
 @AllArgsConstructor
-public class CourseInnerPage {
+public class StudentResponse {
     private Long id;
     private String fullName;
-    @JsonIgnore
-    private Group group;
+    private String groupName;
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
     private String phoneNumber;

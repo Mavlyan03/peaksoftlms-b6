@@ -3,7 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.CourseInnerPage;
+import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
@@ -71,10 +71,10 @@ public class CourseService {
                 request.getImage());
     }
 
-    public List<CourseInnerPage> getAllStudentsFromCourse(Long id) {
+    public List<StudentResponse> getAllStudentsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Course not found"));
-        List<CourseInnerPage> assignStudent = new ArrayList<>();
+        List<StudentResponse> assignStudent = new ArrayList<>();
         for (Group group : course.getGroup()) {
             for (Student student : group.getStudents()) {
                 assignStudent.add(courseRepository.getStudentByCourseId(student.getId()));

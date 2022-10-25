@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.CourseInnerPage;
+import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.service.CourseService;
@@ -78,7 +78,7 @@ public class CourseApi {
     @GetMapping("/students/{id}")
     @Operation(summary = "Get all students from course",
             description = "Admin get all students from course by course id")
-    public List<CourseInnerPage> getAllStudentsFromCourse(@PathVariable("id") Long id) {
+    public List<StudentResponse> getAllStudentsFromCourse(@PathVariable("id") Long id) {
         return courseService.getAllStudentsFromCourse(id);
     }
 

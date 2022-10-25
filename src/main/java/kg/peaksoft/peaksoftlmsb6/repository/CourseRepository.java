@@ -1,11 +1,9 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.CourseInnerPage;
+import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Course;
-import kg.peaksoft.peaksoftlmsb6.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,12 +44,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "c.courseImage) from Course c where c.id = ?1")
     CourseResponse getCourse(Long id);
 
-    @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.CourseInnerPage(" +
+    @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +
             "s.id," +
             "concat(s.firstName,' ',s.lastName)," +
-            "s.group," +
+            "s.group.groupName," +
             "s.studyFormat," +
             "s.phoneNumber," +
             "s.email) from Student s where s.id = ?1")
-    CourseInnerPage getStudentByCourseId(Long id);
+    StudentResponse getStudentByCourseId(Long id);
 }
