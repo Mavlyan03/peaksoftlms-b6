@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -30,4 +31,10 @@ public class Question {
     @OneToMany(cascade = ALL)
     private List<Option> options;
 
+    public void addOption(Option option) {
+        if(this.options == null) {
+            this.options = new ArrayList<>();
+        }
+        this.options.add(option);
+    }
 }

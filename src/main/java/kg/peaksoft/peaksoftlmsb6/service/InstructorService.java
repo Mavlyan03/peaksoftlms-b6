@@ -12,9 +12,12 @@ import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class InstructorService {
 
@@ -24,41 +27,41 @@ public class InstructorService {
 
     private final UserRepository userRepository;
 
-    public SimpleResponse addInstructor(InstructorRequest request){
+    public InstructorResponse addInstructor(InstructorRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
         instructorRepository.save(instructor);
-        return new SimpleResponse("instructor saved");
+        return instructorRepository.getInstructor(instructor.getId());
     }
 
-    public SimpleResponse updateInstructor(Long id, InstructorRequest request) {
+    public InstructorResponse updateInstructor(Long id, InstructorRequest request) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(()-> new NotFoundException(String.format("Instructor with id =%s not found",id)));
-        instructor.setFirstName(request.getFirstName());
-        instructor.setLastName(request.getLastName());
-        instructor.setPhoneNumber(request.getPhoneNumber());
-        instructor.setSpecialization(request.getSpecialization());
+                .orElseThrow(() -> new NotFoundException(String.format("Instructor with id =%s not found", id)));
+        instructorRepository.update(instructor.getId(),
+                request.getFirstName(),
+                request.getLastName(),
+                request.getSpecialization(),
+                request.getPhoneNumber());
         User user = userRepository.findById(instructor.getUser().getId())
-                        .orElseThrow(()-> new NotFoundException(String.format("User with id =%s not found",instructor.getUser().getId())));
+                .orElseThrow(() -> new NotFoundException(String.format("User with id =%s not found", instructor.getUser().getId())));
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.INSTRUCTOR);
         userRepository.save(user);
         instructor.setUser(user);
         instructorRepository.save(instructor);
-        return new SimpleResponse("Instructor updated");
+        return instructorRepository.getInstructor(instructor.getId());
     }
-
 
     public SimpleResponse deleteInstructorById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
-                        .orElseThrow(()-> new NotFoundException(String.format("Instructor with id =%s not found",id)));
+                .orElseThrow(() -> new NotFoundException(String.format("Instructor with id =%s not found", id)));
         instructorRepository.delete(instructor);
         return new SimpleResponse("Instructor deleted");
     }
 
     public List<InstructorResponse> getAllInstructors() {
-         return instructorRepository.getAllInstructors();
+        return instructorRepository.getAllInstructors();
     }
 
 }

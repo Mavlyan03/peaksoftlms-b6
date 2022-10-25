@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.CascadeType.*;
@@ -31,7 +32,7 @@ public class Group {
 
     private String groupImage;
 
-    @OneToMany(cascade = {
+    @ManyToMany(cascade = {
             MERGE,
             REFRESH,
             DETACH}, mappedBy = "group")
@@ -39,5 +40,19 @@ public class Group {
 
     @OneToMany(cascade = ALL, mappedBy = "group")
     private List<Student> students;
+
+    public void addStudents(Student student) {
+        if(this.students == null) {
+            this.students = new ArrayList<>();
+        }
+        this.students.add(student);
+    }
+
+    public void addCourse(Course course) {
+        if(this.courses == null) {
+            this.courses = new ArrayList<>();
+        }
+        this.courses.add(course);
+    }
 
 }
