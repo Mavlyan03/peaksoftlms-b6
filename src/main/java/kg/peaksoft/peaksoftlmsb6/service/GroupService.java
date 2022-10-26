@@ -30,14 +30,14 @@ public class GroupService {
 
     public SimpleResponse deleteById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Group not found"));
+                () -> new NotFoundException(String.format("Group with id %s not found",id)));
         groupRepository.delete(group);
         return new SimpleResponse("Group deleted");
     }
 
     public GroupResponse updateGroup(Long id, GroupRequest request) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Group not found"));
+                () -> new NotFoundException(String.format("Group with id %s not found",id)));
         groupRepository.update(
                 group.getId(),
                 request.getGroupName(),
@@ -54,7 +54,7 @@ public class GroupService {
 
     public List<StudentResponse> getAllStudentsFromGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Group not found"));
+                () -> new NotFoundException(String.format("Group with id %s not found",id)));
         List<StudentResponse> students = new ArrayList<>();
         for(Student student : group.getStudents()) {
             students.add(groupRepository.getStudentsByGroupId(student.getId()));
