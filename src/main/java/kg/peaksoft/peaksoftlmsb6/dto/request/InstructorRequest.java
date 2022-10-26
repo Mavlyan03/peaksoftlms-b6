@@ -11,7 +11,6 @@ import lombok.Setter;
 @RequiredArgsConstructor
 
 public class InstructorRequest {
-
     private String firstName;
     private String lastName;
     private String phoneNumber;

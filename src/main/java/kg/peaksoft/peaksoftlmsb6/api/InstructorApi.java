@@ -24,7 +24,7 @@ public class InstructorApi {
     @PostMapping()
     @Operation(summary = "Save instructor",
             description = "Admin save instructor by request")
-    public InstructorResponse addInstructor(@RequestBody InstructorRequest request) {
+    public InstructorResponse createInstructor(@RequestBody InstructorRequest request) {
         return instructorService.addInstructor(request);
     }
 
@@ -32,7 +32,7 @@ public class InstructorApi {
     @Operation(summary = "Updates instructor",
             description = "Admin update instructor by id")
     public InstructorResponse updateInstructor(@PathVariable Long id,
-                                           @RequestBody InstructorRequest request) {
+                                               @RequestBody InstructorRequest request) {
         return instructorService.updateInstructor(id, request);
     }
 
