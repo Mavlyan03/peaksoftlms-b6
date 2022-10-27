@@ -58,4 +58,5 @@ public class GroupApi {
     public List<StudentResponse> getAllStudents(@PathVariable Long id) {
         return groupService.getAllStudentsFromGroup(id);
     }
+
 }

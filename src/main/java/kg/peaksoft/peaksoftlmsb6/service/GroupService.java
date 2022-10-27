@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.GroupResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
+import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
@@ -61,4 +62,5 @@ public class GroupService {
     public List<GroupResponse> getAllGroups() {
         return groupRepository.getAllGroups();
     }
+
 }
