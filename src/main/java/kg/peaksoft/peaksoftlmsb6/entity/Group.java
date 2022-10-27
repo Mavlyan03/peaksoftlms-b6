@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.GroupRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,6 +54,14 @@ public class Group {
             this.courses = new ArrayList<>();
         }
         this.courses.add(course);
+    }
+
+
+    public Group(GroupRequest request) {
+        this.groupName = request.getGroupName();
+        this.groupDescription = request.getDescription();
+        this.dateOfStart = request.getDateOfStart();
+        this.groupImage = request.getImage();
     }
 
 }
