@@ -8,7 +8,7 @@ public class PasswordValidator implements ConstraintValidator<PasswordValid, Str
     public boolean isValid(String password,
                            ConstraintValidatorContext constraintValidatorContext) {
         if (password.length() > 5) {
-            return password.matches("^[0-9]{5,14}$");
+            return password.matches("^[a-zA-Z0-9]{5,14}$");
         } else {
             return false;
         }
