@@ -55,11 +55,7 @@ public class GroupService {
     public List<StudentResponse> getAllStudentsFromGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Group with id %s not found",id)));
-        List<StudentResponse> students = new ArrayList<>();
-        for(Student student : group.getStudents()) {
-            students.add(groupRepository.getStudentsByGroupId(student.getId()));
-        }
-        return students;
+        return groupRepository.getStudentsByGroupId(group.getId());
     }
 
     public List<GroupResponse> getAllGroups() {

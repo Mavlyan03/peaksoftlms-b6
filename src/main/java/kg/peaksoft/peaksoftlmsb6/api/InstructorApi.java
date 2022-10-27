@@ -23,7 +23,7 @@ public class InstructorApi {
 
     @PostMapping()
     @Operation(summary = "Save instructor",
-            description = "Admin save instructor by request")
+            description = "To save instructor by request")
     public InstructorResponse createInstructor(@RequestBody InstructorRequest request) {
         return instructorService.addInstructor(request);
     }

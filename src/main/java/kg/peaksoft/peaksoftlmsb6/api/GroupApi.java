@@ -25,7 +25,7 @@ public class GroupApi {
 
     @PostMapping
     @Operation(summary = "Save group",
-            description = "Admin save group by request")
+            description = "To save group by request")
     public GroupResponse createGroup(@RequestBody GroupRequest request) {
         return groupService.createGroup(request);
     }
