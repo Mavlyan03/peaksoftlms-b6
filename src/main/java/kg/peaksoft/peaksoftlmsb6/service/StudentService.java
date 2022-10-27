@@ -39,33 +39,31 @@ public class StudentService {
         group.addStudents(student);
         student.setGroup(group);
         studentRepository.save(student);
-        return new StudentResponse(student.getId(),student.getFirstName()+" "+student.getLastName()
-                ,group.getGroupName(),student.getStudyFormat(),student.getPhoneNumber(),student.getEmail());
+        return studentRepository.getStudent(student.getId());
     }
 
     public StudentResponse update(Long id, StudentRequest studentRequest){
         Student student = studentRepository.findById(id).orElseThrow(
-                ()-> new NotFoundException("Not found"));
+                ()-> new NotFoundException(String.format("Student with id =%s not found",studentRequest.getId())));
+        Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
+                () -> new NotFoundException(String.format("Group not found with id=%s",studentRequest.getGroupId())));
+        student.setGroup(group);
+        group.addStudents(student);
         studentRepository.update(
                 student.getId(),
                 studentRequest.getFirstName(),
                 studentRequest.getLastName(),
                 studentRequest.getStudyFormat(),
                 studentRequest.getPhoneNumber(),
-                studentRequest.getEmail(),
-                studentRequest.getPassword());
+                studentRequest.getEmail());
+        studentRepository.save(student);
         User user = userRepository.findById(student.getUser().getId()).orElseThrow(
-                ()-> new NotFoundException("Not found"));
+                () -> new NotFoundException(String.format("User with id =%s not found",student.getUser().getId())));
         user.setEmail(studentRequest.getEmail());
         user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         user.setRole(Role.STUDENT);
-        userRepository.save(user);
         student.setUser(user);
-        Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Group not found with id=%s",studentRequest.getGroupId())));
-        student.setGroup(group);
-        group.addStudents(student);
-        studentRepository.save(student);
+        userRepository.save(user);
         return studentRepository.getStudent(student.getId());
     }
 
