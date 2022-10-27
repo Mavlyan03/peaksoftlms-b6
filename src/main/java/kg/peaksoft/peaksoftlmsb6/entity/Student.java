@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,5 +40,13 @@ public class Student {
 
     @OneToOne(cascade = ALL)
     private User user;
+
+    public Student(StudentRequest request){
+        this.firstName = request.getFirstName();
+        this.lastName = request.getLastName();
+        this.studyFormat = request.getStudyFormat();
+        this.phoneNumber = request.getPhoneNumber();
+        this.email = request.getEmail();
+    }
 
 }
