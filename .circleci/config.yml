@@ -24,7 +24,7 @@ workflows:
           name: "deploy-service-update"
           cluster: peaksoftlms-b6
           container-image-name-updates: 'container=peaksoftlms-b6-container,tag=${CIRCLE_SHA1}'
-          family:
+          family: peaksoftlms-b6
           service-name: peaksoftlms-b6-service
           force-new-deployment: true
           requires:
