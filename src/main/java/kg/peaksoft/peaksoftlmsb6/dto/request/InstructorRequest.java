@@ -15,11 +15,13 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 
 public class InstructorRequest {
-
+    @NotNull
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    @Email
     private String email;
     private String specialization;
+    @PasswordValid
     private String password;
 }
