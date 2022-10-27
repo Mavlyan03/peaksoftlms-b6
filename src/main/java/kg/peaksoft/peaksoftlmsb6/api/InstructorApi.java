@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,8 +24,8 @@ public class InstructorApi {
 
     @PostMapping()
     @Operation(summary = "Save instructor",
-            description = "Admin save instructor by request")
-    public InstructorResponse addInstructor(@RequestBody InstructorRequest request) {
+            description = "To save instructor by request")
+    public InstructorResponse createInstructor(@RequestBody @Valid InstructorRequest request) {
         return instructorService.addInstructor(request);
     }
 
@@ -32,7 +33,7 @@ public class InstructorApi {
     @Operation(summary = "Updates instructor",
             description = "Admin update instructor by id")
     public InstructorResponse updateInstructor(@PathVariable Long id,
-                                           @RequestBody InstructorRequest request) {
+                                               @RequestBody @Valid InstructorRequest request) {
         return instructorService.updateInstructor(id, request);
     }
 
