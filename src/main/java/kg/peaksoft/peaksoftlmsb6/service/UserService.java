@@ -66,4 +66,3 @@ public class UserService  {
         return new SimpleResponse("password updated");
     }
 }
-
