@@ -14,7 +14,8 @@ import java.util.Optional;
 
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    Optional<Student> findByEmail(String email);
+    @Query("select s from Student s where s.user.email = :email")
+    Optional<Student> findByEmail(@Param("email") String email);
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +
             "id," +
@@ -31,14 +32,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "s.firstName = :firstName, " +
             "s.lastName = :lastName, " +
             "s.studyFormat = :studyFormat, " +
-            "s.phoneNumber = :phoneNumber, " +
-            "s.user.email = :email where s.id = :id")
+            "s.phoneNumber = :phoneNumber"
+//            "s.user.email = :email
+            + " where s.id = :id")
     void update(@Param("id") Long id,
                 @Param("firstName") String firstName,
                 @Param("lastName") String lastName,
                 @Param("studyFormat") StudyFormat studyFormat,
-                @Param("phoneNumber") String phoneNumber,
-                @Param("email") String email);
+                @Param("phoneNumber") String phoneNumber);
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +
             "s.id," +

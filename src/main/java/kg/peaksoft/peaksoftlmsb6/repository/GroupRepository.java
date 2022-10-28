@@ -50,7 +50,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "s.group.groupName," +
             "s.studyFormat," +
             "s.phoneNumber," +
-            "s.email ) from Student s where s.group.id = ?1")
+            "s.user.email) from Student s where s.group.id = ?1")
     List<StudentResponse> getStudentsByGroupId(Long id);
 
 }
