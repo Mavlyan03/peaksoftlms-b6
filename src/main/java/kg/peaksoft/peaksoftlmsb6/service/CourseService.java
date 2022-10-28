@@ -8,10 +8,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
-import kg.peaksoft.peaksoftlmsb6.repository.CourseRepository;
-import kg.peaksoft.peaksoftlmsb6.repository.InstructorRepository;
-import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
-import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
+import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -85,7 +82,7 @@ public class CourseService {
 
     public List<AssignInstructorResponse> getAllInstructorsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Not found"));
+                () -> new NotFoundException(String.format("course with id %s not found",id)));
         List<Instructor> instructors = course.getInstructors();
         List<AssignInstructorResponse> assignResponse = new ArrayList<>();
         for (Instructor instructor : instructors) {

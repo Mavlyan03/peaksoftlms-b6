@@ -4,7 +4,6 @@ import kg.peaksoft.peaksoftlmsb6.validation.PasswordValid;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter

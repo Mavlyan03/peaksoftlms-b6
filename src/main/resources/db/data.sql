@@ -10,7 +10,7 @@ insert into courses(id, course_description, course_image, course_name, date_of_s
 values (1, 'Course Description', 'link image', 'course name', '2022/11/10');
 
 insert into instructors(id, first_name, last_name, phone_number, specialization, user_id)
-values (1, 'Instructor firs name', 'Instructor last name', '555231245', 'Java', 1);
+values (1, 'Instructor firs name', 'Instructor last name', '555231245', 'Java', 2);
 
 insert into students(id, email, first_name, last_name, phone_number, study_format, group_id, user_id)
 values (1, 'student@gmail.com', 'Student fist name', 'Student last name', ' 556545652', 'OFFLINE', 1, 1);

@@ -24,13 +24,13 @@ public class InstructorApi {
 
     @PostMapping()
     @Operation(summary = "Save instructor",
-            description = "Admin save instructor by request")
-    public InstructorResponse addInstructor(@RequestBody @Valid InstructorRequest request) {
+            description = "To save instructor by request")
+    public InstructorResponse createInstructor(@RequestBody @Valid InstructorRequest request) {
         return instructorService.addInstructor(request);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Update instructor",
+    @Operation(summary = "Updates instructor",
             description = "Admin update instructor by id")
     public InstructorResponse updateInstructor(@PathVariable Long id,
                                                @RequestBody @Valid InstructorRequest request) {
@@ -38,7 +38,7 @@ public class InstructorApi {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletes instructor",
+    @Operation(summary = "Deletes instructor ",
             description = "Admin delete the instructor by id")
     public SimpleResponse deleteInstructor(@PathVariable Long id) {
         return instructorService.deleteInstructorById(id);
