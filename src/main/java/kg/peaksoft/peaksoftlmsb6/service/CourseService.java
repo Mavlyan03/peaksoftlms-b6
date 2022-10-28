@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.AssignGroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
@@ -25,6 +26,7 @@ public class CourseService {
     private final InstructorRepository instructorRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
@@ -148,4 +150,25 @@ public class CourseService {
         return courseResponses;
     }
 
+    public SimpleResponse assignGroupToCourse(AssignGroupRequest request) {
+        Group group = groupRepository.findById(request.getGroupId()).orElseThrow(
+                () -> new NotFoundException(String.format("Group with id =%s not found",request.getGroupId())));
+        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
+                () -> new NotFoundException(String.format("Course with id =%s not found",request.getCourseId())));
+        group.addCourse(course);
+        course.addGroup(group);
+        courseRepository.save(course);
+        return new SimpleResponse("Group assigned to course was successfully");
+    }
+
+    public SimpleResponse deleteGroupFromCourse(Long id) {
+        Group group = groupRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(String.format("Group with id =%s not found",id)));
+        for(Course course : group.getCourses()) {
+            course.getGroup().remove(group);
+        }
+        group.setCourses(null);
+        groupRepository.save(group);
+        return new SimpleResponse("Group deleted from course successfully");
+    }
 }
