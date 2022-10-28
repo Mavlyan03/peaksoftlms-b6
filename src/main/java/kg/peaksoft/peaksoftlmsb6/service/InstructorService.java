@@ -3,10 +3,11 @@ package kg.peaksoft.peaksoftlmsb6.service;
 import kg.peaksoft.peaksoftlmsb6.dto.request.InstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
-import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
-import kg.peaksoft.peaksoftlmsb6.entity.User;
+import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
+import kg.peaksoft.peaksoftlmsb6.repository.CourseRepository;
+import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.InstructorRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,9 @@ public class InstructorService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+    private final CourseRepository courseRepository;
+
 
     public InstructorResponse addInstructor(InstructorRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -63,5 +67,4 @@ public class InstructorService {
     public List<InstructorResponse> getAllInstructors() {
         return instructorRepository.getAllInstructors();
     }
-
 }
