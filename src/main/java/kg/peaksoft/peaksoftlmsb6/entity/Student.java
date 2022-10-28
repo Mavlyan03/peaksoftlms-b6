@@ -29,8 +29,6 @@ public class Student {
 
     private String phoneNumber;
 
-    private String email;
-
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
 
@@ -47,7 +45,6 @@ public class Student {
         this.lastName = request.getLastName();
         this.studyFormat = request.getStudyFormat();
         this.phoneNumber = request.getPhoneNumber();
-        this.email = request.getEmail();
         User user1 = new User();
         user1.setEmail(request.getEmail());
         user1.setPassword(request.getPassword());

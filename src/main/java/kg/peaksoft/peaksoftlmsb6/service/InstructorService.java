@@ -27,8 +27,6 @@ public class InstructorService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
-    private final CourseRepository courseRepository;
 
 
     public InstructorResponse addInstructor(InstructorRequest request) {

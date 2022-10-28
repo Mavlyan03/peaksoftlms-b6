@@ -49,12 +49,6 @@ public class CourseService {
         return new SimpleResponse("Course deleted");
     }
 
-    public CourseResponse getById(Long id) {
-        Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
-        return courseRepository.getCourse(course.getId());
-    }
-
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Course not found"));
