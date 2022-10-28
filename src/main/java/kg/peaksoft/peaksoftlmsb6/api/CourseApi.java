@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import kg.peaksoft.peaksoftlmsb6.dto.request.AssignGroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
@@ -88,5 +89,19 @@ public class CourseApi {
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR','STUDENT')")
     public List<CourseResponse> getAllCourses(Authentication authentication) {
         return courseService.getAllCourses(authentication);
+    }
+
+    @PostMapping("/assign/group")
+    @Operation(summary = "Assign group to course",
+            description = "Instructor assign group to course by their id")
+    public SimpleResponse assignGroupToCourse(@RequestBody AssignGroupRequest request) {
+        return courseService.assignGroupToCourse(request);
+    }
+
+    @DeleteMapping("/group/{id}")
+    @Operation(summary = "Delete group from course",
+            description = "Instructor delete group from course by id")
+    public SimpleResponse deleteGroupFromCourse(@PathVariable Long id) {
+        return courseService.deleteGroupFromCourse(id);
     }
 }
