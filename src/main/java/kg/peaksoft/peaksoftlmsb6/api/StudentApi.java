@@ -23,14 +23,14 @@ public class StudentApi {
     private final StudentService studentService;
 
     @PostMapping
-    @Operation(summary = "Save students",
-            description = "Admin save student be request")
+    @Operation(summary = "Save student",
+            description = "To save a new student by admin")
     public StudentResponse createStudent(@RequestBody StudentRequest studentRequest){
         return studentService.createStudent(studentRequest);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Updates student",
+    @Operation(summary = "Update student",
             description = "Admin update student by id")
     public StudentResponse updateStudent(@PathVariable Long id,
                                          @RequestBody StudentRequest studentRequest){
@@ -38,7 +38,7 @@ public class StudentApi {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Deletes student",
+    @Operation(summary = "Delete student",
             description = "Admin delete student by id")
     public SimpleResponse deleteStudent(@PathVariable Long id){
         return studentService.deleteStudent(id);

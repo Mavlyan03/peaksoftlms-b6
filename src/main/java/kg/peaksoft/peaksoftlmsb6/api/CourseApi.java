@@ -41,13 +41,6 @@ public class CourseApi {
         return courseService.updateCourse(id, request);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get course",
-            description = "Admin get course by id")
-    public CourseResponse getCourse(@PathVariable("id") Long id) {
-        return courseService.getById(id);
-    }
-
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete course",
             description = "Admin delete course by id")

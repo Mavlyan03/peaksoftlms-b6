@@ -22,7 +22,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "group.groupName," +
             "studyFormat," +
             "phoneNumber," +
-            "email) from Student")
+            "user.email) from Student")
     List<StudentResponse> getAllStudents();
 
     @Modifying
@@ -32,7 +32,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "s.lastName = :lastName, " +
             "s.studyFormat = :studyFormat, " +
             "s.phoneNumber = :phoneNumber, " +
-            "s.email = :email where s.id = :id")
+            "s.user.email = :email where s.id = :id")
     void update(@Param("id") Long id,
                 @Param("firstName") String firstName,
                 @Param("lastName") String lastName,
@@ -40,14 +40,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
                 @Param("phoneNumber") String phoneNumber,
                 @Param("email") String email);
 
-
-
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +
             "s.id," +
             "concat(s.firstName,' ', s.lastName)," +
             "s.group.groupName," +
             "s.studyFormat," +
             "s.phoneNumber," +
-            "s.email)from Student s where s.id = ?1")
+            "s.user.email)from Student s where s.id = ?1")
     StudentResponse getStudent(Long id);
 }
