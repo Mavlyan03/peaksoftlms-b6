@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Deque;
 import java.util.List;
 
 @RestController
@@ -87,7 +88,7 @@ public class CourseApi {
     @Operation(summary = "Get all courses",
             description = "Get all courses for admin, instructor, student")
     @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR','STUDENT')")
-    public List<CourseResponse> getAllCourses(Authentication authentication) {
+    public Deque<CourseResponse> getAllCourses(Authentication authentication) {
         return courseService.getAllCourses(authentication);
     }
 

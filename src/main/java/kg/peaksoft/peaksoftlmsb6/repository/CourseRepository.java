@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 
@@ -52,4 +54,13 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "s.phoneNumber," +
             "s.email) from Student s where s.id = ?1")
     StudentResponse getStudentByCourseId(Long id);
+
+
+    @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse(" +
+            "c.id," +
+            "c.courseName," +
+            "c.courseDescription," +
+            "c.dateOfStart," +
+            "c.courseImage) from Course c group by c order by c.id desc ")
+    ArrayDeque<CourseResponse> getAllCourses();
 }
