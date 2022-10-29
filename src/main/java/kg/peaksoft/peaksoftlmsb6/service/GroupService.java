@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 @Service
@@ -26,7 +28,9 @@ public class GroupService {
     public GroupResponse createGroup(GroupRequest request) {
         Group group = new Group(request);
         groupRepository.save(group);
-        return groupRepository.getGroup(group.getId());
+        Deque<Group> deque = new ArrayDeque<>();
+        deque.addFirst(group);
+        return groupRepository.getGroup(deque.getFirst().getId());
     }
 
     public SimpleResponse deleteById(Long id) {
@@ -59,8 +63,12 @@ public class GroupService {
         return groupRepository.getStudentsByGroupId(group.getId());
     }
 
-    public List<GroupResponse> getAllGroups() {
-        return groupRepository.getAllGroups();
+    public Deque<GroupResponse> getAllGroups() {
+        ArrayDeque<GroupResponse> groups = new ArrayDeque<>();
+        groupRepository.getAllGroups().forEach(x -> {
+            groups.addFirst(groupRepository.getGroup(x.getId()));
+        });
+        return groups;
     }
 
 }
