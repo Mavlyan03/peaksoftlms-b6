@@ -3,7 +3,6 @@ package kg.peaksoft.peaksoftlmsb6.repository;
 import kg.peaksoft.peaksoftlmsb6.dto.response.GroupResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
-import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,8 +10,6 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
