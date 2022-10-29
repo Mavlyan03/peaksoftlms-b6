@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Deque;
 import java.util.List;
 
 @RestController
@@ -48,7 +49,7 @@ public class GroupApi {
     @GetMapping
     @Operation(summary = "Gets all groups",
             description = "Admin get all groups")
-    public List<GroupResponse> getAllGroups() {
+    public Deque<GroupResponse> getAllGroups() {
         return groupService.getAllGroups();
     }
 

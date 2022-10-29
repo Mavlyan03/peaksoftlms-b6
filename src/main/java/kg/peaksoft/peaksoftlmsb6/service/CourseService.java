@@ -15,9 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 @Service
@@ -47,6 +45,12 @@ public class CourseService {
         }
         courseRepository.delete(course);
         return new SimpleResponse("Course deleted");
+    }
+
+    public CourseResponse getById(Long id) {
+        Course course = courseRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Course not found"));
+        return courseRepository.getCourse(course.getId());
     }
 
     public CourseResponse updateCourse(Long id, CourseRequest request) {
@@ -116,26 +120,30 @@ public class CourseService {
         return new SimpleResponse("Instructor unassigned from course");
     }
 
-    public Deque<CourseResponse> getAllCourses(Authentication authentication) {
+    public List<CourseResponse> getAllCourses(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new NotFoundException("User with email %s not found"));
-        Deque<CourseResponse> courseResponses = new ArrayDeque<>();
+        List<CourseResponse> courseResponses = new ArrayList<>();
         switch (user1.getRole().getAuthority()) {
             case "ADMIN":
-                return courseRepository.getAllCourses();
+                List<Course> courses = courseRepository.findAll();
+                for (Course course : courses) {
+                    courseResponses.add(courseRepository.getCourse(course.getId()));
+                }
+                break;
             case "STUDENT":
                 Student student = studentRepository.findByEmail(user1.getEmail()).orElseThrow(
                         () -> new NotFoundException("Student not found"));
                 for (Course course : student.getGroup().getCourses()) {
-                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
+                    courseResponses.add(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
                         .orElseThrow(() -> new NotFoundException("Instructor not found"));
                 for (Course course : instructor.getCourses()) {
-                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
+                    courseResponses.add(courseRepository.getCourse(course.getId()));
                 }
                 break;
         }
