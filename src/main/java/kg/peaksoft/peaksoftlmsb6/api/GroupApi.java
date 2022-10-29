@@ -51,7 +51,7 @@ public class GroupApi {
     @GetMapping
     @Operation(summary = "Gets all groups",
             description = "Admin get all groups")
-    public Deque<GroupResponse> getAllGroups() {
+    public List<GroupResponse> getAllGroups() {
         return groupService.getAllGroups();
     }
 
