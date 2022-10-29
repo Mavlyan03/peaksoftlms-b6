@@ -33,9 +33,7 @@ public class CourseService {
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
         courseRepository.save(course);
-        Deque<Course> deque = new ArrayDeque<>();
-        deque.addFirst(course);
-        return courseRepository.getCourse(deque.getFirst().getId());
+        return courseRepository.getCourse(course.getId());
     }
 
     public SimpleResponse deleteById(Long id) {

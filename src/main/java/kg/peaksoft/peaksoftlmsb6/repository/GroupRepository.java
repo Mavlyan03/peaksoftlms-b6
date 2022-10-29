@@ -40,7 +40,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "g.groupName," +
             "g.groupDescription," +
             "g.dateOfStart," +
-            "g.groupImage) from Group g")
+            "g.groupImage) from Group g group by g order by g.id desc")
     List<GroupResponse> getAllGroups();
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +

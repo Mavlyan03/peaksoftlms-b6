@@ -28,9 +28,7 @@ public class GroupService {
     public GroupResponse createGroup(GroupRequest request) {
         Group group = new Group(request);
         groupRepository.save(group);
-        Deque<Group> deque = new ArrayDeque<>();
-        deque.addFirst(group);
-        return groupRepository.getGroup(deque.getFirst().getId());
+        return groupRepository.getGroup(group.getId());
     }
 
     public SimpleResponse deleteById(Long id) {
@@ -63,12 +61,8 @@ public class GroupService {
         return groupRepository.getStudentsByGroupId(group.getId());
     }
 
-    public Deque<GroupResponse> getAllGroups() {
-        ArrayDeque<GroupResponse> groups = new ArrayDeque<>();
-        groupRepository.getAllGroups().forEach(x -> {
-            groups.addFirst(groupRepository.getGroup(x.getId()));
-        });
-        return groups;
+    public List<GroupResponse> getAllGroups() {
+        return groupRepository.getAllGroups();
     }
 
 }
