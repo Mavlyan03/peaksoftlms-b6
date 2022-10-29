@@ -50,6 +50,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "s.group.groupName," +
             "s.studyFormat," +
             "s.phoneNumber," +
-            "s.email) from Student s where s.id = ?1")
+            "s.user.email) from Student s where s.id = ?1")
     StudentResponse getStudentByCourseId(Long id);
 }

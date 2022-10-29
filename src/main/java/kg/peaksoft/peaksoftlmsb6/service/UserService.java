@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ForgotPasswordRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LoginRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AuthResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
@@ -64,6 +65,4 @@ public class UserService  {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         return new SimpleResponse("password updated");
     }
-
 }
-
