@@ -13,7 +13,7 @@ insert into instructors(id, first_name, last_name, phone_number, specialization,
 values (1, 'Chyngyz', 'Sharshekeev', '555231245', 'Java developer', 2);
 
 insert into students(id, first_name, last_name, phone_number, study_format, group_id, user_id)
-values (1, 'Aiperi', 'Djanybekova', ' 556545652', 'OFFLINE', 1, 1);
+values (1, 'Aiperi', 'Djanybekova', ' 556545652', 'OFFLINE', 1, 3);
 
 insert into lessons(id, lesson_name, course_id)
 values (1, 'AWS', 1);

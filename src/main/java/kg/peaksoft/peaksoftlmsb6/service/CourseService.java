@@ -34,6 +34,7 @@ public class CourseService {
     private final PresentationRepository presentationRepository;
     private final VideoRepository videoRepository;
     private final ContentRepository contentRepository;
+    private final ResultRepository resultRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
@@ -62,10 +63,12 @@ public class CourseService {
             task.setLesson(null);
             lesson.setTask(null);
             for(Content content : task.getContents()) {
-                content.setTask(null);
-                task.setContents(null);
                 contentRepository.deleteById(content.getId());
             }
+            Results results = resultRepository.findResultByTestId(test.getId());
+            results.setStudent(null);
+            results.setTest(null);
+            resultRepository.deleteById(results.getId());
             taskRepository.deleteById(task.getId());
             courseRepository.deleteLessonById(lesson.getId());
         }

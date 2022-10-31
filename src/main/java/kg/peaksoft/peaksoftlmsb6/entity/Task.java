@@ -28,7 +28,7 @@ public class Task {
     private String taskName;
 
     @JsonIgnore
-    @OneToMany(cascade = ALL, orphanRemoval = true)
+    @OneToMany(cascade = ALL, mappedBy = "task")
     private List<Content> contents;
 
     @OneToOne(cascade = {
