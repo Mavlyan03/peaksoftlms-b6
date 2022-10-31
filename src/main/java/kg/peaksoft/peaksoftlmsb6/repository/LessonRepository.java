@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
+<<<<<<< HEAD
 import com.sun.istack.Nullable;
 import kg.peaksoft.peaksoftlmsb6.dto.response.LessonResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
@@ -26,3 +27,10 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
 
 }
+=======
+import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface LessonRepository extends JpaRepository<Lesson, Long> {
+}
+>>>>>>> 09116b4 (LIFO for course and group)

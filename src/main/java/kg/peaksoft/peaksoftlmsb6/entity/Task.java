@@ -28,12 +28,7 @@ public class Task {
     private String taskName;
 
     @JsonIgnore
-    @OneToMany(cascade = {
-            MERGE,
-            REFRESH,
-            PERSIST,
-            DETACH
-    })
+    @OneToMany(cascade = ALL, orphanRemoval = true)
     private List<Content> contents;
 
     @OneToOne(cascade = {

@@ -28,6 +28,10 @@ public class Content {
 
     private String contentValue;
 
-    @ManyToOne
+    @ManyToOne(cascade = {
+            MERGE,
+            PERSIST,
+            REFRESH,
+            DETACH})
     private Task task;
 }

@@ -29,13 +29,13 @@ public class Lesson {
     @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Presentation presentation;
 
-    @OneToOne(cascade = ALL, mappedBy = "lesson")
+    @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
     private Task task;
 
     @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Link link;
 
-    @OneToOne(cascade = ALL, mappedBy = "lesson")
+    @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
     private Test test;
 
     public Lesson(LessonRequest request) {
