@@ -46,7 +46,7 @@ public class CourseService {
 
     public SimpleResponse deleteById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         for (Instructor instructor : course.getInstructors()) {
             instructor.getCourses().remove(course);
         }
@@ -72,15 +72,21 @@ public class CourseService {
             results.setTest(null);
             resultRepository.deleteById(results.getId());
             taskRepository.deleteById(task.getId());
-            courseRepository.deleteLessonById(lesson.getId());
+            lessonRepository.deleteLessonById(lesson.getId());
         }
         courseRepository.delete(course);
         return new SimpleResponse("Course deleted");
     }
 
+    public CourseResponse getById(Long id) {
+        Course course = courseRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(String.format("Course not found",id)));
+        return courseRepository.getCourse(course.getId());
+    }
+
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         courseRepository.update(
                 course.getId(),
                 request.getCourseName(),
@@ -97,7 +103,7 @@ public class CourseService {
 
     public List<StudentResponse> getAllStudentsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         List<StudentResponse> assignStudent = new ArrayList<>();
         for (Group group : course.getGroup()) {
             for (Student student : group.getStudents()) {
@@ -120,9 +126,9 @@ public class CourseService {
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException(String.format("Instructor with id =%s not found",request.getInstructorId())));
+                () -> new NotFoundException(String.format("Instructor not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException(String.format("Course with id =%s not found",request.getCourseId())));
+                () -> new NotFoundException(String.format("Course not found",request.getCourseId())));
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
@@ -131,9 +137,9 @@ public class CourseService {
 
     public SimpleResponse unassigned(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException(String.format("Instructor with id =%s not found",request.getInstructorId())));
+                () -> new NotFoundException(String.format("Instructor not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException(String.format("Course with id =%s not found",request.getCourseId())));
+                () -> new NotFoundException(String.format("Course not found",request.getCourseId())));
         for (Instructor instructor1 : course.getInstructors()) {
             instructor1.getCourses().remove(course);
         }
@@ -148,25 +154,21 @@ public class CourseService {
     public Deque<CourseResponse> getAllCourses(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new NotFoundException(String.format("User with email =%s not found",user.getEmail())));
+                () -> new NotFoundException("User with email %s not found"));
         Deque<CourseResponse> courseResponses = new ArrayDeque<>();
         switch (user1.getRole().getAuthority()) {
             case "ADMIN":
-                List<Course> courses = courseRepository.findAll();
-                for (Course course : courses) {
-                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
-                }
-                break;
+                return courseRepository.getAllCourses();
             case "STUDENT":
                 Student student = studentRepository.findByEmail(user1.getEmail()).orElseThrow(
-                        () -> new NotFoundException(String.format("User with email =%s not found",user1.getEmail())));
+                        () -> new NotFoundException("Student not found"));
                 for (Course course : student.getGroup().getCourses()) {
                     courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
-                        .orElseThrow(() -> new NotFoundException(String.format("User with id =%s not found",user1.getId())));
+                        .orElseThrow(() -> new NotFoundException("Instructor not found"));
                 for (Course course : instructor.getCourses()) {
                     courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
