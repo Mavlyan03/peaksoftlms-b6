@@ -9,6 +9,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
+import kg.peaksoft.peaksoftlmsb6.repository.ResultRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.List;
 public class GroupService {
 
     private final GroupRepository groupRepository;
+    private final ResultRepository resultRepository;
 
     public GroupResponse createGroup(GroupRequest request) {
         Group group = new Group(request);
@@ -34,6 +36,10 @@ public class GroupService {
     public SimpleResponse deleteById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Group with id %s not found",id)));
+        for(Student student : group.getStudents()) {
+            Results results = resultRepository.findResultByTestId(student.getId());
+            results.setStudent(null);
+        }
         groupRepository.delete(group);
         return new SimpleResponse("Group deleted");
     }

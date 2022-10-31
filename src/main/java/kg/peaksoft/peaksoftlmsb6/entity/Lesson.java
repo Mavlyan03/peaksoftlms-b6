@@ -28,7 +28,7 @@ public class Lesson {
     @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Presentation presentation;
 
-    @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
+    @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Task task;
 
     @OneToOne(cascade = ALL, mappedBy = "lesson")
