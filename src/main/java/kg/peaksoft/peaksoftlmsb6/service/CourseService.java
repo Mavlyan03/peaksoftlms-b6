@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 @Service
@@ -89,9 +91,9 @@ public class CourseService {
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException("Instructor not found"));
+                () -> new NotFoundException(String.format("Instructor with id =%s not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course with id =%s not found",request.getCourseId())));
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
@@ -100,9 +102,9 @@ public class CourseService {
 
     public SimpleResponse unassigned(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException("Instructor not found"));
+                () -> new NotFoundException(String.format("Instructor with id =%s not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course with id =%s not found",request.getCourseId())));
         for (Instructor instructor1 : course.getInstructors()) {
             instructor1.getCourses().remove(course);
         }
@@ -114,30 +116,30 @@ public class CourseService {
         return new SimpleResponse("Instructor unassigned from course");
     }
 
-    public List<CourseResponse> getAllCourses(Authentication authentication) {
+    public Deque<CourseResponse> getAllCourses(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findByEmail(user.getEmail()).orElseThrow(
-                () -> new NotFoundException("User with email %s not found"));
-        List<CourseResponse> courseResponses = new ArrayList<>();
+                () -> new NotFoundException(String.format("User with email =%s not found",user.getEmail())));
+        Deque<CourseResponse> courseResponses = new ArrayDeque<>();
         switch (user1.getRole().getAuthority()) {
             case "ADMIN":
                 List<Course> courses = courseRepository.findAll();
                 for (Course course : courses) {
-                    courseResponses.add(courseRepository.getCourse(course.getId()));
+                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "STUDENT":
                 Student student = studentRepository.findByEmail(user1.getEmail()).orElseThrow(
-                        () -> new NotFoundException("Student not found"));
+                        () -> new NotFoundException(String.format("User with email =%s not found",user1.getEmail())));
                 for (Course course : student.getGroup().getCourses()) {
-                    courseResponses.add(courseRepository.getCourse(course.getId()));
+                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
-                        .orElseThrow(() -> new NotFoundException("Instructor not found"));
+                        .orElseThrow(() -> new NotFoundException(String.format("User with id =%s not found",user1.getId())));
                 for (Course course : instructor.getCourses()) {
-                    courseResponses.add(courseRepository.getCourse(course.getId()));
+                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
         }
