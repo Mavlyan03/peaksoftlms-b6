@@ -52,4 +52,10 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "s.phoneNumber," +
             "s.user.email) from Student s where s.id = ?1")
     StudentResponse getStudentByCourseId(Long id);
+
+
+    @Modifying
+    @Transactional
+    @Query("delete from Lesson l where l.course.id = ?1")
+    void deleteLessonById(Long id);
 }

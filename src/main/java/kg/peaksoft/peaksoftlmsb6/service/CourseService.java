@@ -29,6 +29,13 @@ public class CourseService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final LessonRepository lessonRepository;
+    private final TestRepository testRepository;
+    private final TaskRepository taskRepository;
+    private final LinkRepository linkRepository;
+    private final PresentationRepository presentationRepository;
+    private final VideoRepository videoRepository;
+    private final ContentRepository contentRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
@@ -44,6 +51,25 @@ public class CourseService {
         }
         for (Group group : course.getGroup()) {
             group.getCourses().remove(course);
+        }
+        for(Lesson lesson : course.getLessons()) {
+            linkRepository.deleteById(lesson.getLink().getId());
+            videoRepository.deleteById(lesson.getVideo().getId());
+            presentationRepository.deleteById(lesson.getPresentation().getId());
+            Test test = lesson.getTest();
+            test.setLesson(null);
+            lesson.setCourse(null);
+            testRepository.deleteById(test.getId());
+            Task task = lesson.getTask();
+            task.setLesson(null);
+            lesson.setTask(null);
+            for(Content content : task.getContents()) {
+                content.setTask(null);
+                task.setContents(null);
+                contentRepository.deleteById(content.getId());
+            }
+            taskRepository.deleteById(task.getId());
+            courseRepository.deleteLessonById(lesson.getId());
         }
         courseRepository.delete(course);
         return new SimpleResponse("Course deleted");
