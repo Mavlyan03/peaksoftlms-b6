@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ForgotPasswordRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LoginRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AuthResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
@@ -47,7 +48,7 @@ public class UserService  {
 
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException("User not found"));
+                () -> new NotFoundException(String.format("User with email =%s not found",email)));
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
         messageHelper.setSubject("[peaksoftlms-b6] reset password link");
@@ -60,10 +61,8 @@ public class UserService  {
 
     public SimpleResponse resetPassword(ForgotPasswordRequest request) {
         User user = userRepository.findById(request.getId()).orElseThrow(
-                () -> new NotFoundException("User with id not found"));
+                () -> new NotFoundException(String.format("User with id =%s not found",request.getId())));
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         return new SimpleResponse("password updated");
     }
-
 }
-

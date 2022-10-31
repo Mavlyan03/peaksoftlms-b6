@@ -3,7 +3,6 @@ package kg.peaksoft.peaksoftlmsb6.repository;
 import kg.peaksoft.peaksoftlmsb6.dto.response.GroupResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
-import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -50,7 +49,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "s.group.groupName," +
             "s.studyFormat," +
             "s.phoneNumber," +
-            "s.email ) from Student s where s.group.id = ?1")
+            "s.user.email) from Student s where s.group.id = ?1")
     List<StudentResponse> getStudentsByGroupId(Long id);
 
 }

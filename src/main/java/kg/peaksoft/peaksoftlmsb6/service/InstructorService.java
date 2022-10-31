@@ -27,8 +27,6 @@ public class InstructorService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
-    private final GroupRepository groupRepository;
-    private final CourseRepository courseRepository;
 
 
     public InstructorResponse addInstructor(InstructorRequest request) {
@@ -51,7 +49,6 @@ public class InstructorService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.INSTRUCTOR);
-        userRepository.save(user);
         instructor.setUser(user);
         instructorRepository.save(instructor);
         return instructorRepository.getInstructor(instructor.getId());
