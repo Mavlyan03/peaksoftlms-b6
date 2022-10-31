@@ -64,9 +64,4 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "c.courseImage) from Course c group by c order by c.id desc ")
     ArrayDeque<CourseResponse> getAllCourses();
 
-
-    @Modifying
-    @Transactional
-    @Query("delete from Lesson l where l.course.id = ?1")
-    void deleteLessonById(Long id);
 }

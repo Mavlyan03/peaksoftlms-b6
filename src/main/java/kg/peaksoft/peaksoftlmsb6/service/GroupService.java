@@ -38,6 +38,7 @@ public class GroupService {
                 () -> new NotFoundException(String.format("Group with id %s not found",id)));
         for(Student student : group.getStudents()) {
             Results results = resultRepository.findResultByTestId(student.getId());
+            student.setResults(null);
             results.setStudent(null);
         }
         groupRepository.delete(group);
