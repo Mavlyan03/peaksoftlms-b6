@@ -38,7 +38,7 @@ public class CourseService {
 
     public SimpleResponse deleteById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         for (Instructor instructor : course.getInstructors()) {
             instructor.getCourses().remove(course);
         }
@@ -51,13 +51,13 @@ public class CourseService {
 
     public CourseResponse getById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         return courseRepository.getCourse(course.getId());
     }
 
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         courseRepository.update(
                 course.getId(),
                 request.getCourseName(),
@@ -74,7 +74,7 @@ public class CourseService {
 
     public List<StudentResponse> getAllStudentsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         List<StudentResponse> assignStudent = new ArrayList<>();
         for (Group group : course.getGroup()) {
             for (Student student : group.getStudents()) {
@@ -97,9 +97,9 @@ public class CourseService {
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException("Instructor not found"));
+                () -> new NotFoundException(String.format("Instructor not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",request.getCourseId())));
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
@@ -108,9 +108,9 @@ public class CourseService {
 
     public SimpleResponse unassigned(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException("Instructor not found"));
+                () -> new NotFoundException(String.format("Instructor not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",request.getCourseId())));
         for (Instructor instructor1 : course.getInstructors()) {
             instructor1.getCourses().remove(course);
         }
