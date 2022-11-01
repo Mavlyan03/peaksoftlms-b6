@@ -63,4 +63,5 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             "c.dateOfStart," +
             "c.courseImage) from Course c group by c order by c.id desc ")
     ArrayDeque<CourseResponse> getAllCourses();
+
 }
