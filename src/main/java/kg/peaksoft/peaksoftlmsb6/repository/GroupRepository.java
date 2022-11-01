@@ -3,7 +3,6 @@ package kg.peaksoft.peaksoftlmsb6.repository;
 import kg.peaksoft.peaksoftlmsb6.dto.response.GroupResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
-import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -41,7 +40,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "g.groupName," +
             "g.groupDescription," +
             "g.dateOfStart," +
-            "g.groupImage) from Group g")
+            "g.groupImage) from Group g group by g order by g.id desc")
     List<GroupResponse> getAllGroups();
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +

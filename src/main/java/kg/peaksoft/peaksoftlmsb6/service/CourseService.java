@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 @Service
@@ -27,6 +29,14 @@ public class CourseService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final LessonRepository lessonRepository;
+    private final TestRepository testRepository;
+    private final TaskRepository taskRepository;
+    private final LinkRepository linkRepository;
+    private final PresentationRepository presentationRepository;
+    private final VideoRepository videoRepository;
+    private final ContentRepository contentRepository;
+    private final ResultRepository resultRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
@@ -36,20 +46,47 @@ public class CourseService {
 
     public SimpleResponse deleteById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         for (Instructor instructor : course.getInstructors()) {
             instructor.getCourses().remove(course);
         }
         for (Group group : course.getGroup()) {
             group.getCourses().remove(course);
         }
+        for(Lesson lesson : course.getLessons()) {
+            linkRepository.deleteById(lesson.getLink().getId());
+            videoRepository.deleteById(lesson.getVideo().getId());
+            presentationRepository.deleteById(lesson.getPresentation().getId());
+            Test test = lesson.getTest();
+            test.setLesson(null);
+            lesson.setCourse(null);
+            testRepository.deleteById(test.getId());
+            Task task = lesson.getTask();
+            task.setLesson(null);
+            lesson.setTask(null);
+            for(Content content : task.getContents()) {
+                contentRepository.deleteById(content.getId());
+            }
+            Results results = resultRepository.findResultByTestId(test.getId());
+            results.setStudent(null);
+            results.setTest(null);
+            resultRepository.deleteById(results.getId());
+            taskRepository.deleteById(task.getId());
+            lessonRepository.deleteLessonById(lesson.getId());
+        }
         courseRepository.delete(course);
         return new SimpleResponse("Course deleted");
     }
 
+    public CourseResponse getById(Long id) {
+        Course course = courseRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(String.format("Course not found",id)));
+        return courseRepository.getCourse(course.getId());
+    }
+
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         courseRepository.update(
                 course.getId(),
                 request.getCourseName(),
@@ -66,7 +103,7 @@ public class CourseService {
 
     public List<StudentResponse> getAllStudentsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",id)));
         List<StudentResponse> assignStudent = new ArrayList<>();
         for (Group group : course.getGroup()) {
             for (Student student : group.getStudents()) {
@@ -89,9 +126,9 @@ public class CourseService {
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException("Instructor not found"));
+                () -> new NotFoundException(String.format("Instructor not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",request.getCourseId())));
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
@@ -100,9 +137,9 @@ public class CourseService {
 
     public SimpleResponse unassigned(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException("Instructor not found"));
+                () -> new NotFoundException(String.format("Instructor not found",request.getInstructorId())));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException("Course not found"));
+                () -> new NotFoundException(String.format("Course not found",request.getCourseId())));
         for (Instructor instructor1 : course.getInstructors()) {
             instructor1.getCourses().remove(course);
         }
@@ -114,30 +151,26 @@ public class CourseService {
         return new SimpleResponse("Instructor unassigned from course");
     }
 
-    public List<CourseResponse> getAllCourses(Authentication authentication) {
+    public Deque<CourseResponse> getAllCourses(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findByEmail(user.getEmail()).orElseThrow(
                 () -> new NotFoundException("User with email %s not found"));
-        List<CourseResponse> courseResponses = new ArrayList<>();
+        Deque<CourseResponse> courseResponses = new ArrayDeque<>();
         switch (user1.getRole().getAuthority()) {
             case "ADMIN":
-                List<Course> courses = courseRepository.findAll();
-                for (Course course : courses) {
-                    courseResponses.add(courseRepository.getCourse(course.getId()));
-                }
-                break;
+                return courseRepository.getAllCourses();
             case "STUDENT":
                 Student student = studentRepository.findByEmail(user1.getEmail()).orElseThrow(
                         () -> new NotFoundException("Student not found"));
                 for (Course course : student.getGroup().getCourses()) {
-                    courseResponses.add(courseRepository.getCourse(course.getId()));
+                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
                         .orElseThrow(() -> new NotFoundException("Instructor not found"));
                 for (Course course : instructor.getCourses()) {
-                    courseResponses.add(courseRepository.getCourse(course.getId()));
+                    courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
         }
