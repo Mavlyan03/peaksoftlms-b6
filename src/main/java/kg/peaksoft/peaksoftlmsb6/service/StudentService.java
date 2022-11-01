@@ -111,6 +111,7 @@ public class StudentService {
         } else {
             return studentRepository.findStudentByStudyFormat(studyFormat);
         }
+
     }
 
     public StudentResponse getById(Long id) {
