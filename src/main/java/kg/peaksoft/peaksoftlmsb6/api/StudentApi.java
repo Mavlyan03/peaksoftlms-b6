@@ -45,18 +45,12 @@ public class StudentApi {
         return studentService.deleteStudent(id);
     }
 
-    @GetMapping
-    @Operation(summary = "Get all students",
-            description = "Admin get all students")
-    public List<StudentResponse> getAllStudents(){
-        return studentService.getAllStudent();
-    }
 
     @PostMapping("/filter")
     @Operation(summary = "Filter students by study format",
               description = "Filter students by study format")
     public List<StudentResponse> getStudentByStudyFormat(@RequestParam StudyFormat studyFormat){
-        return studentService.getStudentByStudyFormat(studyFormat);
+        return studentService.getAllStudent(studyFormat);
     }
 
 }

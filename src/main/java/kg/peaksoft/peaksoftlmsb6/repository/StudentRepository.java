@@ -25,7 +25,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "group.groupName," +
             "studyFormat," +
             "phoneNumber," +
-            "user.email) from Student order by id")
+            "user.email) from Student order by concat(firstName,' ',lastName)")
     List<StudentResponse> getAllStudents();
 
     @Modifying
