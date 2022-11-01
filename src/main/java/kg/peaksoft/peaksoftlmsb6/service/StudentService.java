@@ -70,16 +70,14 @@ public class StudentService {
         return new SimpleResponse(String.format("student with id = %s deleted", id));
     }
 
-    public List<StudentResponse> getAllStudent() {
-        return studentRepository.getAllStudents();
-    }
 
-    public List<StudentResponse> getStudentByStudyFormat(StudyFormat studyFormat) {
+    public List<StudentResponse> getAllStudent(StudyFormat studyFormat) {
         if (studyFormat.equals(StudyFormat.ALL)) {
             return studentRepository.getAllStudents();
         } else {
             return studentRepository.findStudentByStudyFormat(studyFormat);
         }
+
     }
 
 }
