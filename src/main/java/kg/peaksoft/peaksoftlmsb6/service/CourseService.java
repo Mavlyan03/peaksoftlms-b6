@@ -164,15 +164,15 @@ public class CourseService {
                 }
                 break;
             case "STUDENT":
-                Student student = studentRepository.findByEmail(user1.getEmail()).orElseThrow(
-                        () -> new NotFoundException("Student not found"));
+                Student student = studentRepository.findByUserId(user1.getId()).orElseThrow(
+                        () -> new NotFoundException(String.format("Student with email =%s not found",user1.getId())));
                 for (Course course : student.getGroup().getCourses()) {
                     courseResponses.add(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
-                        .orElseThrow(() -> new NotFoundException("Instructor not found"));
+                        .orElseThrow(() -> new NotFoundException(String.format("Instructor with id =%s not found", user1.getId())));
                 for (Course course : instructor.getCourses()) {
                     courseResponses.add(courseRepository.getCourse(course.getId()));
                 }

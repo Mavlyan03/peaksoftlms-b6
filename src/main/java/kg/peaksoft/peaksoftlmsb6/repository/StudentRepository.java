@@ -1,6 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
+import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -58,5 +59,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "where s.studyFormat = :studyFormat order by concat(s.firstName,' ',s.lastName)")
     List<StudentResponse> findStudentByStudyFormat(@Param("studyFormat") StudyFormat studyFormat);
 
+    @Query("select s from Student s where s.user.id = ?1")
+    Optional<Student> findByUserId(Long id);
 }
 
