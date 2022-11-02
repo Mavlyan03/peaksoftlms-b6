@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import com.poiji.annotation.ExcelRow;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
@@ -18,6 +19,7 @@ import static javax.persistence.CascadeType.*;
 @NoArgsConstructor
 public class Student {
 
+    @ExcelRow
     @Id
     @SequenceGenerator(name = "student_seq", sequenceName = "student_seq", allocationSize = 1 , initialValue = 2)
     @GeneratedValue(generator = "student_seq", strategy = GenerationType.SEQUENCE)
