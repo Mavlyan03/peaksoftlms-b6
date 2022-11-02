@@ -41,4 +41,8 @@ public class Test {
         }
         this.question.add(question);
     }
+
+    public Test(String testName) {
+        this.testName = testName;
+    }
 }

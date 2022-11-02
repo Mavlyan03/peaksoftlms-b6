@@ -49,4 +49,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "s.phoneNumber," +
             "s.user.email)from Student s where s.id = ?1")
     StudentResponse getStudent(Long id);
+
 }

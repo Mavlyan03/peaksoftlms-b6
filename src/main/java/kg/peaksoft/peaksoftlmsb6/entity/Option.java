@@ -20,4 +20,9 @@ public class Option {
     private String optionValue;
 
     private Boolean isTrue;
+
+    public Option(String optionValue, Boolean isTrue) {
+        this.optionValue = optionValue;
+        this.isTrue = isTrue;
+    }
 }

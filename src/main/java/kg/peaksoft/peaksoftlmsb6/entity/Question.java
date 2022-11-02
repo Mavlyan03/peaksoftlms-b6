@@ -37,4 +37,9 @@ public class Question {
         }
         this.options.add(option);
     }
+
+    public Question(String question, QuestionType questionType) {
+        this.question = question;
+        this.questionType = questionType;
+    }
 }

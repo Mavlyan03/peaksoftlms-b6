@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/instructor")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Instructor CRUD", description = "ADMIN instructor api endpoints")
+@Tag(name = "Instructor API", description = "ADMIN instructor api endpoints")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class InstructorApi {
     private final InstructorService instructorService;
@@ -51,6 +51,5 @@ public class InstructorApi {
     public List<InstructorResponse> getAllInstructors() {
         return instructorService.getAllInstructors();
     }
-
 
 }

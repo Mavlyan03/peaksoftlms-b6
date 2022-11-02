@@ -22,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/course")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Course Layout", description = "ADMIN course layout api endpoints")
+@Tag(name = "Course API", description = "ADMIN course layout api endpoints")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class CourseApi {
 
