@@ -28,7 +28,7 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @OneToMany(cascade = ALL)
+    @OneToMany(cascade = ALL, orphanRemoval = true)
     private List<Option> options;
 
     public void addOption(Option option) {
