@@ -49,7 +49,9 @@ public class CourseService {
             instructor.getCourses().remove(course);
         }
         for (Group group : course.getGroup()) {
-            group.getCourses().remove(course);
+            if(group != null) {
+                group.getCourses().remove(course);
+            }
         }
         for(Lesson lesson : course.getLessons()) {
             linkRepository.deleteById(lesson.getLink().getId());

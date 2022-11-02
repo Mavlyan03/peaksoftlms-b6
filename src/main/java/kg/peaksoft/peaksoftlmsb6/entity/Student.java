@@ -46,12 +46,6 @@ public class Student {
             DETACH})
     @ExcelCell(3)
     private Group group;
-
-    @OneToOne(cascade = {
-            DETACH,
-            MERGE})
-    private Results results;
-
     @OneToOne(cascade = ALL)
     @ExcelCell(3)
     private User user;
