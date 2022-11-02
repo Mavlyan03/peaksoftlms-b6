@@ -46,9 +46,9 @@ public class StudentApi {
     }
 
 
-    @PostMapping("/filter")
-    @Operation(summary = "Filter students by study format",
-              description = "Filter students by study format")
+    @GetMapping("/filter")
+    @Operation(summary = "Get all students",
+              description = "Get all students with filter by study format")
     public List<StudentResponse> getStudentByStudyFormat(@RequestParam StudyFormat studyFormat){
         return studentService.getAllStudent(studyFormat);
     }
