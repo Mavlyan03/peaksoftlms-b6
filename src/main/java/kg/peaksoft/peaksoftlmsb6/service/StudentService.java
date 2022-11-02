@@ -7,6 +7,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -65,10 +67,17 @@ public class StudentService {
         Student student = studentRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Not found"));
         studentRepository.delete(student);
-        return new SimpleResponse(String.format("student with id = %s deleted",id));
+        return new SimpleResponse(String.format("student with id = %s deleted", id));
     }
 
-    public List<StudentResponse> getAllStudent() {
-        return studentRepository.getAllStudents();
+
+    public List<StudentResponse> getAllStudent(StudyFormat studyFormat) {
+        if (studyFormat.equals(StudyFormat.ALL)) {
+            return studentRepository.getAllStudents();
+        } else {
+            return studentRepository.findStudentByStudyFormat(studyFormat);
+        }
+
     }
+
 }

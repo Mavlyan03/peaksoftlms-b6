@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import kg.peaksoft.peaksoftlmsb6.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,10 +45,12 @@ public class StudentApi {
         return studentService.deleteStudent(id);
     }
 
-    @GetMapping
+
+    @GetMapping("/filter")
     @Operation(summary = "Get all students",
-            description = "Admin get all students")
-    public List<StudentResponse> getAllStudents(){
-        return studentService.getAllStudent();
+              description = "Get all students with filter by study format")
+    public List<StudentResponse> getStudentByStudyFormat(@RequestParam StudyFormat studyFormat){
+        return studentService.getAllStudent(studyFormat);
     }
+
 }
