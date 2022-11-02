@@ -52,10 +52,10 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
             "s.user.email)from Student s where s.id = ?1")
     StudentResponse getStudent(Long id);
 
-    @Modifying
-    @Transactional
+
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(s.id, concat(s.firstName, ' ', s.lastName)," +
-            "s.group.groupName, s.studyFormat, s.phoneNumber, s.user.email) from Student s where s.studyFormat = :studyFormat")
+            "s.group.groupName, s.studyFormat, s.phoneNumber, s.user.email) from Student s " +
+            "where s.studyFormat = :studyFormat order by concat(s.firstName,' ',s.lastName)")
     List<StudentResponse> findStudentByStudyFormat(@Param("studyFormat") StudyFormat studyFormat);
 
 }
