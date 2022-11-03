@@ -9,6 +9,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.poiji.MyFormatting;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -69,11 +71,16 @@ public class StudentService {
         Student student = studentRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Not found"));
         studentRepository.delete(student);
-        return new SimpleResponse(String.format("student with id = %s deleted",id));
+        return new SimpleResponse(String.format("student with id = %s deleted", id));
     }
 
-    public List<StudentResponse> getAllStudent() {
-        return studentRepository.getAllStudents();
+
+    public List<StudentResponse> getAllStudent(StudyFormat studyFormat) {
+        if (studyFormat.equals(StudyFormat.ALL)) {
+            return studentRepository.getAllStudents();
+        } else {
+            return studentRepository.findStudentByStudyFormat(studyFormat);
+        }
     }
 
     PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
@@ -81,5 +88,6 @@ public class StudentService {
             .build();
     List<Student> students = Poiji.fromExcel(new File("students.xls"), Student.class, options);
     Student student = students.get(0);
+
 
 }
