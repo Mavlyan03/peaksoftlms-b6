@@ -47,7 +47,7 @@ public class VideoService {
 
     public SimpleResponse deleteById(Long id) {
         if (!videoRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Video with id =%s not fount"));
+            throw new NotFoundException(String.format("Video with id =%s not found",id));
         }
         videoRepository.deleteVideoById(id);
         return new SimpleResponse("Video deleted");
