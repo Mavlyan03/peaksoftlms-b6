@@ -1,7 +1,7 @@
 insert into users(id, email, password, role)
-VALUES (1, 'admin@gmail.com', '$2a$12$A1FaB5p5WA2Ydropw14niulfjFP3kgxRGpS0ru4N6YiYc85DGS0tK', 'ADMIN'),
+VALUES (1, 'admin@gmail.com', '$2a$12$3A5GynoSX9x.o1Tgq4G1juWOLfL5ozqZqjib1fBYm52BACpVQS.Jm', 'ADMIN'),
        (2, 'instructor@gmail.com', '$2a$12$c2vzSJ1UIpODKy4dLqa50OMKTBnMQM7dx6lexC013ykPi9bJEAq4q', 'INSTRUCTOR'),
-       (3, 'aiperi@gmail.com', '$2a$12$qvTo/yV6sm2euRGC5cm2.Ou1sfiHTEFv2iKyZPnDnI2UK2cEV3Ife', 'STUDENT');
+       (3, 'student@gmail.com', '$2a$12$MxbOPXg/taPYo/dynHIfsuiKLJefWaZ6CcpruHeMpEqos50a7fr6m', 'STUDENT');
 
 insert into groups(id, date_of_start, group_description, group_image, group_name)
 values (1, '2022/11/10', 'Group Description', 'Group image link', 'Group name');
@@ -10,10 +10,10 @@ insert into courses(id, course_description, course_image, course_name, date_of_s
 values (1, 'IT language', 'link image', 'Java', '2022/11/10');
 
 insert into instructors(id, first_name, last_name, phone_number, specialization, user_id)
-values (1, 'Chyngyz', 'Sharshekeev', '555231245', 'Java developer', 2);
+values (1, 'Instructor name', 'Instructor lastname', '555231245', 'Java developer', 2);
 
 insert into students(id, first_name, last_name, phone_number, study_format, group_id, user_id)
-values (1, 'Aiperi', 'Djanybekova', ' 556545652', 'OFFLINE', 1, 1);
+values (1, 'Student name', 'Student lastname', ' 556545652', 'OFFLINE', 1, 3);
 
 insert into lessons(id, lesson_name, course_id)
 values (1, 'AWS', 1);

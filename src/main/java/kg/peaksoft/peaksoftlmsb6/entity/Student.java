@@ -36,7 +36,6 @@ public class Student {
             MERGE,
             DETACH})
     private Group group;
-
     @OneToOne(cascade = ALL)
     private User user;
 
