@@ -1,6 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
-import com.poiji.annotation.ExcelRow;
+import com.poiji.annotation.*;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 import static javax.persistence.CascadeType.*;
 
@@ -17,26 +18,33 @@ import static javax.persistence.CascadeType.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@ExcelSheet("Students")
 public class Student {
 
-    @ExcelRow
+
     @Id
     @SequenceGenerator(name = "student_seq", sequenceName = "student_seq", allocationSize = 1 , initialValue = 2)
     @GeneratedValue(generator = "student_seq", strategy = GenerationType.SEQUENCE)
+    @ExcelRow
     private Long id;
 
+    @ExcelCell(0)
     private String firstName;
 
+    @ExcelCell(1)
     private String lastName;
 
+    @ExcelCell(2)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
+    @ExcelCell(3)
     private StudyFormat studyFormat;
 
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
+    @ExcelCell(3)
     private Group group;
 
     @OneToOne(cascade = {
@@ -45,6 +53,7 @@ public class Student {
     private Results results;
 
     @OneToOne(cascade = ALL)
+    @ExcelCell(3)
     private User user;
 
     public Student(StudentRequest request){
@@ -58,5 +67,7 @@ public class Student {
         user1.setRole(Role.STUDENT);
         this.user = user1;
     }
+
+
 
 }
