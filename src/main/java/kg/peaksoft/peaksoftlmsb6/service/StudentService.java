@@ -77,7 +77,6 @@ public class StudentService {
         } else {
             return studentRepository.findStudentByStudyFormat(studyFormat);
         }
-
     }
 
 }

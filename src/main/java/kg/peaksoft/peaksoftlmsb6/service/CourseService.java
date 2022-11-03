@@ -51,7 +51,9 @@ public class CourseService {
             instructor.getCourses().remove(course);
         }
         for (Group group : course.getGroup()) {
-            group.getCourses().remove(course);
+            if(group != null) {
+                group.getCourses().remove(course);
+            }
         }
         for(Lesson lesson : course.getLessons()) {
             linkRepository.deleteById(lesson.getLink().getId());
@@ -160,15 +162,15 @@ public class CourseService {
             case "ADMIN":
                 return courseRepository.getAllCourses();
             case "STUDENT":
-                Student student = studentRepository.findByEmail(user1.getEmail()).orElseThrow(
-                        () -> new NotFoundException("Student not found"));
+                Student student = studentRepository.findByUserId(user1.getId()).orElseThrow(
+                        () -> new NotFoundException(String.format("Student with email =%s not found",user1.getId())));
                 for (Course course : student.getGroup().getCourses()) {
                     courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
-                        .orElseThrow(() -> new NotFoundException("Instructor not found"));
+                        .orElseThrow(() -> new NotFoundException(String.format("Instructor with id =%s not found", user1.getId())));
                 for (Course course : instructor.getCourses()) {
                     courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }

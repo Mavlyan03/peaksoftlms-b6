@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/group")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Group CRUD", description = "ADMIN group api endpoints")
+@Tag(name = "Group API", description = "ADMIN group api endpoints")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class GroupApi {
 

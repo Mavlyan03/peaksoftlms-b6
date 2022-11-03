@@ -4,6 +4,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.GroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.GroupResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
+import kg.peaksoft.peaksoftlmsb6.entity.Course;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
@@ -14,9 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 @Service
@@ -36,10 +34,16 @@ public class GroupService {
     public SimpleResponse deleteById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Group with id %s not found",id)));
+        for(Course course : group.getCourses()) {
+            if(course != null) {
+                course.getGroup().remove(group);
+            }
+        }
         for(Student student : group.getStudents()) {
-            Results results = resultRepository.findResultByTestId(student.getId());
-            student.setResults(null);
-            results.setStudent(null);
+            if(resultRepository.findResultByStudentsId(student.getId()) != null) {
+                Results results = resultRepository.findResultByStudentsId(student.getId());
+                results.setStudent(null);
+            }
         }
         groupRepository.delete(group);
         return new SimpleResponse("Group deleted");
