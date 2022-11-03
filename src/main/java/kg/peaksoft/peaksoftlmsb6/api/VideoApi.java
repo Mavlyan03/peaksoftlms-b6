@@ -22,7 +22,7 @@ public class VideoApi {
 
     @PostMapping
     @Operation(summary = "Save video",
-            description = "To save a new video by request")
+            description = "To save a new video by Instructor")
     public VideoResponse saveVideo(@RequestBody VideoRequest request) {
         return videoService.saveVideo(request);
     }
