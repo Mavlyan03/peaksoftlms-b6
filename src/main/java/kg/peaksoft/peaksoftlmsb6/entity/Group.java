@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import com.poiji.annotation.ExcelCellName;
 import kg.peaksoft.peaksoftlmsb6.dto.request.GroupRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

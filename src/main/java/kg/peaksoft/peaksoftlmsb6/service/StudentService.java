@@ -1,5 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
+import com.poiji.bind.Poiji;
+import com.poiji.option.PoijiOptions;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
@@ -8,6 +10,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
+import kg.peaksoft.peaksoftlmsb6.poiji.MyFormatting;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
@@ -16,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -71,4 +75,11 @@ public class StudentService {
     public List<StudentResponse> getAllStudent() {
         return studentRepository.getAllStudents();
     }
+
+    PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
+            .withFormatting(new MyFormatting())
+            .build();
+    List<Student> students = Poiji.fromExcel(new File("students.xls"), Student.class, options);
+    Student student = students.get(0);
+
 }
