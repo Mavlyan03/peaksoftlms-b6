@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/presentation")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Instructor API", description = "Instructor api endpoints")
+@Tag(name = "Presentation API", description = "Instructor api endpoints")
 @PreAuthorize("hasAuthority('INSTRUCTOR')")
 public class PresentationApi {
 
@@ -22,7 +22,7 @@ public class PresentationApi {
 
     @PostMapping
     @Operation(summary = "Save presentation",
-            description = "To save a new presentation by request")
+            description = "To save a new presentation by Instructor")
     public PresentationResponse savePresentation(@RequestBody PresentationRequest request) {
         return presentationService.savePresentation(request);
     }
@@ -44,6 +44,7 @@ public class PresentationApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get presentation by id",
             description = "Instructor get presentation by id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
     public PresentationResponse getPresentationById(@PathVariable("id") Long id) {
         return presentationService.getById(id);
     }

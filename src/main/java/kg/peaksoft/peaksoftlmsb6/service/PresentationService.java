@@ -35,10 +35,6 @@ public class PresentationService {
     public PresentationResponse updatePresentation(Long id, PresentationRequest request) {
         Presentation presentation = presentationRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Presentation with id =%s not found",id)));
-        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException(String.format("Lesson with id =%s not found",request.getLessonId())));
-        lesson.setPresentation(presentation);
-        presentation.setLesson(lesson);
         presentationRepository.update(id,
                 request.getPresentationName(),
                 request.getDescription(),
@@ -51,10 +47,10 @@ public class PresentationService {
     }
 
     public SimpleResponse deleteById(Long id) {
-        Presentation presentation = presentationRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Presentation with id =%s not found",id)));
-        presentation.setLesson(null);
-        presentationRepository.deletePresentationById(presentation.getId());
+        if (!presentationRepository.existsById(id)) {
+            throw new NotFoundException(String.format("Presentation with id =%s not found",id));
+        }
+        presentationRepository.deletePresentationById(id);
         return new SimpleResponse("Presentation deleted");
     }
 
