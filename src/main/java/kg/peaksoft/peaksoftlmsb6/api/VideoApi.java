@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/video")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Instructor API", description = "Instructor api endpoints")
+@Tag(name = "Video API", description = "Video api endpoints")
 @PreAuthorize("hasAuthority('INSTRUCTOR')")
 public class VideoApi {
 
@@ -22,7 +22,7 @@ public class VideoApi {
 
     @PostMapping
     @Operation(summary = "Save video",
-            description = "To save a new video by Instructor")
+            description = "To save a new video by INSTRUCTOR")
     public VideoResponse saveVideo(@RequestBody VideoRequest request) {
         return videoService.saveVideo(request);
     }
@@ -44,6 +44,7 @@ public class VideoApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get video by id",
             description = "Instructor get video by id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
     public VideoResponse getVideoById(@PathVariable("id") Long id) {
         return videoService.getById(id);
     }
