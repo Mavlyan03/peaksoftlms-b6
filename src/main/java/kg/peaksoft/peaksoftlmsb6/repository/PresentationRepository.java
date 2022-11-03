@@ -29,8 +29,10 @@ public interface PresentationRepository extends JpaRepository<Presentation, Long
                 @Param("description") String description,
                 @Param("link") String link);
 
+
     @Modifying
     @Transactional
     @Query("delete from Presentation where id = ?1")
     void deletePresentationById(Long id);
+
 }
