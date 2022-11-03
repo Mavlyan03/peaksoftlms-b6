@@ -7,6 +7,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.*;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.OptionRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.QuestionRepository;
@@ -30,17 +31,30 @@ public class TestService {
     private final OptionRepository optionRepository;
     private final StudentRepository studentRepository;
 
-    public TestResponse save(TestRequest request) {
-        return null;
+    public TestResponse saveTest(TestRequest request) {
+        Test test = testRepository.save(convertToEntity(request));
+        return new TestResponse(test.getId(), test.getTestName());
+    }
+    private TestInnerPageResponse convertToResponse(Test test) {
+        TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
+        List<QuestionResponse> questionResponses = new ArrayList<>();
+        for(Question question : test.getQuestion()) {
+            QuestionResponse questionResponse = new QuestionResponse(
+                    question.getId(),
+                    question.getQuestion(),
+                    question.getQuestionType());
+            List<OptionResponse> optionResponses = new ArrayList<>();
+            for(Option option : question.getOptions()) {
+                OptionResponse optionResponse = new OptionResponse(option.getId(), option.getOptionValue());
+                optionResponses.add(optionResponse);
+            }
+            questionResponse.setOptionResponses(optionResponses);
+            questionResponses.add(questionResponse);
+        }
+        testResponse.setQuestions(questionResponses);
+        return testResponse;
     }
 
-//    public TestResponse save(TestRequest request) {
-//        Test test = testRepository.save(convertToEntity(request));
-//        return new TestResponse(test.getId(),test.getTestName());
-//    }
-
-
-//
 //    private TestInnerPageResponse convertToResponse(Test test) {
 //        TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
 //        List<QuestionResponse> questionResponseList = new ArrayList<>();
@@ -66,9 +80,26 @@ public class TestService {
         for(QuestionRequest questionRequest : request.getQuestions()) {
             Question question = new Question(questionRequest.getQuestion(),questionRequest.getQuestionType());
             if(question.getQuestionType().equals(QuestionType.SINGLETON)) {
-
+                int counter = 0;
+                for(OptionRequest optionRequest : questionRequest.getOptions()) {
+                    Option option = new Option(optionRequest.getOption(),optionRequest.getIsTrue());
+                    question.getOptions().add(option);
+                    if(optionRequest.getIsTrue().equals(true)) {
+                        counter++;
+                    }
+                }
+                if(counter > 1) {
+                    throw new BadRequestException("Bad credentials");
+                }
+            } else {
+                for(OptionRequest optionRequest : questionRequest.getOptions()) {
+                    Option option = new Option(optionRequest.getOption(),optionRequest.getIsTrue());
+                    question.getOptions().add(option);
+                }
             }
+            test.getQuestion().add(question);
         }
+        return test;
     }
 //    private Test convertToEntity(TestRequest request) {
 //        Test test = new Test(request.getTestName());
@@ -83,30 +114,4 @@ public class TestService {
 //        return test;
 //    }
 
-//    public ResultResponse passTest(PassTestRequest testRequest, Authentication authentication) {
-//        User user = (User) authentication.getPrincipal();
-//        Integer countOfCorrectAnswers = 0;
-//        Test test = testRepository.findById(testRequest.getTestId()).orElseThrow(
-//                () -> new NotFoundException(String.format("Test with id =%s not found",testRequest.getTestId())));
-//        for(Map.Entry<Long, List<Long>> answer : testRequest.getAnswers().entrySet()) {
-//            for(Long optionId : answer.getValue()) {
-//                Option option = optionRepository.findById(optionId).orElseThrow(
-//                        () -> new NotFoundException(String.format("Option with id =%s not found")));
-//                if(option.getIsTrue()) {
-//                    countOfCorrectAnswers++;
-//                }
-//            }
-//        }
-//        Student student = studentRepository.findByEmail(user.getEmail()).orElseThrow(
-//                () -> new NotFoundException(String.format("Student with email =%s not found",user.getEmail())));
-//        Results results = new Results();
-//    }
-
-//        Student student = studentRepository.findStudentByAuthInfoEmail(authInfo.getEmail());
-//        Result result = new Result(countOfCorrectAnswers,test.getQuestions().size()+1-countOfCorrectAnswers,
-//                countOfCorrectAnswers,student);
-//        resultRepository.save(result);
-//        return new ResultResponse(student.getFirstName(), countOfCorrectAnswers,
-//                test.getQuestions().size()-countOfCorrectAnswers,countOfCorrectAnswers);
-//    }
 }

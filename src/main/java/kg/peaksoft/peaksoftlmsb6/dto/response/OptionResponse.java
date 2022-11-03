@@ -10,7 +10,7 @@ import lombok.Setter;
 public class OptionResponse {
     private Long id;
     private String optionValue;
-    private String isTrue;
+    private Boolean isTrue;
 
     public OptionResponse(Long id, String optionValue) {
         this.id = id;
