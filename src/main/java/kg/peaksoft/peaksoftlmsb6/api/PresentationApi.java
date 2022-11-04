@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/presentation")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Presentation API", description = "Instructor api endpoints")
+@Tag(name = "Presentation API", description = "Presentation api endpoints")
 @PreAuthorize("hasAuthority('INSTRUCTOR')")
 public class PresentationApi {
 
