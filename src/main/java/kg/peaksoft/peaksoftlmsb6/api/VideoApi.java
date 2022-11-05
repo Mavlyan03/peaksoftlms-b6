@@ -23,7 +23,7 @@ public class VideoApi {
     @PostMapping
     @Operation(summary = "Save video",
             description = "To save a new video by INSTRUCTOR")
-    public VideoResponse saveVideo(@RequestBody VideoRequest request) {
+    public VideoResponse createVideo(@RequestBody VideoRequest request) {
         return videoService.saveVideo(request);
     }
 
@@ -46,6 +46,6 @@ public class VideoApi {
             description = "Instructor get video by id")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
     public VideoResponse getVideoById(@PathVariable("id") Long id) {
-        return videoService.getById(id);
+        return videoService.getVideoById(id);
     }
 }

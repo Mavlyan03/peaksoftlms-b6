@@ -53,7 +53,7 @@ public class VideoService {
         return new SimpleResponse("Video deleted");
     }
 
-    public VideoResponse getById(Long id) {
+    public VideoResponse getVideoById(Long id) {
         Video video = videoRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Video with id =%s not found", id)));
         return videoRepository.getVideo(video.getId());

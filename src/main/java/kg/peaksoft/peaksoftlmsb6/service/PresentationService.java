@@ -54,7 +54,7 @@ public class PresentationService {
         return new SimpleResponse("Presentation deleted");
     }
 
-    public PresentationResponse getById(Long id) {
+    public PresentationResponse getPresentationById(Long id) {
         Presentation presentation = presentationRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Presentation with id =%s not found",id)));
         return presentationRepository.getPresentation(presentation.getId());

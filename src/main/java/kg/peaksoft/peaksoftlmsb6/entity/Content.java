@@ -34,4 +34,10 @@ public class Content {
             REFRESH,
             DETACH})
     private Task task;
+
+    public Content(String contentName, ContentFormat contentFormat, String contentValue) {
+        this.contentName = contentName;
+        this.contentFormat = contentFormat;
+        this.contentValue = contentValue;
+    }
 }

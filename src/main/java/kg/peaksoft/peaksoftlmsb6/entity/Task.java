@@ -1,6 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,6 +37,10 @@ public class Task {
             REFRESH,
             DETACH})
     private Lesson lesson;
+
+    public Task(TaskRequest request) {
+        this.taskName = request.getTaskName();
+    }
 
     public void addContent(Content content) {
         if(this.contents == null) {
