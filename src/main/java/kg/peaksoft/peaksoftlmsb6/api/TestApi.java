@@ -3,6 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TestInnerPageResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TestResponse;
 import kg.peaksoft.peaksoftlmsb6.service.TestService;
@@ -26,6 +27,14 @@ public class TestApi {
     public TestResponse createTask(@RequestBody TestRequest request) {
         return testService.createTest(request);
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete test",
+            description = "Instructor delete test by id")
+    public SimpleResponse deleteTest(@PathVariable Long id) {
+        return testService.deleteById(id);
+    }
+
 
     @GetMapping("/{id}")
     @Operation(summary = "Get test by id",

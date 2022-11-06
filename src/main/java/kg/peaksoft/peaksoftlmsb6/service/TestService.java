@@ -3,10 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 import kg.peaksoft.peaksoftlmsb6.dto.request.OptionRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.QuestionRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.response.OptionResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.QuestionResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.TestInnerPageResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.TestResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.*;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
 import kg.peaksoft.peaksoftlmsb6.entity.Option;
 import kg.peaksoft.peaksoftlmsb6.entity.Question;
@@ -14,9 +11,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.Test;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
-import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
-import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
-import kg.peaksoft.peaksoftlmsb6.repository.TestRepository;
+import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +25,12 @@ import java.util.List;
 public class TestService {
     private final TestRepository testRepository;
     private final StudentRepository studentRepository;
+    private final QuestionRepository questionRepository;
+    private final OptionRepository optionRepository;
     private final LessonRepository lessonRepository;
 
     public TestResponse createTest(TestRequest request) {
-        Lesson lesson = lessonRepository.findLessonById(request.getLessonId()).orElseThrow(
+        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> new NotFoundException(String.format("Lesson with id =%s not found",request.getLessonId())));
         Test test = convertToEntity(request);
         lesson.setTest(test);
@@ -47,6 +44,18 @@ public class TestService {
                 () -> new RuntimeException("not found")
         ));
     }
+
+    public SimpleResponse deleteById(Long id) {
+       Test test = testRepository.findById(id).orElseThrow(
+               () -> new NotFoundException(String.format("Test with id =%s not found",id)));
+       for(Question question : test.getQuestion()) {
+           test.getQuestion().remove(question);
+           questionRepository.deleteQuestionById(question.getId());
+       }
+        testRepository.deleteTestById(id);
+       return new SimpleResponse("Test deleted");
+    }
+
     private TestInnerPageResponse convertToResponse(Test test) {
         TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
         List<QuestionResponse> questionResponses = new ArrayList<>();

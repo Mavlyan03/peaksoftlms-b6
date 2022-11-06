@@ -24,7 +24,7 @@ public class Test {
 
     private String testName;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true)
+    @OneToMany(cascade = ALL)
     private List<Question> question;
 
     @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "test")
