@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
@@ -13,4 +14,7 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Transactional
     @Query("delete from Lesson l where l.course.id = ?1")
     void deleteLessonById(Long id);
+
+    @Query("select l from Lesson l where l.id = ?1")
+    Optional<Lesson> findLessonById(Long id);
 }

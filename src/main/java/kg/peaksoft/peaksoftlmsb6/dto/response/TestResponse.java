@@ -1,14 +1,18 @@
 package kg.peaksoft.peaksoftlmsb6.dto.response;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class TestResponse {
-    private Long id;
+    private Long testId;
     private String testName;
-    private List<QuestionResponse> questionResponseList;
+//    private List<QuestionResponse> questionResponseList;
 
-    public TestResponse(Long id, String testName) {
-        this.id = id;
-        this.testName = testName;
-    }
+
 }

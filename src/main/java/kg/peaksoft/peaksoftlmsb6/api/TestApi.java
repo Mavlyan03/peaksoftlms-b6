@@ -20,18 +20,18 @@ public class TestApi {
 
     private final TestService testService;
 
-//    @PostMapping
-//    @Operation(summary = "Save test",
-//            description = "To save a new test by request")
-//    public TestResponse save(@RequestBody TestRequest request) {
-//        return testService.save(request);
-//    }
+    @PostMapping
+    @Operation(summary = "Save test",
+            description = "To save a new test by request")
+    public TestResponse createTask(@RequestBody TestRequest request) {
+        return testService.createTest(request);
+    }
 
-//    @GetMapping("/{id}")
-//    @Operation(summary = "Get test by id",
-//            description = "Get test by id")
-//    public TestInnerPageResponse getById(@PathVariable Long id) {
-//        return testService.getTestById(id);
-//    }
+    @GetMapping("/{id}")
+    @Operation(summary = "Get test by id",
+            description = "Get test by id")
+    public TestInnerPageResponse getById(@PathVariable Long id) {
+        return testService.getTestById(id);
+    }
 
 }

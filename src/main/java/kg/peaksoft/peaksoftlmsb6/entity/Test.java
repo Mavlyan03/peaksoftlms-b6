@@ -27,10 +27,13 @@ public class Test {
     @OneToMany(cascade = ALL, orphanRemoval = true)
     private List<Question> question;
 
+    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "test")
+    private List<Results> results;
+
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH})
+            DETACH,PERSIST})
     private Lesson lesson;
 
     private Boolean isEnable;

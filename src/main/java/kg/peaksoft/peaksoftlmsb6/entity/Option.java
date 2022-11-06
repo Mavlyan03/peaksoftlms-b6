@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Option {
     @Id
-    @SequenceGenerator(name = "option_seq", sequenceName = "option_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "option_seq", sequenceName = "option_seq", allocationSize = 1, initialValue = 3)
     @GeneratedValue(generator = "option_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

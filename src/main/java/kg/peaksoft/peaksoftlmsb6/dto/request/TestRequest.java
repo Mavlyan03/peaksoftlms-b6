@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TestRequest {
+    private Long lessonId;
     private String testName;
     private List<QuestionRequest> questions;
 
