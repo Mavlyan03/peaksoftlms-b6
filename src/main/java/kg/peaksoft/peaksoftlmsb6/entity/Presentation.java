@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.PresentationRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,4 +33,10 @@ public class Presentation {
             REFRESH,
             DETACH})
     private Lesson lesson;
+
+    public Presentation(PresentationRequest request) {
+        this.presentationName = request.getPresentationName();
+        this.presentationDescription = request.getDescription();
+        this.presentationLink = request.getPresentationLink();
+    }
 }
