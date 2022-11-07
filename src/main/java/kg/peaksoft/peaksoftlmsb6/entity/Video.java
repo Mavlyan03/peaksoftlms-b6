@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.VideoRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,4 +36,10 @@ public class Video {
             REFRESH,
             DETACH})
     private Lesson lesson;
+
+    public Video(VideoRequest request) {
+        this.videoName = request.getVideoName();
+        this.videoDescription = request.getDescription();
+        this.videoLink = request.getLink();
+    }
 }

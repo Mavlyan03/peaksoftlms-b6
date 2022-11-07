@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.LinkRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,4 +32,9 @@ public class Link {
             REFRESH,
             DETACH})
     private Lesson lesson;
+
+    public Link(LinkRequest request) {
+        this.linkText = request.getLinkText();
+        this.link = request.getLink();
+    }
 }

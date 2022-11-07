@@ -52,5 +52,4 @@ public class InstructorApi {
         return instructorService.getAllInstructors();
     }
 
-
 }
