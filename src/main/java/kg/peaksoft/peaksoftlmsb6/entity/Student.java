@@ -44,10 +44,10 @@ public class Student {
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
-    @ExcelCell(3)
+    @ExcelCellRange
     private Group group;
     @OneToOne(cascade = ALL)
-    @ExcelCell(3)
+    @ExcelCellRange
     private User user;
 
     public Student(StudentRequest request){
