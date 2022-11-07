@@ -84,8 +84,8 @@ public class StudentService {
         }
     }
 
-    public void importExcel() throws IOException {
-        String path ="C:\\Users\\user\\IdeaProjects\\peaksoftlms-b6\\students.xlsx";
+    public List<StudentResponse> importExcel(MultipartFile file, Long id) throws IOException {
+        String path = "C:\\Users\\user\\IdeaProjects\\peaksoftlms-b6\\students.xlsx";
         FileInputStream inputStream = new FileInputStream(path);
         Workbook workbook = WorkbookFactory.create(inputStream, "123456789");
         for (Sheet sheet : workbook) {
@@ -94,6 +94,8 @@ public class StudentService {
         Sheet sheet = workbook.getSheetAt(0);
         DataFormatter dataFormatter = new DataFormatter();
         for (Row row : sheet) {
+            User user = new User();
+            user.setEmail(row.getCell(6).getStringCellValue());
             for (Cell cell : row) {
                 String cellValue = dataFormatter.formatCellValue(cell);
                 System.out.print(cellValue);
@@ -102,6 +104,11 @@ public class StudentService {
         }
         workbook.close();
         inputStream.close();
+        List<StudentResponse> studentResponses = new ArrayList<>();
+        for (Student student: studentRepository.findAll()) {
+            studentResponses.add(studentRepository.getStudent(student.getId()));
+        }
+        return studentResponses;
     }
 }
     //        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()

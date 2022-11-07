@@ -10,6 +10,7 @@ import kg.peaksoft.peaksoftlmsb6.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,11 +56,11 @@ public class StudentApi {
     }
 
 
-    @PostMapping ("/import")
+    @PostMapping ("/import/{id}")
     @Operation(summary = "Import excel file",
              description = "Import excel file in java object")
-    public void importExcel() throws IOException {
-      studentService.importExcel();
+    public List<StudentResponse> importExcel(@ModelAttribute MultipartFile file,@PathVariable Long id) throws IOException {
+        return studentService.importExcel(file, id);
     }
 
 }
