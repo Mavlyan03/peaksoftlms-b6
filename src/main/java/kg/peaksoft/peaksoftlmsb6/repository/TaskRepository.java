@@ -1,7 +1,5 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
-import kg.peaksoft.peaksoftlmsb6.dto.response.LinkResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

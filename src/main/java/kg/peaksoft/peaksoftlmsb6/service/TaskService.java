@@ -8,6 +8,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Content;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
 import kg.peaksoft.peaksoftlmsb6.entity.Task;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.ContentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
@@ -35,20 +36,24 @@ public class TaskService {
         return convertToResponse(task);
     }
 
-
     private Task convertToEntity(TaskRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> new NotFoundException(String.format("Lesson with id =%s not found",request.getLessonId())));
-        Task task = new Task(request);
-        lesson.setTask(task);
-        task.setLesson(lesson);
-        for(ContentRequest contentRequest : request.getContentRequests()) {
-            Content content = new Content(
-                    contentRequest.getContentName(),
-                    contentRequest.getContentFormat(),
-                    contentRequest.getContentValue());
-            task.addContent(content);
-            content.setTask(task);
+        Task task = null;
+        if (lesson.getTask() == null) {
+            task = new Task(request);
+            lesson.setTask(task);
+            task.setLesson(lesson);
+            for (ContentRequest contentRequest : request.getContentRequests()) {
+                Content content = new Content(
+                        contentRequest.getContentName(),
+                        contentRequest.getContentFormat(),
+                        contentRequest.getContentValue());
+                task.addContent(content);
+                content.setTask(task);
+            }
+        }else {
+            throw new BadRequestException("У урока уже есть задача");
         }
         return task;
     }
@@ -84,20 +89,23 @@ public class TaskService {
                         request.getContentValue());
             }
         }
-        return convertUpdateToResponse(task.getId(), task);
+        return convertUpdateToResponse(task.getId(), taskRequest);
     }
 
 
-    private TaskResponse convertUpdateToResponse(Long id, Task task) {
-        TaskResponse taskResponse = new TaskResponse(id, task.getTaskName());
+    private TaskResponse convertUpdateToResponse(Long id, TaskRequest request) {
+        Task task = taskRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(String.format("Task with id =%s not found",id)));
+        TaskResponse taskResponse = new TaskResponse(id, request.getTaskName());
         List<ContentResponse> contentResponses = new ArrayList<>();
-        for(Content content : task.getContents()) {
-            ContentResponse contentResponse = new ContentResponse(
-                    content.getId(),
-                    content.getContentName(),
-                    content.getContentFormat(),
-                    content.getContentValue());
-            contentResponses.add(contentResponse);
+        for(ContentRequest contentRequest : request.getContentRequests()) {
+            for(Content content : task.getContents()) {
+                contentResponses.add(new ContentResponse(
+                        content.getId(),
+                        contentRequest.getContentName(),
+                        contentRequest.getContentFormat(),
+                        contentRequest.getContentValue()));
+            }
         }
         taskResponse.setContentResponses(contentResponses);
         return taskResponse;

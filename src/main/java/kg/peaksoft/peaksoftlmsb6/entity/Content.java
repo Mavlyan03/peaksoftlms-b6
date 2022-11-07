@@ -17,11 +17,14 @@ import static javax.persistence.CascadeType.*;
 public class Content {
 
     @Id
-    @SequenceGenerator(name = "content-seq", sequenceName = "content_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "content_seq", sequenceName = "content_seq", allocationSize = 1, initialValue = 2)
     @GeneratedValue(generator = "content_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String contentName;
+
+
+
 
     @Enumerated(EnumType.STRING)
     private ContentFormat contentFormat;
