@@ -39,6 +39,7 @@ public class UserService  {
                 new UsernamePasswordAuthenticationToken(
                         userRequest.getEmail(),
                         userRequest.getPassword()));
+        System.out.println(userRequest.getEmail());
         User user = userRepository.findByEmail(authentication.getName())
                 .orElseThrow(() -> new BadCredentialsException("bad credentials"));
         String token = jwtTokenUtil.generateToken(user.getEmail());
