@@ -4,10 +4,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.OptionRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.QuestionRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.*;
-import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
-import kg.peaksoft.peaksoftlmsb6.entity.Option;
-import kg.peaksoft.peaksoftlmsb6.entity.Question;
-import kg.peaksoft.peaksoftlmsb6.entity.Test;
+import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
@@ -27,6 +24,7 @@ public class TestService {
     private final StudentRepository studentRepository;
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
+    private final ResultRepository resultRepository;
     private final LessonRepository lessonRepository;
 
     public TestResponse createTest(TestRequest request) {
@@ -48,11 +46,12 @@ public class TestService {
     public SimpleResponse deleteById(Long id) {
        Test test = testRepository.findById(id).orElseThrow(
                () -> new NotFoundException(String.format("Test with id =%s not found",id)));
-       for(Question question : test.getQuestion()) {
-           test.getQuestion().remove(question);
-           questionRepository.deleteQuestionById(question.getId());
+       for(Results results : test.getResults()) {
+           test.setResults(null);
+           results.setTest(null);
+           resultRepository.deleteById(results.getId());
        }
-        testRepository.deleteTestById(id);
+       testRepository.deleteTestById(id);
        return new SimpleResponse("Test deleted");
     }
 

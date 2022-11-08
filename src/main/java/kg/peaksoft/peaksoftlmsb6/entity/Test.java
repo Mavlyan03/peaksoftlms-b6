@@ -27,7 +27,7 @@ public class Test {
     @OneToMany(cascade = ALL)
     private List<Question> question;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true, mappedBy = "test")
+    @OneToMany(cascade = ALL, mappedBy = "test")
     private List<Results> results;
 
     @OneToOne(cascade = {
