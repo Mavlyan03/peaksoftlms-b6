@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.LinkResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
 import kg.peaksoft.peaksoftlmsb6.entity.Link;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.LinkRepository;
@@ -23,17 +24,22 @@ public class LinkService {
 
     public LinkResponse createLink(LinkRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException(String.format("Lesson with id =%s not found",request.getLessonId())));
-        Link link = new Link(request);
-        lesson.setLink(link);
-        link.setLesson(lesson);
+                () -> new NotFoundException(String.format("Lesson with id =%s not found", request.getLessonId())));
+        Link link = null;
+        if (lesson.getLink() == null) {
+            link = new Link(request);
+            lesson.setLink(link);
+            link.setLesson(lesson);
+        } else {
+            throw new BadRequestException("У урока уже есть ссылка");
+        }
         linkRepository.save(link);
         return linkRepository.getLink(link.getId());
     }
 
     public LinkResponse updateLink(Long id, LinkRequest request) {
         Link link = linkRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Link with id =%s not found",id)));
+                () -> new NotFoundException(String.format("Link with id =%s not found", id)));
         linkRepository.update(
                 link.getId(),
                 request.getLinkText(),
@@ -46,8 +52,8 @@ public class LinkService {
     }
 
     public SimpleResponse deleteById(Long id) {
-        if(!linkRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Link with id =%s not found",id));
+        if (!linkRepository.existsById(id)) {
+            throw new NotFoundException(String.format("Link with id =%s not found", id));
         }
         linkRepository.deleteLinkById(id);
         return new SimpleResponse("Link deleted");
@@ -55,7 +61,7 @@ public class LinkService {
 
     public LinkResponse getLinkById(Long id) {
         Link link = linkRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Link with id =%s not found",id)));
+                () -> new NotFoundException(String.format("Link with id =%s not found", id)));
         return linkRepository.getLink(link.getId());
     }
 }
