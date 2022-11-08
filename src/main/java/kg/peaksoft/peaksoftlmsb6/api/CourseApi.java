@@ -102,7 +102,6 @@ public class CourseApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get course by id",
             description = "Get course by id for admin")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public CourseResponse getCourseById(@PathVariable Long id) {
         return courseService.getById(id);
     }
