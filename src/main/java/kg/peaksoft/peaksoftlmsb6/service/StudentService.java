@@ -43,7 +43,7 @@ public class StudentService {
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Student with id =%s not found", studentRequest.getId())));
+                () -> new NotFoundException(String.format("Student with id =%s not found",id)));
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException(String.format("Group not found with id=%s", studentRequest.getGroupId())));
         student.setGroup(group);
