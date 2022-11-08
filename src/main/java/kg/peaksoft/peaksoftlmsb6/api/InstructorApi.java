@@ -27,7 +27,7 @@ public class InstructorApi {
     @Operation(summary = "Save instructor",
             description = "To save instructor by request")
     public InstructorResponse createInstructor(@RequestBody @Valid InstructorRequest request) {
-        return instructorService.addInstructor(request);
+        return instructorService.createInstructor(request);
     }
 
     @PutMapping("/{id}")
@@ -50,6 +50,13 @@ public class InstructorApi {
             description = "Admin get all instructors")
     public List<InstructorResponse> getAllInstructors() {
         return instructorService.getAllInstructors();
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get instructor by id",
+            description = "Get instructor by id for admin")
+    public InstructorResponse getInstructorById(@PathVariable Long id) {
+        return instructorService.getById(id);
     }
 
 }

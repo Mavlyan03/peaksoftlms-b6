@@ -53,4 +53,11 @@ public class StudentApi {
         return studentService.getAllStudent(studyFormat);
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get student by id",
+            description = "Get student by id for admin")
+    public StudentResponse getStudentById(@PathVariable Long id) {
+        return studentService.getById(id);
+    }
+
 }

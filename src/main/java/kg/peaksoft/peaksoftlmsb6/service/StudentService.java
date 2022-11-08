@@ -79,4 +79,10 @@ public class StudentService {
         }
     }
 
+    public StudentResponse getById(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(String.format("Студент с id = %s не найден",id)));
+        return studentRepository.getStudent(student.getId());
+    }
+
 }
