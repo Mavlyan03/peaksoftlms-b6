@@ -82,7 +82,7 @@ public class CourseService {
 
     public CourseResponse getById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Course not found",id)));
+                () -> new NotFoundException(String.format("Курс с id = %s не найден",id)));
         return courseRepository.getCourse(course.getId());
     }
 
