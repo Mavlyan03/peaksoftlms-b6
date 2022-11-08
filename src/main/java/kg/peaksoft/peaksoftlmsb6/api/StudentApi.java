@@ -10,9 +10,7 @@ import kg.peaksoft.peaksoftlmsb6.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -28,7 +26,7 @@ public class StudentApi {
     @PostMapping
     @Operation(summary = "Save student",
             description = "To save a new student by admin")
-    public StudentResponse createStudent(@RequestBody StudentRequest studentRequest)  {
+    public StudentResponse createStudent(@RequestBody StudentRequest studentRequest){
         return studentService.createStudent(studentRequest);
     }
 
@@ -53,14 +51,6 @@ public class StudentApi {
               description = "Get all students with filter by study format")
     public List<StudentResponse> getStudentByStudyFormat(@RequestParam StudyFormat studyFormat){
         return studentService.getAllStudent(studyFormat);
-    }
-
-
-    @PostMapping ("/import")
-    @Operation(summary = "Import excel file",
-             description = "Import excel file in java object")
-    public List<StudentResponse> importExcel(@ModelAttribute MultipartFile file) throws IOException {
-        return studentService.importExcel(file);
     }
 
 }

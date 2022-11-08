@@ -29,7 +29,7 @@ public class InstructorService {
     private final UserRepository userRepository;
 
 
-    public InstructorResponse addInstructor(InstructorRequest request) {
+    public InstructorResponse createInstructor(InstructorRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
         instructorRepository.save(instructor);
@@ -63,5 +63,12 @@ public class InstructorService {
 
     public List<InstructorResponse> getAllInstructors() {
         return instructorRepository.getAllInstructors();
+    }
+
+
+    public InstructorResponse getById(Long id) {
+        Instructor instructor = instructorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Инструктор с id =%s не найден", id)));
+        return instructorRepository.getInstructor(instructor.getId());
     }
 }
