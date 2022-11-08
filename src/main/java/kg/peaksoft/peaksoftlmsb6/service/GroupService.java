@@ -33,14 +33,14 @@ public class GroupService {
 
     public SimpleResponse deleteById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Group with id %s not found",id)));
-        for(Course course : group.getCourses()) {
-            if(course != null) {
+                () -> new NotFoundException(String.format("Group with id %s not found", id)));
+        for (Course course : group.getCourses()) {
+            if (course != null) {
                 course.getGroup().remove(group);
             }
         }
-        for(Student student : group.getStudents()) {
-            if(resultRepository.findResultByStudentsId(student.getId()) != null) {
+        for (Student student : group.getStudents()) {
+            if (resultRepository.findResultByStudentsId(student.getId()) != null) {
                 Results results = resultRepository.findResultByStudentsId(student.getId());
                 results.setStudent(null);
             }
@@ -51,7 +51,7 @@ public class GroupService {
 
     public GroupResponse updateGroup(Long id, GroupRequest request) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Group with id %s not found",id)));
+                () -> new NotFoundException(String.format("Group with id %s not found", id)));
         groupRepository.update(
                 group.getId(),
                 request.getGroupName(),
@@ -68,12 +68,18 @@ public class GroupService {
 
     public List<StudentResponse> getAllStudentsFromGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Group with id %s not found",id)));
+                () -> new NotFoundException(String.format("Group with id %s not found", id)));
         return groupRepository.getStudentsByGroupId(group.getId());
     }
 
     public List<GroupResponse> getAllGroups() {
         return groupRepository.getAllGroups();
+    }
+
+    public GroupResponse getById(Long id) {
+        Group group = groupRepository.findById(id).orElseThrow(
+                () -> new NotFoundException(String.format("Группа с id = %s не найдена", id)));
+        return groupRepository.getGroup(group.getId());
     }
 
 }

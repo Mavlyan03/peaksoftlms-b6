@@ -60,4 +60,11 @@ public class GroupApi {
         return groupService.getAllStudentsFromGroup(id);
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Get group by id",
+            description = "Get group by id for admin")
+    public GroupResponse getGroupById(@PathVariable Long id) {
+        return groupService.getById(id);
+    }
+
 }

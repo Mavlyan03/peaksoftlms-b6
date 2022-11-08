@@ -98,4 +98,12 @@ public class CourseApi {
     public SimpleResponse deleteGroupFromCourse(@PathVariable Long id) {
         return courseService.deleteGroupFromCourse(id);
     }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get course by id",
+            description = "Get course by id for admin and instructor")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
+    public CourseResponse getCourseById(@PathVariable Long id) {
+        return courseService.getById(id);
+    }
 }
