@@ -1,9 +1,12 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
 import kg.peaksoft.peaksoftlmsb6.entity.Question;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 
@@ -13,4 +16,14 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Transactional
     @Query("delete from Question where id = ?1")
     void deleteQuestionById(Long id);
+
+
+    @Modifying
+    @Transactional
+    @Query("update Question set " +
+            "question = :question, " +
+            "questionType = :questionType where id = :id")
+    void update(@Param("id") Long id,
+                @Param("question") String question,
+                @Param("questionType") QuestionType questionType);
 }
