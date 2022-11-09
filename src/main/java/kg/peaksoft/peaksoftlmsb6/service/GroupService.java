@@ -33,7 +33,7 @@ public class GroupService {
 
     public SimpleResponse deleteById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найдена", id)));
+                () -> new NotFoundException("Группа не найдена"));
         for (Course course : group.getCourses()) {
             if (course != null) {
                 course.getGroup().remove(group);
@@ -68,7 +68,7 @@ public class GroupService {
 
     public List<StudentResponse> getAllStudentsFromGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найдена", id)));
+                () -> new NotFoundException("Группа не найдена"));
         return groupRepository.getStudentsByGroupId(group.getId());
     }
 
@@ -78,7 +78,7 @@ public class GroupService {
 
     public GroupResponse getById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найдена", id)));
+                () -> new NotFoundException("Группа не найдена"));
         return groupRepository.getGroup(group.getId());
     }
 

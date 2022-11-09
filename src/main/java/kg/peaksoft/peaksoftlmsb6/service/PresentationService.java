@@ -24,7 +24,7 @@ public class PresentationService {
 
     public PresentationResponse savePresentation(PresentationRequest request){
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException(String.format("Урок не найден",request.getLessonId())));
+                () -> new NotFoundException("Урок не найден"));
         Presentation presentation = new Presentation(request);
         lesson.setPresentation(presentation);
         presentation.setLesson(lesson);
@@ -34,7 +34,7 @@ public class PresentationService {
 
     public PresentationResponse updatePresentation(Long id, PresentationRequest request) {
         Presentation presentation = presentationRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Презентация не найдена",id)));
+                () -> new NotFoundException("Презентация не найдена"));
         presentationRepository.update(id,
                 request.getPresentationName(),
                 request.getDescription(),
@@ -48,7 +48,7 @@ public class PresentationService {
 
     public SimpleResponse deleteById(Long id) {
         if (!presentationRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Презентация не найдена",id));
+            throw new NotFoundException("Презентация не найдена");
         }
         presentationRepository.deletePresentationById(id);
         return new SimpleResponse("Презентация удалена");
@@ -56,7 +56,7 @@ public class PresentationService {
 
     public PresentationResponse getById(Long id) {
         Presentation presentation = presentationRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Презентация не найдена",id)));
+                () -> new NotFoundException("Презентация не найдена"));
         return presentationRepository.getPresentation(presentation.getId());
     }
 }

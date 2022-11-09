@@ -46,10 +46,9 @@ public class UserService  {
         return new AuthResponse(user.getUsername(),token,user.getRole());
     }
 
-
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException(String.format("Пользователь не найден",email)));
+                () -> new NotFoundException("Пользователь не найден"));
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
         messageHelper.setSubject("[peaksoftlms-b6] подвердить пароль");
@@ -57,12 +56,12 @@ public class UserService  {
         messageHelper.setTo(email);
         messageHelper.setText(link + "/" + user.getId(), true);
         javaMailSender.send(mimeMessage);
-        return new SimpleResponse("Почта отправлена");
+        return new SimpleResponse("Отправлено в почту");
     }
 
     public SimpleResponse resetPassword(ForgotPasswordRequest request) {
         User user = userRepository.findById(request.getId()).orElseThrow(
-                () -> new NotFoundException(String.format("Пользователь не найден",request.getId())));
+                () -> new NotFoundException("Пользователь не найден"));
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         return new SimpleResponse("Пароль обнавлён");
     }
