@@ -1,5 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
+import com.poiji.bind.Poiji;
+import com.poiji.option.PoijiOptions;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
@@ -8,6 +10,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
@@ -15,12 +18,20 @@ import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.io.File;;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +48,7 @@ public class StudentService {
 
     public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найден", studentRequest.getGroupId())));
+                () -> new NotFoundException("Группа не найден"));
         Student student = new Student(studentRequest);
         group.addStudents(student);
         student.setGroup(group);
@@ -62,9 +73,9 @@ public class StudentService {
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Студент не найден",id)));
+                () -> new NotFoundException("Студент не найден"));
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найдена", studentRequest.getGroupId())));
+                () -> new NotFoundException("Группа не найдена"));
         student.setGroup(group);
         group.addStudents(student);
         studentRepository.update(
@@ -75,7 +86,7 @@ public class StudentService {
                 studentRequest.getPhoneNumber());
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         User user = userRepository.findById(student.getUser().getId())
-                .orElseThrow(() -> new NotFoundException(String.format("Пользователь не найден", student.getUser().getId())));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         user.setEmail(studentRequest.getEmail());
         user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
@@ -84,7 +95,7 @@ public class StudentService {
 
     public SimpleResponse deleteStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Студент не найден",id)));
+                () -> new NotFoundException("Студент не найден"));
         studentRepository.delete(student);
         return new SimpleResponse("Студент удалён");
     }
@@ -100,7 +111,7 @@ public class StudentService {
 
     public StudentResponse getById(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Студент не найден",id)));
+                () -> new NotFoundException("Студент не найден"));
         return studentRepository.getStudent(student.getId());
     }
 
