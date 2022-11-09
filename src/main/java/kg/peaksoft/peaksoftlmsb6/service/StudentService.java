@@ -13,9 +13,13 @@ import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,16 +33,31 @@ public class StudentService {
     private final PasswordEncoder passwordEncoder;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
 
-    public StudentResponse createStudent(StudentRequest studentRequest) {
-        studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+    public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException(String.format("Группа не найден", studentRequest.getGroupId())));
         Student student = new Student(studentRequest);
         group.addStudents(student);
         student.setGroup(group);
+        String password =  studentRequest.getPassword();
+        student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
+        sendEmail(student.getUser().getEmail(),password);
         return studentRepository.getStudent(student.getId());
+    }
+
+    private void sendEmail(String email,String password) throws MessagingException {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
+        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
+        messageHelper.setTo(user.getEmail());
+        messageHelper.setText("Username: " + user.getUsername() + "\tPassword: " + password, true);
+        javaMailSender.send(mimeMessage);
     }
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
