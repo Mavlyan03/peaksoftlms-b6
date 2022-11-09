@@ -23,7 +23,7 @@ public class LinkService {
 
     public LinkResponse createLink(LinkRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException(String.format("Lesson with id =%s not found",request.getLessonId())));
+                () -> new NotFoundException(String.format("Урок не найден",request.getLessonId())));
         Link link = new Link(request);
         lesson.setLink(link);
         link.setLesson(lesson);
@@ -33,7 +33,7 @@ public class LinkService {
 
     public LinkResponse updateLink(Long id, LinkRequest request) {
         Link link = linkRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Link with id =%s not found",id)));
+                () -> new NotFoundException(String.format("Ссылка не найдена",id)));
         linkRepository.update(
                 link.getId(),
                 request.getLinkText(),
@@ -47,15 +47,15 @@ public class LinkService {
 
     public SimpleResponse deleteById(Long id) {
         if(!linkRepository.existsById(id)) {
-            throw new NotFoundException(String.format("Link with id =%s not found",id));
+            throw new NotFoundException(String.format("Ссылка не найдена",id));
         }
         linkRepository.deleteLinkById(id);
-        return new SimpleResponse("Link deleted");
+        return new SimpleResponse("Ссылка удалена");
     }
 
     public LinkResponse getLinkById(Long id) {
         Link link = linkRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Link with id =%s not found",id)));
+                () -> new NotFoundException(String.format("Ссылка не найдена",id)));
         return linkRepository.getLink(link.getId());
     }
 }
