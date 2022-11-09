@@ -26,29 +26,25 @@ public class Student {
     @Id
     @SequenceGenerator(name = "student_seq", sequenceName = "student_seq", allocationSize = 1 , initialValue = 2)
     @GeneratedValue(generator = "student_seq", strategy = GenerationType.SEQUENCE)
-    @ExcelRow
     private Long id;
 
-    @ExcelProperty
     private String firstName;
 
-    @ExcelProperty
     private String lastName;
 
-    @ExcelProperty
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    @ExcelProperty
+
     private StudyFormat studyFormat;
 
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
-    @ExcelProperty
+
     private Group group;
     @OneToOne(cascade = ALL)
-    @ExcelProperty
+
     private User user;
 
     public Student(StudentRequest request){
@@ -65,5 +61,14 @@ public class Student {
 
 
     public Student(StudentExcelRequest studentExcelRequest, String encode) {
+        this.firstName = studentExcelRequest.getName();
+        this.lastName = studentExcelRequest.getLastName();
+        this.phoneNumber = studentExcelRequest.getPhoneNumber();
+        this.studyFormat = studentExcelRequest.getStudyFormat();
+        User user1= new User();
+        user1.setEmail(studentExcelRequest.getEmail());
+        user1.setPassword(encode);
+        user1.setRole(Role.STUDENT);
+        this.user = user1;
     }
 }

@@ -64,11 +64,11 @@ public class StudentApi {
     }
 
 
-    @PostMapping ("/import")
+    @PostMapping ("/import/{id}")
     @Operation(summary = "Import excel file",
              description = "Import excel file in java object")
-    public List<StudentResponse> importExcel(@ModelAttribute MultipartFile file) throws IOException {
-        return studentService.importExcel(file);
+    public SimpleResponse importExcel(@PathVariable Long id, @ModelAttribute MultipartFile file) throws IOException, MessagingException {
+        return  studentService.importExcel(id, file);
     }
 
 }
