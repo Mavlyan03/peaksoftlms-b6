@@ -90,10 +90,10 @@ public class StudentService {
         }
     }
 
-    public List<StudentResponse> importExcel(MultipartFile file, Long id) throws IOException {
+    public List<StudentResponse> importExcel(MultipartFile file) throws IOException {
 
         PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
-                .addListDelimiter(";")
+                .password("123456")
                 .build();
         List<Student> students = Poiji.fromExcel(new File("students.xlsx"), Student.class, options);
         List<StudentResponse> studentResponses = new ArrayList<>();
@@ -108,9 +108,11 @@ public class StudentService {
         Sheet sheet = workbook.getSheetAt(0);
         DataFormatter dataFormatter = new DataFormatter();
         for (Row row : sheet) {
-            User user = new User();
-            user.setEmail(row.getCell(6).getStringCellValue());
+//            User user = new User();
+//            user.setEmail(row.getCell(6).getStringCellValue());
             for (Cell cell : row) {
+                User user = new User();
+                user.setEmail(row.getCell(6).getStringCellValue());
                 String cellValue = dataFormatter.formatCellValue(cell);
                 System.out.print(cellValue);
             }
@@ -126,7 +128,7 @@ public class StudentService {
     }
 
 //    public List<StudentResponse> importExcel(MultipartFile file, Long id) throws IOException {
-////            List<Student> students = new ArrayList<>();
+//            List<Student> students = new ArrayList<>();
 //
 //        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
 //                .password("123456789")
@@ -218,7 +220,7 @@ public class StudentService {
 
 
     //        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
-//                .password("123456789")
+//                .password("123456")
 //                .build();
 //        List<Student> students = Poiji.fromExcel(new File("students.xlsx"), Student.class, options);
 //        students.size();
