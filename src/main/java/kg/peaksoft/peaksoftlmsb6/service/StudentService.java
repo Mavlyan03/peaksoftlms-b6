@@ -16,6 +16,8 @@ import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -25,6 +27,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.File;;
 import java.io.IOException;
@@ -40,23 +44,38 @@ public class StudentService {
     private final PasswordEncoder passwordEncoder;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
 
-    public StudentResponse createStudent(StudentRequest studentRequest) {
-        studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+    public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Group not found with id=%s", studentRequest.getGroupId())));
+                () -> new NotFoundException("Группа не найден"));
         Student student = new Student(studentRequest);
         group.addStudents(student);
         student.setGroup(group);
+        String password =  studentRequest.getPassword();
+        student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
+        sendEmail(student.getUser().getEmail(),password);
         return studentRepository.getStudent(student.getId());
+    }
+
+    private void sendEmail(String email,String password) throws MessagingException {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
+        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
+        messageHelper.setTo(user.getEmail());
+        messageHelper.setText("Username: " + user.getUsername() + "\tPassword: " + password, true);
+        javaMailSender.send(mimeMessage);
     }
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Student with id =%s not found", studentRequest.getId())));
+                () -> new NotFoundException("Студент не найден"));
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Group not found with id=%s", studentRequest.getGroupId())));
+                () -> new NotFoundException("Группа не найдена"));
         student.setGroup(group);
         group.addStudents(student);
         studentRepository.update(
@@ -67,7 +86,7 @@ public class StudentService {
                 studentRequest.getPhoneNumber());
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         User user = userRepository.findById(student.getUser().getId())
-                .orElseThrow(() -> new NotFoundException(String.format("User with id =%s not found", student.getUser().getId())));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         user.setEmail(studentRequest.getEmail());
         user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
@@ -76,9 +95,9 @@ public class StudentService {
 
     public SimpleResponse deleteStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Not found"));
+                () -> new NotFoundException("Студент не найден"));
         studentRepository.delete(student);
-        return new SimpleResponse(String.format("student with id = %s deleted", id));
+        return new SimpleResponse("Студент удалён");
     }
 
 
@@ -90,138 +109,10 @@ public class StudentService {
         }
     }
 
-    public List<StudentResponse> importExcel(MultipartFile file) throws IOException {
-
-        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
-                .password("123456")
-                .build();
-        List<Student> students = Poiji.fromExcel(new File("students.xlsx"), Student.class, options);
-        List<StudentResponse> studentResponses = new ArrayList<>();
-        for(Student student : students) {
-            studentResponses.add(studentRepository.getStudent(student.getId()));
-        }
-        Student student = students.get(0);
-        Workbook workbook = WorkbookFactory.create(file.getInputStream());
-        for (Sheet sheet : workbook) {
-            System.out.print(sheet.getSheetName());
-        }
-        Sheet sheet = workbook.getSheetAt(0);
-        DataFormatter dataFormatter = new DataFormatter();
-        for (Row row : sheet) {
-//            User user = new User();
-//            user.setEmail(row.getCell(6).getStringCellValue());
-            for (Cell cell : row) {
-                User user = new User();
-                user.setEmail(row.getCell(6).getStringCellValue());
-                String cellValue = dataFormatter.formatCellValue(cell);
-                System.out.print(cellValue);
-            }
-        }
-        workbook.close();
-//        for (Student student : students) {
-//            Group groupEntity = groupRepository.findById(id).orElseThrow(
-//                    () -> new NotFoundException(String.format("Group with id =%s not found",id)));
-//            student.setGroup(groupEntity);
-//            studentRepository.save(student);
-//
-        return studentResponses;
+    public StudentResponse getById(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Студент не найден"));
+        return studentRepository.getStudent(student.getId());
     }
 
-//    public List<StudentResponse> importExcel(MultipartFile file, Long id) throws IOException {
-//            List<Student> students = new ArrayList<>();
-//
-//        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
-//                .password("123456789")
-//                .build();
-//        List<Student> students = Poiji.fromExcel(new File("students.xlsx"), Student.class, options);
-//        students.size();
-//        Student student = students.get(0);
-//
-//            XSSFWorkbook workbook = new XSSFWorkbook(file.getInputStream());
-//            XSSFSheet wordSheet = workbook.getSheetAt(0);
-//
-//            for (int index = 0; index < wordSheet.getPhysicalNumberOfRows(); index++) {
-//                if (index > 0) {
-//                    Student student1 = new Student();
-//                    XSSFRow row = wordSheet.getRow(index);
-//
-//                    if(row.getCell(0)==null){
-//                        throw new BadRequestException("FirstName in line index "+index+" is empty!");
-//                    }else {
-//                        student1.setFirstName(row.getCell(0).getStringCellValue());
-//                    }
-//
-//                    if(row.getCell(1)==null){
-//                        throw new BadRequestException("LastName in line index "+index+" is empty!");
-//                    }else {
-//                        student1.setLastName(row.getCell(1).getStringCellValue());
-//                    }
-//
-//                    if(row.getCell(2)==null){
-//                        throw new BadRequestException("Phone number in line index "+index+" is empty!");
-//                    }else {
-//                        student1.setPhoneNumber(String.valueOf((long) row.getCell(2).getNumericCellValue()));
-//                    }
-//
-//                    if(row.getCell(3, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL)==null){
-//                        throw new BadRequestException("Study format in line index "+index+" is empty!");
-//                    }else {
-//                        student1.setStudyFormat(StudyFormat.valueOf(row.getCell(3).getStringCellValue()));
-//                    }
-//                    User user = new User();
-//
-//                    if(row.getCell(4,Row.MissingCellPolicy.RETURN_BLANK_AS_NULL)==null){
-//                        throw new BadRequestException("Email in line index "+index+" is empty!");
-//                    }else {
-//                        user.setEmail(row.getCell(4).getStringCellValue());
-//                    }
-//
-//                    if(row.getCell(5)==null){
-//                        throw new BadRequestException("Role in line index "+index+" is empty!");
-//                    }else {
-//                        user.setRole(Role.valueOf(row.getCell(5).getStringCellValue()));
-//                    }
-//
-//                    if(row.getCell(6)==null){
-//                        throw new BadRequestException("Password in line index "+index+" is empty!");
-//                    }else {
-//                        user.setPassword(passwordEncoder.encode(String.valueOf(row.getCell(6).getStringCellValue())));
-//                    }
-//                    student1.setUser(user);
-//                    students.add(student1);
-//                }
-//            }
-//
-//            for (Student student1 : students) {
-//                Group groupEntity = groupRepository.findById(id).orElseThrow(
-//                        () -> new NotFoundException(String.format("Group with id =%s not found",id)));
-//                student.setGroup(groupEntity);
-//                studentRepository.save(student);
-//            }
-//
-//            List<StudentResponse> studentResponses = new ArrayList<>();
-//            for (Student student1 : studentRepository.findAll()) {
-//                studentResponses.add(studentRepository.getStudent(student.getId()));
-//            }
-//
-//            return studentResponses;
-//        }
-
-
 }
-//        workbook.close();
-//        inputStream.close();
-//        List<StudentResponse> studentResponses = new ArrayList<>();
-//        for (Student student : studentRepository.findAll()) {
-//            studentResponses.add(studentRepository.getStudent(student.getId()));
-//        }
-//        return studentResponses;
-
-
-
-    //        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings()
-//                .password("123456")
-//                .build();
-//        List<Student> students = Poiji.fromExcel(new File("students.xlsx"), Student.class, options);
-//        students.size();
-//        Student student = students.get(0);
