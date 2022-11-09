@@ -1,6 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
 import com.poiji.annotation.*;
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentExcelRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
@@ -63,5 +64,6 @@ public class Student {
     }
 
 
-
+    public Student(StudentExcelRequest studentExcelRequest, String encode) {
+    }
 }

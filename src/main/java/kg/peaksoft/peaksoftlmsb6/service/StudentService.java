@@ -1,7 +1,9 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
 import com.poiji.bind.Poiji;
+import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentExcelRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
@@ -32,8 +34,10 @@ import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.io.File;;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -115,4 +119,54 @@ public class StudentService {
         return studentRepository.getStudent(student.getId());
     }
 
+
+    public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException, MessagingException {
+
+        Group group = groupRepository.findById(groupId).orElseThrow(
+                () -> new NotFoundException("Группа с " + groupId + " id не найдено !!!")
+        );
+
+        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings().build();
+
+        InputStream inputStream = multipartFile.getInputStream();
+
+        if (multipartFile.isEmpty()) {
+//            log.error("multipart file is empty");
+            throw new BadRequestException("Файл пуст");
+        }
+
+        List<StudentExcelRequest> excelResponseList = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, options);
+
+        List<Student> students = new ArrayList<>();
+
+        Random random = new Random();
+
+        for (StudentExcelRequest studentExcelRequest : excelResponseList) {
+
+            boolean exists = studentRepository.existsByUserEmail(studentExcelRequest.getEmail());
+
+            if (!exists) {
+
+                int randomNumber = random.nextInt(9999 - 1000) + 1000;
+
+
+//                String generatedPassword = studentExcelRequest.getName() + randomNumber;
+                int email = studentExcelRequest.getEmail().lastIndexOf('@');
+                String password = studentExcelRequest.getEmail().substring(0,email);
+                String generatedPassword = password + randomNumber;
+
+                Student student = new Student(studentExcelRequest, passwordEncoder.encode(generatedPassword));
+                student.setGroup(group);
+                group.addStudents(student);
+
+                students.add(student);
+//                sendEmail(student.getUser().getEmail(),generatedPassword);
+            }
+        }
+
+        studentRepository.saveAll(students);
+
+
+        return new SimpleResponse("Студенты из файла Excel успешно добавлены");
+    }
 }
