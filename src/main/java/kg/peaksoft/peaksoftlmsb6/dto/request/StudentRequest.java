@@ -15,7 +15,6 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class StudentRequest {
 
-    private Long id;
     @NotNull(message = "First name must be not null")
     private String firstName;
     private String lastName;

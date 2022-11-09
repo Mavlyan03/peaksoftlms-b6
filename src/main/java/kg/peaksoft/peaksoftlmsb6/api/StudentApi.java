@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -26,7 +27,7 @@ public class StudentApi {
     @PostMapping
     @Operation(summary = "Save student",
             description = "To save a new student by admin")
-    public StudentResponse createStudent(@RequestBody StudentRequest studentRequest){
+    public StudentResponse createStudent(@RequestBody StudentRequest studentRequest) throws MessagingException {
         return studentService.createStudent(studentRequest);
     }
 
@@ -51,6 +52,13 @@ public class StudentApi {
               description = "Get all students with filter by study format")
     public List<StudentResponse> getStudentByStudyFormat(@RequestParam StudyFormat studyFormat){
         return studentService.getAllStudent(studyFormat);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get student by id",
+            description = "Get student by id for admin")
+    public StudentResponse getStudentById(@PathVariable Long id) {
+        return studentService.getById(id);
     }
 
 }

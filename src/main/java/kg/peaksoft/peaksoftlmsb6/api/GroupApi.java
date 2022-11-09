@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Deque;
 import java.util.List;
 
 @RestController
@@ -23,6 +22,8 @@ import java.util.List;
 public class GroupApi {
 
     private final GroupService groupService;
+
+
 
     @PostMapping
     @Operation(summary = "Save group",
@@ -58,6 +59,13 @@ public class GroupApi {
             description = "Get all students from group by id")
     public List<StudentResponse> getAllStudents(@PathVariable Long id) {
         return groupService.getAllStudentsFromGroup(id);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get group by id",
+            description = "Get group by id for admin")
+    public GroupResponse getGroupById(@PathVariable Long id) {
+        return groupService.getById(id);
     }
 
 }
