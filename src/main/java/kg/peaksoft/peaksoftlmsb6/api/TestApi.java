@@ -24,8 +24,16 @@ public class TestApi {
     @PostMapping
     @Operation(summary = "Save test",
             description = "To save a new test by request")
-    public TestResponse createTask(@RequestBody TestRequest request) {
+    public TestResponse createTest(@RequestBody TestRequest request) {
         return testService.createTest(request);
+    }
+
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update test",
+            description = "Instructor update test by id")
+    public TestInnerPageResponse updateTest(@PathVariable Long id, @RequestBody TestRequest testRequest) {
+        return testService.updateTest(id, testRequest);
     }
 
     @DeleteMapping("/{id}")
