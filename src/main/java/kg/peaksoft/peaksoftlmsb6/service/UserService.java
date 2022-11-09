@@ -40,7 +40,7 @@ public class UserService  {
                         userRequest.getEmail(),
                         userRequest.getPassword()));
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new BadCredentialsException("bad credentials"));
+                .orElseThrow(() -> new BadCredentialsException("Неправильные данные"));
         String token = jwtTokenUtil.generateToken(user.getEmail());
         return new AuthResponse(user.getUsername(),token,user.getRole());
     }
@@ -48,21 +48,21 @@ public class UserService  {
 
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException(String.format("User with email =%s not found",email)));
+                () -> new NotFoundException(String.format("Пользователь не найден",email)));
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
-        messageHelper.setSubject("[peaksoftlms-b6] reset password link");
+        messageHelper.setSubject("[peaksoftlms-b6] подвердить пароль");
         messageHelper.setFrom("peaksoftlms-b6@gmail.com");
         messageHelper.setTo(email);
         messageHelper.setText(link + "/" + user.getId(), true);
         javaMailSender.send(mimeMessage);
-        return new SimpleResponse("Email send");
+        return new SimpleResponse("Почта отправлена");
     }
 
     public SimpleResponse resetPassword(ForgotPasswordRequest request) {
         User user = userRepository.findById(request.getId()).orElseThrow(
-                () -> new NotFoundException(String.format("User with id =%s not found",request.getId())));
+                () -> new NotFoundException(String.format("Пользователь не найден",request.getId())));
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
-        return new SimpleResponse("password updated");
+        return new SimpleResponse("Пароль обнавлён");
     }
 }

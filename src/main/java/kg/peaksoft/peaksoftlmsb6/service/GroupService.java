@@ -33,7 +33,7 @@ public class GroupService {
 
     public SimpleResponse deleteById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Group with id %s not found", id)));
+                () -> new NotFoundException(String.format("Группа не найдена", id)));
         for (Course course : group.getCourses()) {
             if (course != null) {
                 course.getGroup().remove(group);
@@ -46,12 +46,12 @@ public class GroupService {
             }
         }
         groupRepository.delete(group);
-        return new SimpleResponse("Group deleted");
+        return new SimpleResponse("Группа удалена");
     }
 
     public GroupResponse updateGroup(Long id, GroupRequest request) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Group with id %s not found", id)));
+                () -> new NotFoundException(String.format("Группа не найдена", id)));
         groupRepository.update(
                 group.getId(),
                 request.getGroupName(),
@@ -68,7 +68,7 @@ public class GroupService {
 
     public List<StudentResponse> getAllStudentsFromGroup(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Group with id %s not found", id)));
+                () -> new NotFoundException(String.format("Группа не найдена", id)));
         return groupRepository.getStudentsByGroupId(group.getId());
     }
 
@@ -78,7 +78,7 @@ public class GroupService {
 
     public GroupResponse getById(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Группа с id = %s не найдена", id)));
+                () -> new NotFoundException(String.format("Группа не найдена", id)));
         return groupRepository.getGroup(group.getId());
     }
 
