@@ -28,26 +28,26 @@ public class Student {
     @ExcelRow
     private Long id;
 
-    @ExcelCell(0)
+    @ExcelProperty
     private String firstName;
 
-    @ExcelCell(1)
+    @ExcelProperty
     private String lastName;
 
-    @ExcelCell(2)
+    @ExcelProperty
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    @ExcelCell(3)
+    @ExcelProperty
     private StudyFormat studyFormat;
 
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
-    @ExcelCellRange
+    @ExcelProperty
     private Group group;
     @OneToOne(cascade = ALL)
-    @ExcelCellRange
+    @ExcelProperty
     private User user;
 
     public Student(StudentRequest request){
