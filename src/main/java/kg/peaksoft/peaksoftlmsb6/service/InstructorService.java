@@ -38,14 +38,14 @@ public class InstructorService {
 
     public InstructorResponse updateInstructor(Long id, InstructorRequest request) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Instructor with id =%s not found", id)));
+                .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
         instructorRepository.update(instructor.getId(),
                 request.getFirstName(),
                 request.getLastName(),
                 request.getSpecialization(),
                 request.getPhoneNumber());
         User user = userRepository.findById(instructor.getUser().getId())
-                .orElseThrow(() -> new NotFoundException(String.format("User with id =%s not found", instructor.getUser().getId())));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.INSTRUCTOR);
@@ -56,9 +56,9 @@ public class InstructorService {
 
     public SimpleResponse deleteInstructorById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Instructor with id =%s not found", id)));
+                .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
         instructorRepository.delete(instructor);
-        return new SimpleResponse("Instructor deleted");
+        return new SimpleResponse("Инструктор удалён");
     }
 
     public List<InstructorResponse> getAllInstructors() {
@@ -68,7 +68,7 @@ public class InstructorService {
 
     public InstructorResponse getById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("Инструктор с id =%s не найден", id)));
+                .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
         return instructorRepository.getInstructor(instructor.getId());
     }
 }
