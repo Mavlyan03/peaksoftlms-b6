@@ -1,4 +1,4 @@
-package kg.peaksoft.peaksoftlmsb6.config;
+package kg.peaksoft.peaksoftlmsb6.service.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
