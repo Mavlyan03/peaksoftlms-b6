@@ -119,7 +119,6 @@ public class StudentService {
         return studentRepository.getStudent(student.getId());
     }
 
-
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException, MessagingException {
 
         Group group = groupRepository.findById(groupId).orElseThrow(
@@ -131,7 +130,6 @@ public class StudentService {
         InputStream inputStream = multipartFile.getInputStream();
 
         if (multipartFile.isEmpty()) {
-//            log.error("multipart file is empty");
             throw new BadRequestException("Файл пуст");
         }
 
@@ -147,7 +145,7 @@ public class StudentService {
 
             if (!exists) {
 
-                int randomNumber = random.nextInt(9999 - 1000) + 1000;
+                int randomNumber = random.nextInt(1000,100000);
 
 
 //                String generatedPassword = studentExcelRequest.getName() + randomNumber;
