@@ -46,6 +46,6 @@ public class VideoApi {
             description = "Instructor get video by id")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
     public VideoResponse getVideoById(@PathVariable("id") Long id) {
-        return videoService.getVideoById(id);
+        return videoService.getById(id);
     }
 }

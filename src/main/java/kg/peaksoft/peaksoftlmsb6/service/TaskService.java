@@ -38,7 +38,7 @@ public class TaskService {
 
     private Task convertToEntity(TaskRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException(String.format("Lesson with id =%s not found",request.getLessonId())));
+                () -> new NotFoundException("Урок не найден"));
         Task task = null;
         if (lesson.getTask() == null) {
             task = new Task(request);
@@ -76,26 +76,16 @@ public class TaskService {
 
     public TaskResponse updateTask(Long id, TaskRequest taskRequest) {
         Task task = taskRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Task with id =%s not found",id)));
+                () -> new NotFoundException("Задача не найдена"));
         taskRepository.update(task.getId(), taskRequest.getTaskName());
-        for(Content contents : task.getContents()) {
-            Content content = contentRepository.findById(contents.getId()).orElseThrow(
-                    () -> new NotFoundException(String.format("Content with id =%s not found",contents.getId())));
-            for(ContentRequest request : taskRequest.getContentRequests()) {
-                contentRepository.update(
-                        content.getId(),
-                        request.getContentName(),
-                        request.getContentFormat(),
-                        request.getContentValue());
-            }
-        }
+        Content content = new Content();
         return convertUpdateToResponse(task.getId(), taskRequest);
     }
 
 
     private TaskResponse convertUpdateToResponse(Long id, TaskRequest request) {
         Task task = taskRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Task with id =%s not found",id)));
+                () -> new NotFoundException("Задача не найдена"));
         TaskResponse taskResponse = new TaskResponse(id, request.getTaskName());
         List<ContentResponse> contentResponses = new ArrayList<>();
         for(ContentRequest contentRequest : request.getContentRequests()) {
@@ -114,19 +104,19 @@ public class TaskService {
 
     public SimpleResponse deleteById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Task with id =%s not found",id)));
+                () -> new NotFoundException("Задача не найдена"));
         for(Content content : task.getContents()) {
             content.setTask(null);
             task.setContents(null);
             contentRepository.deleteById(content.getId());
         }
         taskRepository.deleteTaskById(id);
-        return new SimpleResponse("Task deleted");
+        return new SimpleResponse("Задача удалена");
     }
 
     public TaskResponse getTaskById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Task with id =%s not found",id)));
+                () -> new NotFoundException("Задача не найдена"));
         return convertToResponse(task);
     }
 

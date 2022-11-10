@@ -43,4 +43,11 @@ public class Content {
         this.contentFormat = contentFormat;
         this.contentValue = contentValue;
     }
+
+    public Content(Long id, String contentName, ContentFormat contentFormat, String contentValue) {
+        this.id = id;
+        this.contentName = contentName;
+        this.contentFormat = contentFormat;
+        this.contentValue = contentValue;
+    }
 }

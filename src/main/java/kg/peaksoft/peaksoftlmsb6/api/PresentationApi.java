@@ -46,6 +46,6 @@ public class PresentationApi {
             description = "Instructor get presentation by id")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
     public PresentationResponse getPresentationById(@PathVariable("id") Long id) {
-        return presentationService.getPresentationById(id);
+        return presentationService.getById(id);
     }
 }
