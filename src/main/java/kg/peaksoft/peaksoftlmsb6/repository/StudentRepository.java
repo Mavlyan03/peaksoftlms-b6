@@ -61,5 +61,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("select s from Student s where s.user.id = ?1")
     Optional<Student> findByUserId(Long id);
+
+
+    boolean existsByUserEmail(String email);
 }
 
