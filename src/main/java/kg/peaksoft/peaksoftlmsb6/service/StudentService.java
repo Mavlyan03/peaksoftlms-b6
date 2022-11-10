@@ -1,24 +1,36 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
+import com.poiji.bind.Poiji;
+import com.poiji.exception.PoijiExcelType;
+import com.poiji.option.PoijiOptions;
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentExcelRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
-import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Transactional
@@ -29,23 +41,39 @@ public class StudentService {
     private final PasswordEncoder passwordEncoder;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final JavaMailSender javaMailSender;
 
-    public StudentResponse createStudent(StudentRequest studentRequest) {
-        studentRequest.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+    public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Group not found with id=%s", studentRequest.getGroupId())));
+                () -> new NotFoundException("Группа не найден"));
         Student student = new Student(studentRequest);
         group.addStudents(student);
         student.setGroup(group);
+        String password = studentRequest.getPassword();
+        student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
+        sendEmail(student.getUser().getEmail(), password);
         return studentRepository.getStudent(student.getId());
+    }
+
+    private void sendEmail(String email, String password) throws MessagingException {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
+        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
+        messageHelper.setTo(user.getEmail());
+        messageHelper.setText("WELCOME TO PEAKSOFT SCHOOL! " +
+                " Username: " + user.getUsername() + "  Password: " + password, true);
+        javaMailSender.send(mimeMessage);
     }
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Student with id =%s not found", studentRequest.getId())));
+                () -> new NotFoundException("Студент не найден"));
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Group not found with id=%s", studentRequest.getGroupId())));
+                () -> new NotFoundException("Группа не найдена"));
         student.setGroup(group);
         group.addStudents(student);
         studentRepository.update(
@@ -56,7 +84,7 @@ public class StudentService {
                 studentRequest.getPhoneNumber());
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         User user = userRepository.findById(student.getUser().getId())
-                .orElseThrow(() -> new NotFoundException(String.format("User with id =%s not found", student.getUser().getId())));
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         user.setEmail(studentRequest.getEmail());
         user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
@@ -65,9 +93,9 @@ public class StudentService {
 
     public SimpleResponse deleteStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Not found"));
+                () -> new NotFoundException("Студент не найден"));
         studentRepository.delete(student);
-        return new SimpleResponse(String.format("student with id = %s deleted", id));
+        return new SimpleResponse("Студент удалён");
     }
 
 
@@ -79,4 +107,54 @@ public class StudentService {
         }
     }
 
+    public StudentResponse getById(Long id) {
+        Student student = studentRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Студент не найден"));
+        return studentRepository.getStudent(student.getId());
+    }
+
+    public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException, MessagingException {
+
+        Group group = groupRepository.findById(groupId).orElseThrow(
+                () -> new NotFoundException("Группа с " + groupId + " id не найдено !!!")
+        );
+
+        PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings().build();
+
+        InputStream inputStream = multipartFile.getInputStream();
+
+        if (multipartFile.isEmpty()) {
+            throw new BadRequestException("Файл пуст");
+        }
+
+        List<StudentExcelRequest> excelResponseList = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, options);
+
+        List<Student> students = new ArrayList<>();
+
+        Random random = new Random();
+
+        for (StudentExcelRequest studentExcelRequest : excelResponseList) {
+
+            boolean exists = studentRepository.existsByUserEmail(studentExcelRequest.getEmail());
+
+            if (!exists) {
+
+                int randomNumber = random.nextInt(1000,100000);
+
+                int email = studentExcelRequest.getEmail().lastIndexOf('@');
+                String password = studentExcelRequest.getEmail().substring(0, email);
+                String generatedPassword = password + randomNumber;
+
+                Student student = new Student(studentExcelRequest, passwordEncoder.encode(generatedPassword));
+                student.setGroup(group);
+                group.addStudents(student);
+
+                students.add(student);
+                sendEmail(student.getUser().getEmail(), generatedPassword);
+            }
+        }
+        studentRepository.saveAll(students);
+
+        return new SimpleResponse("Студенты из файла Excel успешно добавлены");
+    }
 }
