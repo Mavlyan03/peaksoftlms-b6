@@ -2,6 +2,8 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateContentRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ContentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
@@ -74,32 +76,44 @@ public class TaskService {
     }
 
 
-    public TaskResponse updateTask(Long id, TaskRequest taskRequest) {
+    public SimpleResponse updateTask(Long id, UpdateTaskRequest taskRequest) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Задача не найдена"));
         taskRepository.update(task.getId(), taskRequest.getTaskName());
-        Content content = new Content();
-        return convertUpdateToResponse(task.getId(), taskRequest);
-    }
-
-
-    private TaskResponse convertUpdateToResponse(Long id, TaskRequest request) {
-        Task task = taskRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Задача не найдена"));
-        TaskResponse taskResponse = new TaskResponse(id, request.getTaskName());
-        List<ContentResponse> contentResponses = new ArrayList<>();
-        for(ContentRequest contentRequest : request.getContentRequests()) {
-            for(Content content : task.getContents()) {
-                contentResponses.add(new ContentResponse(
-                        content.getId(),
-                        contentRequest.getContentName(),
-                        contentRequest.getContentFormat(),
-                        contentRequest.getContentValue()));
-            }
+        for(UpdateContentRequest contentRequest : taskRequest.getContentRequestList()) {
+            convertToEntity(contentRequest);
         }
-        taskResponse.setContentResponses(contentResponses);
-        return taskResponse;
+        return new SimpleResponse("Task update successfully");
     }
+
+    private void convertToEntity(UpdateContentRequest contentRequest) {
+        Task task = taskRepository.findById(contentRequest.getTaskId()).orElseThrow(
+                () -> new NotFoundException("Задача не найдена"));
+        for(Content content : task.getContents()) {
+            content.setContentName(contentRequest.getContentName());
+            content.setContentFormat(contentRequest.getContentFormat());
+            content.setContentValue(contentRequest.getContentValue());
+        }
+    }
+
+
+//    private TaskResponse convertUpdateToResponse(Long id, UpdateTaskRequest request) {
+//        Task task = taskRepository.findById(id).orElseThrow(
+//                () -> new NotFoundException("Задача не найдена"));
+//        TaskResponse taskResponse = new TaskResponse(id, request.getTaskName());
+//        List<ContentResponse> contentResponses = new ArrayList<>();
+//        for(UpdateTaskRequest contentRequest : request.getContentRequestList()) {
+//            for(Content content : task.getContents()) {
+//                contentResponses.add(new ContentResponse(
+//                        content.getId(),
+//                        contentRequest.getContentName(),
+//                        contentRequest.getContentFormat(),
+//                        contentRequest.getContentValue()));
+//            }
+//        }
+//        taskResponse.setContentResponses(contentResponses);
+//        return taskResponse;
+//    }
 
 
     public SimpleResponse deleteById(Long id) {
