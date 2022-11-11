@@ -15,9 +15,11 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Query("delete from Lesson l where l.course.id = ?1")
     void deleteLessonById(Long id);
 
-    @Query("update Lesson set lessonName = :lessonName where id = :id")
-    void update(@Param("id") Long id,
-                @Param("lessonName") String lessonName);
+//    @Modifying
+//    @Transactional
+//    @Query("update Lesson set lessonName = :lessonName where id = :id")
+//    void update(@Param("id") Long id,
+//                @Param("lessonName") String lessonName);
 
 }
 

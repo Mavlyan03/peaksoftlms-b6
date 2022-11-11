@@ -8,6 +8,4 @@ import lombok.Setter;
 public class LessonRequest {
     private Long courseId;
     private String lessonName;
-
-
 }

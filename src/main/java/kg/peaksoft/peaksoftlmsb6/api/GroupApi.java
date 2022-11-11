@@ -20,14 +20,11 @@ import java.util.List;
 @Tag(name = "Group API", description = "ADMIN group api endpoints")
 @PreAuthorize("hasAuthority('ADMIN')")
 public class GroupApi {
-
     private final GroupService groupService;
-
-
 
     @PostMapping
     @Operation(summary = "Save group",
-            description = "To save group by ADMIN")
+            description = "To save a new group by Admin")
     public GroupResponse createGroup(@RequestBody GroupRequest request) {
         return groupService.createGroup(request);
     }
@@ -42,7 +39,7 @@ public class GroupApi {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Deletes group ",
-            description = "Admin delete the group by id")
+            description = "Admin delete group by id")
     public SimpleResponse deleteGroup(@PathVariable Long id) {
         return groupService.deleteById(id);
     }

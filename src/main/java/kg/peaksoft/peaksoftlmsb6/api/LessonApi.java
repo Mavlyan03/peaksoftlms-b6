@@ -18,37 +18,37 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/lesson")
 @CrossOrigin(origins = "*", maxAge = 3600)
-@Tag(name = "Lesson CRUD", description = "Instructor my course inner page endpoints")
+@Tag(name = "Lesson API", description = "Instructor my course inner page endpoints")
 @PreAuthorize("hasAuthority('INSTRUCTOR')")
 public class LessonApi {
 
     private final LessonService lessonService;
 
     @PostMapping
-    @Operation(summary = "save new lesson",
-                description = "Instructor saves new lesson")
+    @Operation(summary = "Save lesson",
+            description = "To save a new lesson by Instructor")
     public SimpleResponse addLesson(@RequestBody LessonRequest request){
         return lessonService.createLesson(request);
     }
 
     @PutMapping("{id}")
     @Operation(summary = "Update lesson",
-                description = "Instructor updates lesson by id")
+            description = "Instructor update lesson by id")
     public LessonResponse updateLesson(@PathVariable Long id,
                                        @RequestBody @Valid LessonRequest request){
         return lessonService.updateLesson(id, request);
     }
 
     @DeleteMapping("{id}")
-    @Operation(summary = "delete lesson",
-                description = "Instructor deletes lesson by id")
+    @Operation(summary = "Delete lesson",
+            description = "Instructor delete lesson by id")
     public SimpleResponse deleteLesson(@PathVariable Long id){
         return lessonService.deleteLesson(id);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get all lessons",
-                description = "Instructor gets all lessons")
+            description = "Instructor get all lessons by course id")
     public List<LessonResponse> getAllLessons(@PathVariable Long id){
         return lessonService.getAllLessonsByCourseId(id);
     }
