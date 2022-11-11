@@ -46,7 +46,7 @@ public class CourseService {
 
     public SimpleResponse deleteById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",id)));
+                () -> new NotFoundException("Курс не найден"));
         for (Instructor instructor : course.getInstructors()) {
             instructor.getCourses().remove(course);
         }
@@ -82,13 +82,13 @@ public class CourseService {
 
     public CourseResponse getById(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",id)));
+                () -> new NotFoundException("Курс не найден"));
         return courseRepository.getCourse(course.getId());
     }
 
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",id)));
+                () -> new NotFoundException("Курс не найден"));
         courseRepository.update(
                 course.getId(),
                 request.getCourseName(),
@@ -105,7 +105,7 @@ public class CourseService {
 
     public List<StudentResponse> getAllStudentsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",id)));
+                () -> new NotFoundException("Курс не найден"));
         List<StudentResponse> assignStudent = new ArrayList<>();
         for (Group group : course.getGroup()) {
             for (Student student : group.getStudents()) {
@@ -117,7 +117,7 @@ public class CourseService {
 
     public List<AssignInstructorResponse> getAllInstructorsFromCourse(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",id)));
+                () -> new NotFoundException("Курс не найден"));
         List<Instructor> instructors = course.getInstructors();
         List<AssignInstructorResponse> assignResponse = new ArrayList<>();
         for (Instructor instructor : instructors) {
@@ -128,9 +128,9 @@ public class CourseService {
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException(String.format("Инструктор не найден",request.getInstructorId())));
+                () -> new NotFoundException("Инструктор не найден"));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",request.getCourseId())));
+                () -> new NotFoundException("Курс не найден"));
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
@@ -139,9 +139,9 @@ public class CourseService {
 
     public SimpleResponse unassigned(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> new NotFoundException(String.format("Инструктор не найден",request.getInstructorId())));
+                () -> new NotFoundException("Инструктор не найден"));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",request.getCourseId())));
+                () -> new NotFoundException("Курс не найден"));
         for (Instructor instructor1 : course.getInstructors()) {
             instructor1.getCourses().remove(course);
         }
@@ -150,7 +150,7 @@ public class CourseService {
         }
         courseRepository.save(course);
         instructorRepository.save(instructor);
-        return new SimpleResponse("Назначение инструктор на курс отменён");
+        return new SimpleResponse("Инструктор удален с курса");
     }
 
     public Deque<CourseResponse> getAllCourses(Authentication authentication) {
@@ -163,14 +163,14 @@ public class CourseService {
                 return courseRepository.getAllCourses();
             case "STUDENT":
                 Student student = studentRepository.findByUserId(user1.getId()).orElseThrow(
-                        () -> new NotFoundException(String.format("Студент с почтой не найден",user1.getId())));
+                        () -> new NotFoundException("Студент с почтой не найден"));
                 for (Course course : student.getGroup().getCourses()) {
                     courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
                 break;
             case "INSTRUCTOR":
                 Instructor instructor = instructorRepository.findByUserId(user1.getId())
-                        .orElseThrow(() -> new NotFoundException(String.format("Инструктор не найден", user1.getId())));
+                        .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
                 for (Course course : instructor.getCourses()) {
                     courseResponses.addFirst(courseRepository.getCourse(course.getId()));
                 }
@@ -181,9 +181,9 @@ public class CourseService {
 
     public SimpleResponse assignGroupToCourse(AssignGroupRequest request) {
         Group group = groupRepository.findById(request.getGroupId()).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найдена",request.getGroupId())));
+                () -> new NotFoundException("Группа не найдена"));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
-                () -> new NotFoundException(String.format("Курс не найден",request.getCourseId())));
+                () -> new NotFoundException("Курс не найден"));
         group.addCourse(course);
         course.addGroup(group);
         courseRepository.save(course);
@@ -192,12 +192,12 @@ public class CourseService {
 
     public SimpleResponse deleteGroupFromCourse(Long id) {
         Group group = groupRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Группа не найдена",id)));
+                () -> new NotFoundException("Группа не найдена"));
         for(Course course : group.getCourses()) {
             course.getGroup().remove(group);
         }
         group.setCourses(null);
         groupRepository.save(group);
-        return new SimpleResponse("Назначенная группа к курсу отсоединенна");
+        return new SimpleResponse("Группа удалена с курса");
     }
 }
