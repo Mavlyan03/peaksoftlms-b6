@@ -1,5 +1,5 @@
 insert into users(id, email, password, role)
-VALUES (1, 'admin@gmail.com', '$2a$12$A1FaB5p5WA2Ydropw14niulfjFP3kgxRGpS0ru4N6YiYc85DGS0tK', 'ADMIN'),
+VALUES (1, 'admin@gmail.com', '$2a$12$3A5GynoSX9x.o1Tgq4G1juWOLfL5ozqZqjib1fBYm52BACpVQS.Jm', 'ADMIN'),
        (2, 'instructor@gmail.com', '$2a$12$c2vzSJ1UIpODKy4dLqa50OMKTBnMQM7dx6lexC013ykPi9bJEAq4q', 'INSTRUCTOR'),
        (3, 'student@gmail.com', '$2a$12$MxbOPXg/taPYo/dynHIfsuiKLJefWaZ6CcpruHeMpEqos50a7fr6m', 'STUDENT');
 

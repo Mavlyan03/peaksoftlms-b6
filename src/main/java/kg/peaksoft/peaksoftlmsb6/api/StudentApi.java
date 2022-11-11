@@ -29,7 +29,7 @@ public class StudentApi {
 
     @PostMapping
     @Operation(summary = "Save student",
-            description = "To save a new student by admin")
+            description = "To save a new student by Admin")
     public StudentResponse createStudent(@RequestBody StudentRequest studentRequest) throws MessagingException {
         return studentService.createStudent(studentRequest);
     }
@@ -64,13 +64,12 @@ public class StudentApi {
         return studentService.getById(id);
     }
 
-
-    @Operation(summary = "Import excel file",
-            description = "Import students from excel file for admin")
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,
             path = "/import/{id}")
+    @Operation(summary = "Import excel file",
+            description = "Import students from excel file for admin")
     public SimpleResponse importExcel(@PathVariable Long id, @RequestParam(name = "file", required = false) MultipartFile file) throws IOException, MessagingException {
         return studentService.importExcel(id, file);
     }

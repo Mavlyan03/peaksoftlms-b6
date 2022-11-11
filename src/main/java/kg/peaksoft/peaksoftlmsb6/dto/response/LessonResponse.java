@@ -1,8 +1,10 @@
 package kg.peaksoft.peaksoftlmsb6.dto.response;
 
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
-import lombok.*;
-import org.springframework.lang.Nullable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -17,13 +19,27 @@ public class LessonResponse {
     private Long taskId;
     private Long testId;
 
-//    public LessonResponse(Lesson lesson) {
-//        this.lessonId = lesson.getId();
-//        this.lessonName = lesson.getLessonName();
-//        this.videoId = lesson.getVideo().getId();
-//        this.presentationId = lesson.getPresentation().getId();
-//        this.linkId = lesson.getLink().getId();
-//        this.taskId = lesson.getTask().getId();
-//        this.testId = lesson.getTest().getId();
-//    }
+    public LessonResponse(Lesson lesson) {
+        this.lessonId = lesson.getId();
+        this.lessonName = lesson.getLessonName();
+        if (lesson.getVideo() != null) {
+            setVideoId(lesson.getVideo().getId());
+        } else setVideoId(null);
+
+        if (lesson.getPresentation() != null) {
+            setPresentationId(lesson.getPresentation().getId());
+        } else setPresentationId(null);
+
+        if (lesson.getLink() != null) {
+            setLinkId(lesson.getLink().getId());
+        } else setLinkId(null);
+
+        if (lesson.getTest() != null) {
+            setTestId(lesson.getTest().getId());
+        } else setTestId(null);
+
+        if (lesson.getTask() != null) {
+            setTaskId(lesson.getTask().getId());
+        } else setTaskId(null);
+    }
 }

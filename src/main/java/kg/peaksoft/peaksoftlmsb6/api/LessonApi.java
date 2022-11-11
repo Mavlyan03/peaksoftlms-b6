@@ -48,7 +48,7 @@ public class LessonApi {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get all lessons",
-                description = "Instructor gets all lessons by course id")
+                description = "Instructor gets all lessons")
     public List<LessonResponse> getAllLessons(@PathVariable Long id){
         return lessonService.getAllLessonsByCourseId(id);
     }
