@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LessonRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.LessonResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
-import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
