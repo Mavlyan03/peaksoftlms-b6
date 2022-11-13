@@ -47,26 +47,21 @@ public class LessonService {
         if (lesson.getTest() != null) {
             Test test = testRepository.findById(lesson.getTest().getId())
                     .orElseThrow(() -> new NotFoundException("Тест не найден"));
+            Results results = resultsRepository.findById(lesson.getTest().getId())
+                    .orElseThrow(() -> new NotFoundException("Результат не найден"));
+            resultsRepository.delete(results);
             testRepository.delete(test);
         }
 
         if (lesson.getTask() != null) {
             Task task = taskRepository.findById(lesson.getTask().getId())
                     .orElseThrow(() -> new NotFoundException("Задача не найдена"));
-            taskRepository.delete(task);
-        }
-
-        if (lesson.getTask() != null) {
             Content content = contentRepository.findById(lesson.getTask().getId())
                     .orElseThrow(() -> new NotFoundException("Контент не найден"));
             contentRepository.delete(content);
+            taskRepository.delete(task);
         }
 
-        if (lesson.getTest() != null) {
-            Results results = resultsRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Результат не найден"));
-            resultsRepository.delete(results);
-        }
         lessonRepository.delete(lesson);
         return new SimpleResponse("Урок удалён");
     }
