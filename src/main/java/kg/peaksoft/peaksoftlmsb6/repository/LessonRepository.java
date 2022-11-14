@@ -13,4 +13,6 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     @Transactional
     @Query("delete from Lesson l where l.course.id = ?1")
     void deleteLessonById(Long id);
+
 }
+

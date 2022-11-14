@@ -29,7 +29,7 @@ public class StudentApi {
 
     @PostMapping
     @Operation(summary = "Save student",
-            description = "To save a new student by admin")
+            description = "To save a new student by Admin")
     public StudentResponse createStudent(@RequestBody StudentRequest studentRequest) throws MessagingException {
         return studentService.createStudent(studentRequest);
     }

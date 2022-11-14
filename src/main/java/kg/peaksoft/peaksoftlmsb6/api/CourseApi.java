@@ -30,7 +30,7 @@ public class CourseApi {
 
     @PostMapping
     @Operation(summary = "Save course",
-            description = "Admin save new course")
+            description = "To save a new course by admin")
     public CourseResponse createCourse(@RequestBody CourseRequest request) {
         return courseService.createCourse(request);
     }

@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LessonRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.LessonResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
-import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,15 +24,15 @@ public class LessonApi {
     private final LessonService lessonService;
 
     @PostMapping
-    @Operation(summary = "save new lesson",
-                description = "Instructor saves new lesson")
+    @Operation(summary = "Save a new lesson to course",
+            description = "Instructor saves new lesson")
     public SimpleResponse addLesson(@RequestBody LessonRequest request){
         return lessonService.createLesson(request);
     }
 
     @PutMapping("{id}")
     @Operation(summary = "Update lesson",
-                description = "Instructor updates lesson by id")
+            description = "Instructor updates lesson by id")
     public LessonResponse updateLesson(@PathVariable Long id,
                                        @RequestBody @Valid LessonRequest request){
         return lessonService.updateLesson(id, request);
@@ -41,15 +40,22 @@ public class LessonApi {
 
     @DeleteMapping("{id}")
     @Operation(summary = "delete lesson",
-                description = "Instructor deletes lesson by id")
+            description = "Instructor deletes lesson by id")
     public SimpleResponse deleteLesson(@PathVariable Long id){
         return lessonService.deleteLesson(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/course/{id}")
     @Operation(summary = "Get all lessons",
-                description = "Instructor gets all lessons")
+            description = "Instructor gets all lessons")
     public List<LessonResponse> getAllLessons(@PathVariable Long id){
         return lessonService.getAllLessonsByCourseId(id);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get lesson by id",
+            description = "Get lesson by id for instructor")
+    public LessonResponse getLessonById(@PathVariable Long id) {
+        return lessonService.getById(id);
     }
 }

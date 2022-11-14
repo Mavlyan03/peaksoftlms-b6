@@ -28,7 +28,6 @@ public class InstructorService {
 
     private final UserRepository userRepository;
 
-
     public InstructorResponse createInstructor(InstructorRequest request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
@@ -71,4 +70,5 @@ public class InstructorService {
                 .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
         return instructorRepository.getInstructor(instructor.getId());
     }
+
 }
