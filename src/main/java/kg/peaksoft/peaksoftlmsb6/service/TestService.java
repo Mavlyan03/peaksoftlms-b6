@@ -44,7 +44,7 @@ public class TestService {
 
     public TestInnerPageResponse getTestById(Long id) {
         return convertToResponse(testRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("not found")
+                () -> new NotFoundException("not found")
         ));
     }
 

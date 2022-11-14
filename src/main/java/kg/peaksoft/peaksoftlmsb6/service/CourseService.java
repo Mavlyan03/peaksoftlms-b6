@@ -29,14 +29,6 @@ public class CourseService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final LessonRepository lessonRepository;
-    private final TestRepository testRepository;
-    private final TaskRepository taskRepository;
-    private final LinkRepository linkRepository;
-    private final PresentationRepository presentationRepository;
-    private final VideoRepository videoRepository;
-    private final ContentRepository contentRepository;
-    private final ResultRepository resultRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
@@ -54,55 +46,6 @@ public class CourseService {
             if(group != null) {
                 group.getCourses().remove(course);
             }
-        }
-        for(Lesson lesson : course.getLessons()) {
-            if(linkRepository.existsById(lesson.getLink().getId())) {
-                Link link = lesson.getLink();
-                link.setLesson(null);
-                lesson.setLink(null);
-                linkRepository.deleteById(link.getId());
-            }
-            if(videoRepository.existsById(lesson.getVideo().getId())) {
-                Video video = lesson.getVideo();
-                video.setLesson(null);
-                lesson.setVideo(null);
-                videoRepository.deleteById(video.getId());
-            }
-            if(presentationRepository.existsById(lesson.getPresentation().getId())) {
-                Presentation presentation = lesson.getPresentation();
-                presentation.setLesson(null);
-                lesson.setPresentation(null);
-                presentationRepository.deleteById(presentation.getId());
-            }
-            Task task = lesson.getTask();
-            task.setLesson(null);
-            lesson.setTask(null);
-            for(Content content : task.getContents()) {
-                if(contentRepository.existsById(content.getId())) {
-                    contentRepository.deleteById(content.getId());
-                }
-            }
-            for(Results result : lesson.getTest().getResults()) {
-                if(resultRepository.existsById(result.getId())) {
-                    Results results = resultRepository.findResultByTestId(result.getId());
-                    results.setStudent(null);
-                    results.setTest(null);
-                    resultRepository.deleteById(results.getId());
-                }
-            }
-            if(testRepository.existsById(lesson.getTest().getId())) {
-                Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(
-                        () -> new NotFoundException(String.format("Test with id =%s not found", lesson.getTest().getId())));
-                lesson.setTest(null);
-                test.setLesson(null);
-//                lesson.setCourse(null);
-                testRepository.deleteById(test.getId());
-            }
-
-            if(taskRepository.existsById(task.getId())) {
-                taskRepository.deleteById(task.getId());
-            }
-            lessonRepository.deleteLessonById(lesson.getId());
         }
         courseRepository.delete(course);
         return new SimpleResponse("Курс удалён");

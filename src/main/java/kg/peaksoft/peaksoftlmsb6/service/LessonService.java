@@ -20,16 +20,13 @@ public class LessonService {
 
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
-    private final TestRepository testRepository;
-    private final TaskRepository taskRepository;
-    private final ContentRepository contentRepository;
-    private final ResultsRepository resultsRepository;
-
 
     public SimpleResponse createLesson(LessonRequest request) {
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new NotFoundException("Course not found"));
+        Course course = courseRepository.findById(request.getCourseId())
+                .orElseThrow(() -> new NotFoundException("Course not found"));
         Lesson lesson = new Lesson(request);
         lesson.setCourse(course);
+        course.addLesson(lesson);
         lessonRepository.save(lesson);
         return new SimpleResponse("Урок сохранён");
     }
@@ -44,24 +41,6 @@ public class LessonService {
     public SimpleResponse deleteLesson(Long id) {
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Урок не найден"));
-        if (lesson.getTest() != null) {
-            Test test = testRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Тест не найден"));
-            Results results = resultsRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Результат не найден"));
-            resultsRepository.delete(results);
-            testRepository.delete(test);
-        }
-
-        if (lesson.getTask() != null) {
-            Task task = taskRepository.findById(lesson.getTask().getId())
-                    .orElseThrow(() -> new NotFoundException("Задача не найдена"));
-            Content content = contentRepository.findById(lesson.getTask().getId())
-                    .orElseThrow(() -> new NotFoundException("Контент не найден"));
-            contentRepository.delete(content);
-            taskRepository.delete(task);
-        }
-
         lessonRepository.delete(lesson);
         return new SimpleResponse("Урок удалён");
     }
