@@ -1,6 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.LessonRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.LessonResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
@@ -41,7 +42,6 @@ public class LessonService {
     }
 
     public SimpleResponse deleteLesson(Long id) {
-
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Урок не найден"));
         if (lesson.getTest() != null) {
@@ -73,5 +73,11 @@ public class LessonService {
             lessonResponses.add(new LessonResponse(lesson));
         }
         return lessonResponses;
+    }
+
+    public LessonResponse getById(Long id) {
+        Lesson lesson = lessonRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Урок не найден"));
+        return new LessonResponse(lesson);
     }
 }
