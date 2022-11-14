@@ -16,3 +16,4 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
     void deleteLessonById(Long id);
 
 }
+

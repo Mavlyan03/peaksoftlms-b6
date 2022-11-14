@@ -4,6 +4,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.VideoRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 
