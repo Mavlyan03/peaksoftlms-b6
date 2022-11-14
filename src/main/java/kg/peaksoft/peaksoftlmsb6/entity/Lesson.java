@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.LessonRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import static javax.persistence.CascadeType.*;
 public class Lesson {
 
     @Id
-    @SequenceGenerator(name = "lesson_seq", sequenceName = "lesson_seq", allocationSize = 10)
+    @SequenceGenerator(name = "lesson_seq", sequenceName = "lesson_seq", allocationSize = 1,initialValue = 2)
     @GeneratedValue(generator = "lesson_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -36,6 +37,16 @@ public class Lesson {
 
     @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
     private Test test;
+
+    public Lesson(LessonRequest request) {
+        this.lessonName = request.getLessonName();
+        this.video = getVideo();
+        this.presentation = getPresentation();
+        this.task = getTask();
+        this.link = getLink();
+        this.test = getTest();
+    }
+
     @ManyToOne(cascade = {
             DETACH,
             MERGE,
