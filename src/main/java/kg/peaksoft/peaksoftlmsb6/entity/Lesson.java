@@ -36,9 +36,10 @@ public class Lesson {
 
     @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
     private Test test;
-    @ManyToOne(cascade = {
-            DETACH,
-            MERGE,
-            REFRESH})
-    private Course course;
+
+//    @ManyToOne(cascade = {
+//            DETACH,
+//            MERGE,
+//            REFRESH})
+//    private Course course;
 }

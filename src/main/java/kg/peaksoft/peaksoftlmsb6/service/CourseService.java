@@ -95,7 +95,7 @@ public class CourseService {
                         () -> new NotFoundException(String.format("Test with id =%s not found", lesson.getTest().getId())));
                 lesson.setTest(null);
                 test.setLesson(null);
-                lesson.setCourse(null);
+//                lesson.setCourse(null);
                 testRepository.deleteById(test.getId());
             }
 
