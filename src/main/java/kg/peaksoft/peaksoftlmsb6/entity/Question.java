@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "questions")
@@ -28,8 +28,15 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @OneToMany(cascade = ALL)
+    @OneToMany(cascade = ALL, mappedBy = "question")
     private List<Option> options;
+
+    @ManyToOne(cascade = {
+            PERSIST,
+            REFRESH,
+            MERGE,
+            DETACH})
+    private Test test;
 
     public void addOption(Option option) {
         if(this.options == null) {

@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.*;
+
 @Entity
 @Table(name = "options")
 @Getter
@@ -20,6 +22,13 @@ public class Option {
     private String optionValue;
 
     private Boolean isTrue;
+
+    @ManyToOne(cascade = {
+            PERSIST,
+            REFRESH,
+            MERGE,
+            DETACH})
+    private Question question;
 
     public Option(String optionValue, Boolean isTrue) {
         this.optionValue = optionValue;

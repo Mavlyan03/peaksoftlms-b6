@@ -90,12 +90,14 @@ public class CourseService {
                     resultRepository.deleteById(results.getId());
                 }
             }
-            Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(
-                    () -> new NotFoundException(String.format("Test with id =%s not found",lesson.getTest().getId())));
-            lesson.setTest(null);
-            test.setLesson(null);
-            lesson.setCourse(null);
-            testRepository.deleteById(test.getId());
+            if(testRepository.existsById(lesson.getTest().getId())) {
+                Test test = testRepository.findById(lesson.getTest().getId()).orElseThrow(
+                        () -> new NotFoundException(String.format("Test with id =%s not found", lesson.getTest().getId())));
+                lesson.setTest(null);
+                test.setLesson(null);
+                lesson.setCourse(null);
+                testRepository.deleteById(test.getId());
+            }
 
             if(taskRepository.existsById(task.getId())) {
                 taskRepository.deleteById(task.getId());

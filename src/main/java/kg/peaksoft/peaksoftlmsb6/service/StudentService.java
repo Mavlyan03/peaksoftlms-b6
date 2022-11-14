@@ -139,7 +139,7 @@ public class StudentService {
 
             if (!exists) {
 
-                int randomNumber = random.nextInt(1000,100000);
+                int randomNumber = random.nextInt(1000);
 
                 int email = studentExcelRequest.getEmail().lastIndexOf('@');
                 String password = studentExcelRequest.getEmail().substring(0, email);

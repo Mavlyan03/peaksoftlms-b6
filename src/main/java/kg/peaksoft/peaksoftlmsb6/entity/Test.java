@@ -24,7 +24,7 @@ public class Test {
 
     private String testName;
 
-    @OneToMany(cascade = ALL)
+    @OneToMany(cascade = ALL, mappedBy = "test")
     private List<Question> question;
 
     @OneToMany(cascade = ALL, mappedBy = "test")
