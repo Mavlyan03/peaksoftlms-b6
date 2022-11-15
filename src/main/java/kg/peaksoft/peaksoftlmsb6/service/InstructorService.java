@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.CourseRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
@@ -29,6 +30,9 @@ public class InstructorService {
     private final UserRepository userRepository;
 
     public InstructorResponse createInstructor(InstructorRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new BadRequestException("Student already exists");
+        }
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
         instructorRepository.save(instructor);
