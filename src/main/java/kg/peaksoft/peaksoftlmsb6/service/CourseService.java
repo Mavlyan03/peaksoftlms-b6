@@ -29,14 +29,6 @@ public class CourseService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final LessonRepository lessonRepository;
-    private final TestRepository testRepository;
-    private final TaskRepository taskRepository;
-    private final LinkRepository linkRepository;
-    private final PresentationRepository presentationRepository;
-    private final VideoRepository videoRepository;
-    private final ContentRepository contentRepository;
-    private final ResultRepository resultRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);

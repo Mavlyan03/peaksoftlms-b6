@@ -20,11 +20,6 @@ public class LessonService {
 
     private final LessonRepository lessonRepository;
     private final CourseRepository courseRepository;
-    private final TestRepository testRepository;
-    private final TaskRepository taskRepository;
-    private final ContentRepository contentRepository;
-    private final ResultsRepository resultsRepository;
-
 
     public SimpleResponse createLesson(LessonRequest request) {
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new NotFoundException("Course not found"));
