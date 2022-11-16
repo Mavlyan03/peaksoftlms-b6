@@ -12,12 +12,21 @@ values (1, 'IT language', 'link image', 'Java', '2022/11/10');
 insert into instructors(id, first_name, last_name, phone_number, specialization, user_id)
 values (1, 'Instructor name', 'Instructor lastname', '555231245', 'Java developer', 2);
 
+insert into instructors_courses(instructors_id, courses_id)
+values (1, 1);
+
+insert into courses_group(courses_id, group_id)
+values (1, 1);
+
 insert into students(id, first_name, last_name, phone_number, study_format, group_id, user_id)
 values (1, 'Student name', 'Student lastname', ' 556545652', 'OFFLINE', 1, 3);
 
 insert into lessons(id, lesson_name, course_id)
 values (1, 'AWS', 1),
-       (2,'Docker',1);
+       (2,'Docker',1),
+       (3,'Postgres',1),
+       (4,'MVC',1),
+       (5,'Rest',1);
 
 insert into links(id, link, link_text, lesson_id)
 values (1, 'link', 'The link text', 1),

@@ -66,7 +66,7 @@ public class TestService {
             test.setQuestion(null);
             questionRepository.deleteQuestionById(question.getId());
         }
-        testRepository.deleteTestById(id);
+        testRepository.deleteTestById(test.getId());
 
         return new SimpleResponse("Test deleted");
     }

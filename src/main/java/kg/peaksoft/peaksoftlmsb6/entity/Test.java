@@ -33,7 +33,8 @@ public class Test {
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH,PERSIST})
+            DETACH,
+            PERSIST})
     private Lesson lesson;
 
     private Boolean isEnable;
