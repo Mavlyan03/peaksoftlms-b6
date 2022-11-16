@@ -24,7 +24,7 @@ public class Test {
 
     private String testName;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true)
+    @OneToMany(cascade = ALL, mappedBy = "test")
     private List<Question> question;
 
     @OneToOne(cascade = {
@@ -32,6 +32,7 @@ public class Test {
             REFRESH,
             DETACH})
     private Lesson lesson;
+
 
     private Boolean isEnable;
 

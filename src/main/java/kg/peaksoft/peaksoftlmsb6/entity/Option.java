@@ -3,8 +3,11 @@ package kg.peaksoft.peaksoftlmsb6.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
+
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "options")
@@ -20,4 +23,11 @@ public class Option {
     private String optionValue;
 
     private Boolean isTrue;
+
+    @ManyToOne(cascade = {
+            DETACH,
+            REFRESH,
+            MERGE,
+            PERSIST})
+    private Question question;
 }
