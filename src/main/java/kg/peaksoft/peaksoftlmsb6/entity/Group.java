@@ -37,7 +37,7 @@ public class Group {
     @ManyToMany(cascade = {
             MERGE,
             REFRESH,
-            DETACH}, mappedBy = "group")
+            DETACH})
     private List<Course> courses;
 
     @OneToMany(cascade = ALL, mappedBy = "group")

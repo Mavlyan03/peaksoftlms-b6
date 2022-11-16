@@ -11,15 +11,25 @@ values (1, 'IT language', 'link image', 'Java', '2022/11/10');
 
 insert into instructors(id, first_name, last_name, phone_number, specialization, user_id)
 values (1, 'Instructor name', 'Instructor lastname', '555231245', 'Java developer', 2);
+insert into instructors_courses(instructors_id, courses_id)
+values (1, 1);
+
+insert into courses_group(courses_id, group_id)
+values (1, 1);
 
 insert into students(id, first_name, last_name, phone_number, study_format, group_id, user_id)
 values (1, 'Student name', 'Student lastname', ' 556545652', 'OFFLINE', 1, 3);
 
 insert into lessons(id, lesson_name, course_id)
-values (1, 'AWS', 1);
+values (1, 'AWS', 1),
+       (2,'Docker',1),
+       (3,'Postgres',1),
+       (4,'MVC',1),
+       (5,'Rest',1);
 
 insert into links(id, link, link_text, lesson_id)
-values (1, 'link', 'The link text', 1);
+values (1, 'link', 'The link text', 1),
+       (2,'spring','spring text',2);
 
 insert into presentations(id, presentation_description, presentation_link, presentation_name, lesson_id)
 values (1, 'Presentation description', 'link', 'S3', 1);
@@ -36,12 +46,12 @@ values (1, 'VIDEO', 'video link', 'aws', 1);
 insert into tests(id, is_enable, test_name, lesson_id)
 values (1, false, 'Java core', 1);
 
-insert into questions(id, question, question_type)
-values (1, 'Type of variables?', 'SINGLETON');
+insert into questions(id, question, question_type, test_id)
+values (1, 'Type of variables?', 'SINGLETON', 1);
 
-insert into options(id, is_true, option_value)
-values (1, true, 'String and primitive'),
-       (2, false, 'Varchar');
+insert into options(id, is_true, option_value, question_id)
+values (1, true, 'String and primitive', 1),
+       (2, false, 'Varchar', 1);
 
 insert into results(id, date_of_pass, percent, student_id, test_id)
 values (1, '2022/11/10', 100, 1, 1);
