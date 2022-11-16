@@ -81,5 +81,4 @@ public class GroupService {
                 () -> new NotFoundException("Группа не найдена"));
         return groupRepository.getGroup(group.getId());
     }
-
 }
