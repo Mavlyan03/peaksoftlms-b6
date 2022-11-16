@@ -35,7 +35,7 @@ public class Lesson {
     @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Link link;
 
-    @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
+    @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Test test;
 
     public Lesson(LessonRequest request) {

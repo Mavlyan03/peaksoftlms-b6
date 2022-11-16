@@ -55,27 +55,6 @@ public class CourseService {
                 group.getCourses().remove(course);
             }
         }
-        for(Lesson lesson : course.getLessons()) {
-            linkRepository.deleteById(lesson.getLink().getId());
-            videoRepository.deleteById(lesson.getVideo().getId());
-            presentationRepository.deleteById(lesson.getPresentation().getId());
-            Test test = lesson.getTest();
-            test.setLesson(null);
-            lesson.setCourse(null);
-            testRepository.deleteById(test.getId());
-            Task task = lesson.getTask();
-            task.setLesson(null);
-            lesson.setTask(null);
-            for(Content content : task.getContents()) {
-                contentRepository.deleteById(content.getId());
-            }
-            Results results = resultRepository.findResultByTestId(test.getId());
-            results.setStudent(null);
-            results.setTest(null);
-            resultRepository.deleteById(results.getId());
-            taskRepository.deleteById(task.getId());
-            lessonRepository.deleteLessonById(lesson.getId());
-        }
         courseRepository.delete(course);
         return new SimpleResponse("Курс удалён");
     }

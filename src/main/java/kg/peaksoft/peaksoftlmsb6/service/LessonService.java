@@ -44,24 +44,6 @@ public class LessonService {
     public SimpleResponse deleteLesson(Long id) {
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Урок не найден"));
-        if (lesson.getTest() != null) {
-            Test test = testRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Тест не найден"));
-            Results results = resultsRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Результат не найден"));
-            resultsRepository.delete(results);
-            testRepository.delete(test);
-        }
-
-        if (lesson.getTask() != null) {
-            Task task = taskRepository.findById(lesson.getTask().getId())
-                    .orElseThrow(() -> new NotFoundException("Задача не найдена"));
-            Content content = contentRepository.findById(lesson.getTask().getId())
-                    .orElseThrow(() -> new NotFoundException("Контент не найден"));
-            contentRepository.delete(content);
-            taskRepository.delete(task);
-        }
-
         lessonRepository.delete(lesson);
         return new SimpleResponse("Урок удалён");
     }
