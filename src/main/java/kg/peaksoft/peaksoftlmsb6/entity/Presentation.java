@@ -31,7 +31,8 @@ public class Presentation {
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH})
+            DETACH,
+            PERSIST})
     private Lesson lesson;
 
     public Presentation(PresentationRequest request) {

@@ -34,7 +34,8 @@ public class Task {
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH})
+            DETACH,
+            PERSIST})
     private Lesson lesson;
 
     public void addContent(Content content) {

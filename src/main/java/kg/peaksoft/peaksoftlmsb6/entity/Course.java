@@ -36,7 +36,7 @@ public class Course {
     @ManyToMany(cascade = {
             DETACH,
             MERGE,
-            REFRESH})
+            REFRESH}, mappedBy = "courses")
     private List<Group> group;
 
     @ManyToMany(cascade = {
