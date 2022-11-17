@@ -17,6 +17,7 @@ import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,6 +36,7 @@ import java.util.Random;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class StudentService {
 
     private final StudentRepository studentRepository;
@@ -48,7 +50,10 @@ public class StudentService {
             throw new BadRequestException("Student already exists");
         }
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Группа не найден"));
+                () -> {
+                    log.error("Group with id {} not found", studentRequest.getGroupId());
+                    throw new NotFoundException("Группа не найден");
+                });
         Student student = new Student(studentRequest);
         group.addStudents(student);
         student.setGroup(group);
@@ -56,12 +61,16 @@ public class StudentService {
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
         sendEmail(student.getUser().getEmail(), password);
+        log.info("Save a new student by request was successfully");
         return studentRepository.getStudent(student.getId());
     }
 
     private void sendEmail(String email, String password) throws MessagingException {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
+                () -> {
+                    log.error("User with email {} not found", email);
+                    throw new NotFoundException(String.format("Пользователь с email =%s не найден", email));
+                });
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         messageHelper.setSubject("[peaksoftlms-b6] send password and username");
@@ -74,9 +83,15 @@ public class StudentService {
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Студент не найден"));
+                () -> {
+                    log.error("Student with id {} not found", id);
+                    throw new NotFoundException("Студент не найден");
+                });
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Группа не найдена"));
+                () -> {
+                    log.error("Group with id {} not found", studentRequest.getGroupId());
+                    throw new NotFoundException("Группа не найден");
+                });
         student.setGroup(group);
         group.addStudents(student);
         studentRepository.update(
@@ -91,59 +106,60 @@ public class StudentService {
         user.setEmail(studentRequest.getEmail());
         user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
+        log.info("Update student with id {} was successfully", id);
         return studentRepository.getStudent(student.getId());
     }
 
     public SimpleResponse deleteStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Студент не найден"));
+                () -> {
+                    log.error("Student with id {} not found", id);
+                    throw new NotFoundException("Студент не найден");
+                });
         studentRepository.delete(student);
+        log.info("Delete student by id {} was successfully", id);
         return new SimpleResponse("Студент удалён");
     }
 
 
     public List<StudentResponse> getAllStudent(StudyFormat studyFormat) {
         if (studyFormat.equals(StudyFormat.ALL)) {
+            log.info("Get all students by study format {} was successfully", studyFormat);
             return studentRepository.getAllStudents();
         } else {
+            log.info("Get all students by study format {} was successfully", studyFormat);
             return studentRepository.findStudentByStudyFormat(studyFormat);
         }
     }
 
     public StudentResponse getById(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Студент не найден"));
+                () -> {
+                    log.error("Student with id {} not found", id);
+                    throw new NotFoundException("Студент не найден");
+                });
+        log.info("Get student by id {} was successfully", id);
         return studentRepository.getStudent(student.getId());
     }
 
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException, MessagingException {
-
         Group group = groupRepository.findById(groupId).orElseThrow(
-                () -> new NotFoundException("Группа с " + groupId + " id не найдено !!!")
-        );
-
+                () -> {
+                    log.error("Group with id {} not found", groupId);
+                    throw new NotFoundException("Группа с " + groupId + " id не найдено !!!");
+                });
         PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings().build();
-
         InputStream inputStream = multipartFile.getInputStream();
-
         if (multipartFile.isEmpty()) {
             throw new BadRequestException("Файл пуст");
         }
-
         List<StudentExcelRequest> excelResponseList = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, options);
-
         List<Student> students = new ArrayList<>();
-
         Random random = new Random();
-
         for (StudentExcelRequest studentExcelRequest : excelResponseList) {
-
             boolean exists = studentRepository.existsByUserEmail(studentExcelRequest.getEmail());
-
             if (!exists) {
-
                 int randomNumber = random.nextInt(1000);
-
                 int email = studentExcelRequest.getEmail().lastIndexOf('@');
                 String password = studentExcelRequest.getEmail().substring(0, email);
                 String generatedPassword = password + randomNumber;
@@ -157,7 +173,7 @@ public class StudentService {
             }
         }
         studentRepository.saveAll(students);
-
+        log.info("Import students from excel was successfully");
         return new SimpleResponse("Студенты из файла Excel успешно добавлены");
     }
 }

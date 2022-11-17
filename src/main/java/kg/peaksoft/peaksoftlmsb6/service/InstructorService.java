@@ -12,6 +12,7 @@ import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.InstructorRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class InstructorService {
 
     private final InstructorRepository instructorRepository;
@@ -36,43 +38,58 @@ public class InstructorService {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
         instructorRepository.save(instructor);
+        log.info("Save a new instructor by request was successfully");
         return instructorRepository.getInstructor(instructor.getId());
     }
 
     public InstructorResponse updateInstructor(Long id, InstructorRequest request) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
+                .orElseThrow(() -> {
+                    log.error("Instructor with id {} not found", id);
+                    throw new NotFoundException("Инструктор не найден");
+                });
         instructorRepository.update(instructor.getId(),
                 request.getFirstName(),
                 request.getLastName(),
                 request.getSpecialization(),
                 request.getPhoneNumber());
         User user = userRepository.findById(instructor.getUser().getId())
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> {
+                    log.error("User with id {} not found", instructor.getUser().getId());
+                    throw new NotFoundException("Пользователь не найден");
+                });
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.INSTRUCTOR);
         instructor.setUser(user);
         instructorRepository.save(instructor);
+        log.info("Update instructor with id {} was successfully", id);
         return instructorRepository.getInstructor(instructor.getId());
     }
 
     public SimpleResponse deleteInstructorById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
+                .orElseThrow(() -> {
+                    log.error("Instructor with id {} not found", id);
+                    throw new NotFoundException("Инструктор не найден");
+                });
         instructorRepository.delete(instructor);
+        log.info("Delete instructor by id {} was successfully", id);
         return new SimpleResponse("Инструктор удалён");
     }
 
     public List<InstructorResponse> getAllInstructors() {
+        log.info("Get all instructor was successfully");
         return instructorRepository.getAllInstructors();
     }
 
-
     public InstructorResponse getById(Long id) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Инструктор не найден"));
+                .orElseThrow(() -> {
+                    log.error("Instructor with id {} not found", id);
+                    throw new NotFoundException("Инструктор не найден");
+                });
+        log.info("Get instructor by id {} was successfully", id);
         return instructorRepository.getInstructor(instructor.getId());
     }
-
 }

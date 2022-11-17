@@ -11,6 +11,7 @@ import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import kg.peaksoft.peaksoftlmsb6.security.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,13 +27,13 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class UserService  {
+@Slf4j
+public class UserService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
-
 
     public AuthResponse login(LoginRequest userRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -41,28 +42,41 @@ public class UserService  {
                         userRequest.getPassword()));
         System.out.println(userRequest.getEmail());
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new BadCredentialsException("Неправильные данные"));
+                .orElseThrow(() -> {
+                    log.error("Bad credentials");
+                    throw new BadCredentialsException("Неправильные данные");
+                });
         String token = jwtTokenUtil.generateToken(user.getEmail());
-        return new AuthResponse(user.getUsername(),token,user.getRole());
+        log.info("Login user with email {} and password {} was successfully",
+                userRequest.getEmail(), userRequest.getPassword());
+        return new AuthResponse(user.getUsername(), token, user.getRole());
     }
 
     public SimpleResponse forgotPassword(String email, String link) throws MessagingException {
         User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException("Пользователь не найден"));
+                () -> {
+                    log.error("User with email {} not found", email);
+                    throw new NotFoundException("Пользователь не найден");
+                });
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,true,"UTF-8");
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         messageHelper.setSubject("[peaksoftlms-b6] подвердить пароль");
         messageHelper.setFrom("peaksoftlms-b6@gmail.com");
         messageHelper.setTo(email);
         messageHelper.setText(link + "/" + user.getId(), true);
         javaMailSender.send(mimeMessage);
+        log.info("Forgot password with email {} was successfully", email);
         return new SimpleResponse("Отправлено в почту");
     }
 
     public SimpleResponse resetPassword(ForgotPasswordRequest request) {
         User user = userRepository.findById(request.getId()).orElseThrow(
-                () -> new NotFoundException("Пользователь не найден"));
+                () -> {
+                    log.error("User with id {} not found", request.getId());
+                    throw new NotFoundException("Пользователь не найден");
+                });
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        log.info("Reset a new password {} was successfully", request.getNewPassword());
         return new SimpleResponse("Пароль обнавлён");
     }
 }
