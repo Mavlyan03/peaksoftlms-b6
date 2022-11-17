@@ -11,6 +11,7 @@ import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class CourseService {
     private final CourseRepository courseRepository;
     private final InstructorRepository instructorRepository;
@@ -134,6 +136,7 @@ public class CourseService {
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
+        log.info(String.format("Инструктор назначен на курс"));
         return new SimpleResponse("Инструктор назначен на курс");
     }
 
