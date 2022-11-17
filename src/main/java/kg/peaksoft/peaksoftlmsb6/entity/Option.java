@@ -15,6 +15,7 @@ import static javax.persistence.CascadeType.*;
 @Setter
 @NoArgsConstructor
 public class Option {
+
     @Id
     @SequenceGenerator(name = "option_seq", sequenceName = "option_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "option_seq", strategy = GenerationType.SEQUENCE)
@@ -24,10 +25,4 @@ public class Option {
 
     private Boolean isTrue;
 
-    @ManyToOne(cascade = {
-            DETACH,
-            REFRESH,
-            MERGE,
-            PERSIST})
-    private Question question;
 }

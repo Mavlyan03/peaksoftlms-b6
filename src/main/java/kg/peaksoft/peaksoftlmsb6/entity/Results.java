@@ -35,5 +35,4 @@ public class Results {
             REFRESH,
             DETACH})
     private Test test;
-
 }

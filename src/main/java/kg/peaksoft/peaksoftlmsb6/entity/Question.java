@@ -28,15 +28,8 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @OneToMany(cascade = ALL, mappedBy = "question")
+    @OneToMany(cascade = ALL)
     private List<Option> options;
-
-    @ManyToOne(cascade = {
-            DETACH,
-            REFRESH,
-            MERGE,
-            PERSIST})
-    private Test test;
 
     public void addOption(Option option) {
         if(this.options == null) {

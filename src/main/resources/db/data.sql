@@ -31,8 +31,8 @@ insert into students(id, first_name, last_name, phone_number, study_format, grou
 values (1, 'Student name', 'Student lastname', ' 556545652', 'OFFLINE', 1, 3),
        (2, 'Mavlyan', 'Sadirov', ' 0999123456', 'ONLINE', 1, 4),
        (3, 'Aiperi', 'Dzanyshalieva', ' 0700987654', 'OFFLINE', 1, 5),
-       (4, 'Nurmatbek', 'Davranov', ' 0778341287', 'OFFLINE', 1, 6),
-       (5, 'Nursultan', 'Kalilov', ' 0556981267', 'OFFLINE', 1, 7);
+       (4, 'Nurmatbek', 'Davranov', ' 0778341287', 'OFFLINE', 2, 6),
+       (5, 'Nursultan', 'Kalilov', ' 0556981267', 'OFFLINE', 2, 7);
 
 insert into lessons(id, lesson_name, course_id)
 values (1, 'AWS', 1),
@@ -67,12 +67,22 @@ values (1, 'VIDEO', 'video link', 'aws', 1);
 insert into tests(id, is_enable, test_name, lesson_id)
 values (1, false, 'Java core', 1);
 
-insert into questions(id, question, question_type, test_id)
-values (1, 'Type of variables?', 'SINGLETON', 1);
+insert into questions(id, question, question_type)
+values (1, 'Type of variables?', 'SINGLETON');
 
-insert into options(id, is_true, option_value, question_id)
-values (1, true, 'String and primitive', 1),
-       (2, false, 'Varchar', 1);
+insert into options(id, is_true, option_value)
+values (1, true, 'String and primitive'),
+       (2, false, 'Varchar');
 
-insert into results(id, date_of_pass, percent, student_id, test_id)
-values (1, '2022/11/10', 100, 1, 1);
+insert into tests_question(test_id,question_id)
+values (1,1);
+
+insert into questions_options(question_id,options_id)
+values (1,1),
+       (1,2);
+
+insert into results(id, date_of_pass, percent, student_id,test_id)
+values (1, '2022/11/10', 100, 1,1),
+       (2,'2022/12/22',100,4,1)
+
+
