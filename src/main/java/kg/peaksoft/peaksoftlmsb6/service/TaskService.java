@@ -75,7 +75,6 @@ public class TaskService {
         return taskResponse;
     }
 
-
     public SimpleResponse updateTask(Long id, TaskRequest taskRequest) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Задача не найдена"));
@@ -86,25 +85,6 @@ public class TaskService {
         }
         return new SimpleResponse("Task update successfully");
     }
-
-//    private TaskResponse convertUpdateToResponse(Long id, UpdateTaskRequest request) {
-//        Task task = taskRepository.findById(id).orElseThrow(
-//                () -> new NotFoundException("Задача не найдена"));
-//        TaskResponse taskResponse = new TaskResponse(id, request.getTaskName());
-//        List<ContentResponse> contentResponses = new ArrayList<>();
-//        for(UpdateTaskRequest contentRequest : request.getContentRequestList()) {
-//            for(Content content : task.getContents()) {
-//                contentResponses.add(new ContentResponse(
-//                        content.getId(),
-//                        contentRequest.getContentName(),
-//                        contentRequest.getContentFormat(),
-//                        contentRequest.getContentValue()));
-//            }
-//        }
-//        taskResponse.setContentResponses(contentResponses);
-//        return taskResponse;
-//    }
-
 
     public SimpleResponse deleteById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
