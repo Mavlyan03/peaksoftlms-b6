@@ -29,12 +29,12 @@ public class TaskApi {
     }
 
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update task",
-            description = "Instructor update task by id")
-    public SimpleResponse updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
-        return taskService.updateTask(id, taskRequest);
-    }
+//    @PutMapping("/{id}")
+//    @Operation(summary = "Update task",
+//            description = "Instructor update task by id")
+//    public SimpleResponse updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
+//        return taskService.updateTask(id, taskRequest);
+//    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete task",

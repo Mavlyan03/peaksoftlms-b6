@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.LinkResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
 import kg.peaksoft.peaksoftlmsb6.entity.Link;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.LinkRepository;
@@ -24,9 +25,14 @@ public class LinkService {
     public LinkResponse createLink(LinkRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> new NotFoundException("Урок не найден"));
-        Link link = new Link(request);
-        lesson.setLink(link);
-        link.setLesson(lesson);
+        Link link = null;
+        if (lesson.getLink() == null) {
+            link = new Link(request);
+            lesson.setLink(link);
+            link.setLesson(lesson);
+        } else {
+            throw new BadRequestException("У урока уже есть ссылка");
+        }
         linkRepository.save(link);
         return linkRepository.getLink(link.getId());
     }
@@ -46,7 +52,7 @@ public class LinkService {
     }
 
     public SimpleResponse deleteById(Long id) {
-        if(!linkRepository.existsById(id)) {
+        if (!linkRepository.existsById(id)) {
             throw new NotFoundException("Ссылка не найдена");
         }
         linkRepository.deleteLinkById(id);

@@ -49,13 +49,4 @@ public class Content {
         this.contentFormat = contentFormat;
         this.contentValue = contentValue;
     }
-
-    public Content(Task task, ContentRequest contentRequest) {
-        for(Content content : task.getContents()) {
-            this.id = content.getId();
-            this.contentName = contentRequest.getContentName();
-            this.contentFormat = contentRequest.getContentFormat();
-            this.contentValue = contentRequest.getContentValue();
-        }
-    }
 }
