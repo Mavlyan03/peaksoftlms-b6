@@ -23,12 +23,14 @@ public class FileApi {
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Upload file", description = "Upload file to database")
+    @Operation(summary = "Upload file",
+            description = "Upload file to database")
     public Map<String, String> uploadFile(@RequestParam(name = "file", required = false) MultipartFile file) throws IOException {
         return s3Service.upload(file);
     }
     @DeleteMapping
-    @Operation(summary = "Delete file", description = "Delete file from database")
+    @Operation(summary = "Delete file",
+            description = "Delete file from database")
     public Map<String, String> deleteFile(@RequestParam String fileLink) {
         return s3Service.delete(fileLink);
     }

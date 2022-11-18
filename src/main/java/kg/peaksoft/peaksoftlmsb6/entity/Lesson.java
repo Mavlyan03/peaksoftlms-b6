@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.LessonRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -36,6 +37,16 @@ public class Lesson {
 
     @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
     private Test test;
+
+    public Lesson(LessonRequest request) {
+        this.lessonName = request.getLessonName();
+        this.video = getVideo();
+        this.presentation = getPresentation();
+        this.task = getTask();
+        this.link = getLink();
+        this.test = getTest();
+    }
+
     @ManyToOne(cascade = {
             DETACH,
             MERGE,

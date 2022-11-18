@@ -44,6 +44,9 @@ public class StudentService {
     private final JavaMailSender javaMailSender;
 
     public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
+        if (userRepository.existsByEmail(studentRequest.getEmail())) {
+            throw new BadRequestException("Student already exists");
+        }
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
                 () -> new NotFoundException("Группа не найден"));
         Student student = new Student(studentRequest);

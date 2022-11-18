@@ -22,8 +22,8 @@ public class VideoApi {
 
     @PostMapping
     @Operation(summary = "Save video",
-            description = "To save a new video by INSTRUCTOR")
-    public VideoResponse createVideo(@RequestBody VideoRequest request) {
+            description = "To save a new video by Instructor")
+    public VideoResponse saveVideo(@RequestBody VideoRequest request) {
         return videoService.saveVideo(request);
     }
 
