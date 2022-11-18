@@ -1,5 +1,8 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateContentRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.ContentFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,10 +25,6 @@ public class Content {
     private Long id;
 
     private String contentName;
-
-
-
-
     @Enumerated(EnumType.STRING)
     private ContentFormat contentFormat;
 
@@ -49,5 +48,14 @@ public class Content {
         this.contentName = contentName;
         this.contentFormat = contentFormat;
         this.contentValue = contentValue;
+    }
+
+    public Content(Task task, ContentRequest contentRequest) {
+        for(Content content : task.getContents()) {
+            this.id = content.getId();
+            this.contentName = contentRequest.getContentName();
+            this.contentFormat = contentRequest.getContentFormat();
+            this.contentValue = contentRequest.getContentValue();
+        }
     }
 }

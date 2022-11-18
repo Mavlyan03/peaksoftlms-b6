@@ -10,5 +10,5 @@ import java.util.List;
 public class UpdateTaskRequest {
     private Long lessonId;
     private String taskName;
-    private List<UpdateContentRequest> contentRequestList;
+    private List<ContentRequest> contentRequestList;
 }

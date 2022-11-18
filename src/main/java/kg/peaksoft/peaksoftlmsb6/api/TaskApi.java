@@ -32,7 +32,7 @@ public class TaskApi {
     @PutMapping("/{id}")
     @Operation(summary = "Update task",
             description = "Instructor update task by id")
-    public SimpleResponse updateTask(@PathVariable Long id, @RequestBody UpdateTaskRequest taskRequest) {
+    public SimpleResponse updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
         return taskService.updateTask(id, taskRequest);
     }
 

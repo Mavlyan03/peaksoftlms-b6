@@ -16,7 +16,7 @@ import static javax.persistence.CascadeType.*;
 public class Lesson {
 
     @Id
-    @SequenceGenerator(name = "lesson_seq", sequenceName = "lesson_seq", allocationSize = 10)
+    @SequenceGenerator(name = "lesson_seq", sequenceName = "lesson_seq", allocationSize = 1, initialValue = 2)
     @GeneratedValue(generator = "lesson_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

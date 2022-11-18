@@ -16,7 +16,8 @@ insert into students(id, first_name, last_name, phone_number, study_format, grou
 values (1, 'Student name', 'Student lastname', ' 556545652', 'OFFLINE', 1, 3);
 
 insert into lessons(id, lesson_name, course_id)
-values (1, 'AWS', 1);
+values (1, 'AWS', 1),
+       (2,'S3',1);
 
 insert into links(id, link, link_text, lesson_id)
 values (1, 'link', 'The link text', 1);

@@ -76,26 +76,16 @@ public class TaskService {
     }
 
 
-    public SimpleResponse updateTask(Long id, UpdateTaskRequest taskRequest) {
+    public SimpleResponse updateTask(Long id, TaskRequest taskRequest) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Задача не найдена"));
         taskRepository.update(task.getId(), taskRequest.getTaskName());
-        for(UpdateContentRequest contentRequest : taskRequest.getContentRequestList()) {
-            convertToEntity(contentRequest);
+        for(ContentRequest contentRequest : taskRequest.getContentRequests()) {
+            Content content = new Content(task, contentRequest);
+            task.addContent(content);
         }
         return new SimpleResponse("Task update successfully");
     }
-
-    private void convertToEntity(UpdateContentRequest contentRequest) {
-        Task task = taskRepository.findById(contentRequest.getTaskId()).orElseThrow(
-                () -> new NotFoundException("Задача не найдена"));
-        for(Content content : task.getContents()) {
-            content.setContentName(contentRequest.getContentName());
-            content.setContentFormat(contentRequest.getContentFormat());
-            content.setContentValue(contentRequest.getContentValue());
-        }
-    }
-
 
 //    private TaskResponse convertUpdateToResponse(Long id, UpdateTaskRequest request) {
 //        Task task = taskRepository.findById(id).orElseThrow(
