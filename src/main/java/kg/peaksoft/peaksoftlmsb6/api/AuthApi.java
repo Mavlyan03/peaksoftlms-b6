@@ -25,7 +25,7 @@ public class AuthApi {
     @PostMapping("/login")
     @Operation(summary = "Login",
             description = "User can login by email and password")
-    public AuthResponse login(@RequestBody LoginRequest request){
+    public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
     }
 
