@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 public class LinkService {
 
     private final LinkRepository linkRepository;
+
     private final LessonRepository lessonRepository;
 
     public LinkResponse createLink(LinkRequest request) {
@@ -33,7 +34,7 @@ public class LinkService {
         lesson.setLink(link);
         link.setLesson(lesson);
         linkRepository.save(link);
-        log.info("Save a new link by request was successfully");
+        log.info("New lesson successfully saved!");
         return linkRepository.getLink(link.getId());
     }
 

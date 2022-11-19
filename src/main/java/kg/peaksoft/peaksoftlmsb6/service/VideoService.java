@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 public class VideoService {
 
     private final VideoRepository videoRepository;
+
     private final LessonRepository lessonRepository;
 
     public VideoResponse saveVideo(VideoRequest request) {
@@ -33,7 +34,7 @@ public class VideoService {
         lesson.setVideo(video);
         video.setLesson(lesson);
         videoRepository.save(video);
-        log.info("Save a new video by request was successfully");
+        log.info("New video successfully saved!");
         return videoRepository.getVideo(video.getId());
     }
 

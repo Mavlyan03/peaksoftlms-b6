@@ -2,7 +2,6 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ForgotPasswordRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.LoginRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AuthResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
@@ -29,10 +28,15 @@ import javax.transaction.Transactional;
 @Transactional
 @Slf4j
 public class UserService {
+
     private final UserRepository userRepository;
+
     private final AuthenticationManager authenticationManager;
+
     private final JwtTokenUtil jwtTokenUtil;
+
     private final JavaMailSender javaMailSender;
+
     private final PasswordEncoder passwordEncoder;
 
 

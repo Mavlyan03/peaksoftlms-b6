@@ -3,12 +3,11 @@ package kg.peaksoft.peaksoftlmsb6.service;
 import kg.peaksoft.peaksoftlmsb6.dto.request.InstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
-import kg.peaksoft.peaksoftlmsb6.entity.*;
+import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
+import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
-import kg.peaksoft.peaksoftlmsb6.repository.CourseRepository;
-import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.InstructorRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +37,7 @@ public class InstructorService {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
         instructorRepository.save(instructor);
-        log.info("Save a new instructor by request was successfully");
+        log.info("New instructor successfully saved!");
         return instructorRepository.getInstructor(instructor.getId());
     }
 

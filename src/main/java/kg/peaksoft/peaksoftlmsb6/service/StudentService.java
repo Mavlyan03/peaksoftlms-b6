@@ -40,9 +40,13 @@ import java.util.Random;
 public class StudentService {
 
     private final StudentRepository studentRepository;
+
     private final PasswordEncoder passwordEncoder;
+
     private final GroupRepository groupRepository;
+
     private final UserRepository userRepository;
+
     private final JavaMailSender javaMailSender;
 
     public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {

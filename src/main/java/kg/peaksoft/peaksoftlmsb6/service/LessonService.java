@@ -1,7 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.LessonRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.LessonResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
@@ -22,10 +21,15 @@ import java.util.List;
 public class LessonService {
 
     private final LessonRepository lessonRepository;
+
     private final CourseRepository courseRepository;
+
     private final TestRepository testRepository;
+
     private final TaskRepository taskRepository;
+
     private final ContentRepository contentRepository;
+
     private final ResultsRepository resultsRepository;
 
 

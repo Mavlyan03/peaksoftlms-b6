@@ -34,7 +34,7 @@ public class PresentationService {
         lesson.setPresentation(presentation);
         presentation.setLesson(lesson);
         presentationRepository.save(presentation);
-        log.info("Save a new presentation by request was successfully");
+        log.info("New presentation successfully saved!");
         return presentationRepository.getPresentation(presentation.getId());
     }
 

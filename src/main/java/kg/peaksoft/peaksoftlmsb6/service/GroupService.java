@@ -25,12 +25,13 @@ import java.util.List;
 public class GroupService {
 
     private final GroupRepository groupRepository;
+
     private final ResultRepository resultRepository;
 
     public GroupResponse createGroup(GroupRequest request) {
         Group group = new Group(request);
         groupRepository.save(group);
-        log.info("Save a new group by request was successfully");
+        log.info("New course successfully saved!");
         return groupRepository.getGroup(group.getId());
     }
 

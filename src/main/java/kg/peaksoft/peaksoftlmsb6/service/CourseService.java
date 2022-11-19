@@ -11,7 +11,6 @@ import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -27,16 +26,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class CourseService {
+
     private final CourseRepository courseRepository;
+
     private final InstructorRepository instructorRepository;
+
     private final StudentRepository studentRepository;
+
     private final UserRepository userRepository;
+
     private final GroupRepository groupRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
         courseRepository.save(course);
-        log.info("Save a new course by request was successfully");
+        log.info("New course successfully saved!");
         return courseRepository.getCourse(course.getId());
     }
 
@@ -55,7 +59,7 @@ public class CourseService {
             }
         }
         courseRepository.delete(course);
-        log.info("Delete course by id {} was sucessfully", id);
+        log.info("Delete course by id {} was successfully", id);
         return new SimpleResponse("Курс удалён");
     }
 
@@ -122,7 +126,8 @@ public class CourseService {
     }
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
-        Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
+        Instructor instructor = instructorRepository.findById(request.getInstructorId())
+                .orElseThrow(
                 () -> {
                     log.error("Instructor with id {} not found", request.getInstructorId());
                     throw new NotFoundException("Инструктор не найден");
@@ -135,7 +140,7 @@ public class CourseService {
         instructor.addCourse(course);
         course.addInstructor(instructor);
         courseRepository.save(course);
-        log.info("Assign instructor to course by request was successfully");
+        log.info("Assign instructor {} to course was successfully", instructor.getUser().getEmail());
         return new SimpleResponse("Инструктор назначен на курс");
     }
 
@@ -158,7 +163,7 @@ public class CourseService {
         }
         courseRepository.save(course);
         instructorRepository.save(instructor);
-        log.info("Unassigned instructor from course by request was successfully");
+        log.info("Unassigned instructor from course was successfully");
         return new SimpleResponse("Инструктор удален с курса");
     }
 
@@ -212,7 +217,7 @@ public class CourseService {
         group.addCourse(course);
         course.addGroup(group);
         courseRepository.save(course);
-        log.info("Assign group to course by request was successfully");
+        log.info("Assign group to course was successfully");
         return new SimpleResponse("Группа назначена на курс");
     }
 
