@@ -18,14 +18,17 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class LinkService {
-
     private final LinkRepository linkRepository;
     private final LessonRepository lessonRepository;
 
     public LinkResponse createLink(LinkRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Урок не найден"));
+                () -> {
+                    log.error("Lesson with id {} not found",request.getLessonId());
+                    throw new NotFoundException("Урок не найден");
+                });
         Link link = null;
         if (lesson.getLink() == null) {
             link = new Link(request);
@@ -34,11 +37,7 @@ public class LinkService {
         } else {
             throw new BadRequestException("У урока уже есть ссылка");
         }
-                () -> {
-                    log.error("Lesson with id {} not found", request.getLessonId());
-                    throw new NotFoundException("Урок не найден");
-                });
-        Link link = new Link(request);
+        link = new Link(request);
         lesson.setLink(link);
         link.setLesson(lesson);
         linkRepository.save(link);
