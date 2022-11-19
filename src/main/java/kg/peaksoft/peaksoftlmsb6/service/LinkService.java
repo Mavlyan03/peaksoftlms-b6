@@ -10,6 +10,7 @@ import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.LinkRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,18 +34,30 @@ public class LinkService {
         } else {
             throw new BadRequestException("У урока уже есть ссылка");
         }
+                () -> {
+                    log.error("Lesson with id {} not found", request.getLessonId());
+                    throw new NotFoundException("Урок не найден");
+                });
+        Link link = new Link(request);
+        lesson.setLink(link);
+        link.setLesson(lesson);
         linkRepository.save(link);
+        log.info("New lesson successfully saved!");
         return linkRepository.getLink(link.getId());
     }
 
     public LinkResponse updateLink(Long id, LinkRequest request) {
         Link link = linkRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Ссылка не найдена"));
+                () -> {
+                    log.error("Link with id {} not found", id);
+                    throw new NotFoundException("Ссылка не найдена");
+                });
         linkRepository.update(
                 link.getId(),
                 request.getLinkText(),
                 request.getLink());
         linkRepository.save(link);
+        log.info("Update link with id {} was successfully", id);
         return new LinkResponse(
                 link.getId(),
                 request.getLinkText(),
@@ -53,15 +66,21 @@ public class LinkService {
 
     public SimpleResponse deleteById(Long id) {
         if (!linkRepository.existsById(id)) {
+            log.error("Link with id {} not found", id);
             throw new NotFoundException("Ссылка не найдена");
         }
         linkRepository.deleteLinkById(id);
+        log.info("Delete link by id {} was successfully", id);
         return new SimpleResponse("Ссылка удалена");
     }
 
     public LinkResponse getLinkById(Long id) {
         Link link = linkRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Ссылка не найдена"));
+                () -> {
+                    log.error("Link with id {} not found", id);
+                    throw new NotFoundException("Ссылка не найдена");
+                });
+        log.info("Get link by id {} was successfully", id);
         return linkRepository.getLink(link.getId());
     }
 }

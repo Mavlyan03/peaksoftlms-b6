@@ -1,8 +1,8 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Course;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +12,6 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayDeque;
-import java.util.Deque;
 
 public interface CourseRepository extends JpaRepository<Course, Long> {
 

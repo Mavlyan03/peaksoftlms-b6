@@ -17,6 +17,7 @@ import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,12 +36,17 @@ import java.util.Random;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class StudentService {
 
     private final StudentRepository studentRepository;
+
     private final PasswordEncoder passwordEncoder;
+
     private final GroupRepository groupRepository;
+
     private final UserRepository userRepository;
+
     private final JavaMailSender javaMailSender;
 
     public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
@@ -48,13 +54,17 @@ public class StudentService {
             throw new BadRequestException("Student already exists");
         }
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Группа не найден"));
+                () -> {
+                    log.error("Group with id {} not found", studentRequest.getGroupId());
+                    throw new NotFoundException("Группа не найден");
+                });
         Student student = new Student(studentRequest);
         group.addStudents(student);
         student.setGroup(group);
         String password = studentRequest.getPassword();
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
+        log.info("Save a new student by request was successfully");
 //        sendEmail(student.getUser().getEmail(), password);
         return studentRepository.getStudent(student.getId());
     }
@@ -74,9 +84,15 @@ public class StudentService {
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Студент не найден"));
+                () -> {
+                    log.error("Student with id {} not found", id);
+                    throw new NotFoundException("Студент не найден");
+                });
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
-                () -> new NotFoundException("Группа не найдена"));
+                () -> {
+                    log.error("Group with id {} not found", studentRequest.getGroupId());
+                    throw new NotFoundException("Группа не найден");
+                });
         student.setGroup(group);
         group.addStudents(student);
         studentRepository.update(
@@ -91,39 +107,49 @@ public class StudentService {
         user.setEmail(studentRequest.getEmail());
         user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
+        log.info("Update student with id {} was successfully", id);
         return studentRepository.getStudent(student.getId());
     }
 
     public SimpleResponse deleteStudent(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Студент не найден"));
+                () -> {
+                    log.error("Student with id {} not found", id);
+                    throw new NotFoundException("Студент не найден");
+                });
         studentRepository.delete(student);
+        log.info("Delete student by id {} was successfully", id);
         return new SimpleResponse("Студент удалён");
     }
 
 
     public List<StudentResponse> getAllStudent(StudyFormat studyFormat) {
         if (studyFormat.equals(StudyFormat.ALL)) {
+            log.info("Get all students by study format {} was successfully", studyFormat);
             return studentRepository.getAllStudents();
         } else {
+            log.info("Get all students by study format {} was successfully", studyFormat);
             return studentRepository.findStudentByStudyFormat(studyFormat);
         }
     }
 
     public StudentResponse getById(Long id) {
         Student student = studentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Студент не найден"));
+                () -> {
+                    log.error("Student with id {} not found", id);
+                    throw new NotFoundException("Студент не найден");
+                });
+        log.info("Get student by id {} was successfully", id);
         return studentRepository.getStudent(student.getId());
     }
 
     public SimpleResponse importExcel(Long groupId, MultipartFile multipartFile) throws IOException, MessagingException {
-
         Group group = groupRepository.findById(groupId).orElseThrow(
-                () -> new NotFoundException("Группа с " + groupId + " id не найдено !!!")
-        );
-
+                () -> {
+                    log.error("Group with id {} not found", groupId);
+                    throw new NotFoundException("Группа с " + groupId + " id не найдено !!!");
+                });
         PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings().build();
-
         InputStream inputStream = multipartFile.getInputStream();
 
         if (multipartFile.isEmpty()) {
@@ -157,7 +183,7 @@ public class StudentService {
             }
         }
         studentRepository.saveAll(students);
-
+        log.info("Import students from excel was successfully");
         return new SimpleResponse("Студенты из файла Excel успешно добавлены");
     }
 }

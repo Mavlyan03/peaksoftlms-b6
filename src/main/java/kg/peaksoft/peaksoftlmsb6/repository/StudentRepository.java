@@ -1,7 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.repository;
 
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
-import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,9 +15,6 @@ import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-
-    @Query("select s from Student s where s.user.email = :email")
-    Optional<Student> findByEmail(@Param("email") String email);
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse(" +
             "id," +
@@ -61,7 +57,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("select s from Student s where s.user.id = ?1")
     Optional<Student> findByUserId(Long id);
-
 
     boolean existsByUserEmail(String email);
 }
