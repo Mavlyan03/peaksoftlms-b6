@@ -32,14 +32,6 @@ public class CourseService {
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
-    private final LessonRepository lessonRepository;
-    private final TestRepository testRepository;
-    private final TaskRepository taskRepository;
-    private final LinkRepository linkRepository;
-    private final PresentationRepository presentationRepository;
-    private final VideoRepository videoRepository;
-    private final ContentRepository contentRepository;
-    private final ResultRepository resultRepository;
 
     public CourseResponse createCourse(CourseRequest request) {
         Course course = new Course(request);
@@ -61,27 +53,6 @@ public class CourseService {
             if (group != null) {
                 group.getCourses().remove(course);
             }
-        }
-        for (Lesson lesson : course.getLessons()) {
-            linkRepository.deleteById(lesson.getLink().getId());
-            videoRepository.deleteById(lesson.getVideo().getId());
-            presentationRepository.deleteById(lesson.getPresentation().getId());
-            Test test = lesson.getTest();
-            test.setLesson(null);
-            lesson.setCourse(null);
-            testRepository.deleteById(test.getId());
-            Task task = lesson.getTask();
-            task.setLesson(null);
-            lesson.setTask(null);
-            for (Content content : task.getContents()) {
-                contentRepository.deleteById(content.getId());
-            }
-            Results results = resultRepository.findResultByTestId(test.getId());
-            results.setStudent(null);
-            results.setTest(null);
-            resultRepository.deleteById(results.getId());
-            taskRepository.deleteById(task.getId());
-            lessonRepository.deleteLessonById(lesson.getId());
         }
         courseRepository.delete(course);
         log.info("Delete course by id {} was sucessfully", id);

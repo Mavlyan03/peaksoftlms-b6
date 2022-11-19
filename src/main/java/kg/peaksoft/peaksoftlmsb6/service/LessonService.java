@@ -28,6 +28,7 @@ public class LessonService {
     private final ContentRepository contentRepository;
     private final ResultsRepository resultsRepository;
 
+
     public SimpleResponse createLesson(LessonRequest request) {
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
@@ -53,11 +54,8 @@ public class LessonService {
     }
 
     public SimpleResponse deleteLesson(Long id) {
-        Lesson lesson = lessonRepository.findById(id).orElseThrow(
-                () -> {
-                    log.error("Lesson with id {} not found", id);
-                    throw new NotFoundException("Урок не найден");
-                });
+        Lesson lesson = lessonRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Урок не найден"));
         if (lesson.getTest() != null) {
             Test test = testRepository.findById(lesson.getTest().getId())
                     .orElseThrow(() -> new NotFoundException("Тест не найден"));

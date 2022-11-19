@@ -60,26 +60,23 @@ public class StudentService {
         String password = studentRequest.getPassword();
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
-        sendEmail(student.getUser().getEmail(), password);
         log.info("Save a new student by request was successfully");
+//        sendEmail(student.getUser().getEmail(), password);
         return studentRepository.getStudent(student.getId());
     }
 
-    private void sendEmail(String email, String password) throws MessagingException {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> {
-                    log.error("User with email {} not found", email);
-                    throw new NotFoundException(String.format("Пользователь с email =%s не найден", email));
-                });
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
-        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
-        messageHelper.setTo(user.getEmail());
-        messageHelper.setText("WELCOME TO PEAKSOFT SCHOOL! " +
-                " Username: " + user.getUsername() + "  Password: " + password, true);
-        javaMailSender.send(mimeMessage);
-    }
+//    private void sendEmail(String email, String password) throws MessagingException {
+//        User user = userRepository.findByEmail(email).orElseThrow(
+//                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
+//        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+//        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
+//        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
+//        messageHelper.setTo(user.getEmail());
+//        messageHelper.setText("WELCOME TO PEAKSOFT SCHOOL! " +
+//                " Username: " + user.getUsername() + "  Password: " + password, true);
+//        javaMailSender.send(mimeMessage);
+//    }
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
@@ -150,16 +147,25 @@ public class StudentService {
                 });
         PoijiOptions options = PoijiOptions.PoijiOptionsBuilder.settings().build();
         InputStream inputStream = multipartFile.getInputStream();
+
         if (multipartFile.isEmpty()) {
             throw new BadRequestException("Файл пуст");
         }
+
         List<StudentExcelRequest> excelResponseList = Poiji.fromExcel(inputStream, PoijiExcelType.XLSX, StudentExcelRequest.class, options);
+
         List<Student> students = new ArrayList<>();
+
         Random random = new Random();
+
         for (StudentExcelRequest studentExcelRequest : excelResponseList) {
+
             boolean exists = studentRepository.existsByUserEmail(studentExcelRequest.getEmail());
+
             if (!exists) {
+
                 int randomNumber = random.nextInt(1000);
+
                 int email = studentExcelRequest.getEmail().lastIndexOf('@');
                 String password = studentExcelRequest.getEmail().substring(0, email);
                 String generatedPassword = password + randomNumber;
@@ -169,7 +175,7 @@ public class StudentService {
                 group.addStudents(student);
 
                 students.add(student);
-                sendEmail(student.getUser().getEmail(), generatedPassword);
+//                sendEmail(student.getUser().getEmail(), generatedPassword);
             }
         }
         studentRepository.saveAll(students);

@@ -35,6 +35,7 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
 
+
     public AuthResponse login(LoginRequest userRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

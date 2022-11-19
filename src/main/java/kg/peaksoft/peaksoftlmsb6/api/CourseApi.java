@@ -49,6 +49,7 @@ public class CourseApi {
         return courseService.deleteById(id);
     }
 
+
     @PostMapping("/assign")
     @Operation(summary = "Assign",
             description = "Admin assign instructors to course by their id")
