@@ -21,7 +21,7 @@ import static javax.persistence.CascadeType.*;
 public class Group {
 
     @Id
-    @SequenceGenerator(name = "group_seq", sequenceName = "group_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "group_seq", sequenceName = "group_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "group_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -37,7 +37,7 @@ public class Group {
     @ManyToMany(cascade = {
             MERGE,
             REFRESH,
-            DETACH}, mappedBy = "group")
+            DETACH})
     private List<Course> courses;
 
     @OneToMany(cascade = ALL, mappedBy = "group")

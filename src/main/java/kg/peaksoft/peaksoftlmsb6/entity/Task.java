@@ -22,7 +22,7 @@ import static javax.persistence.CascadeType.*;
 public class Task {
 
     @Id
-    @SequenceGenerator(name = "task_seq", sequenceName = "task_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "task_seq", sequenceName = "task_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "task_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -35,7 +35,8 @@ public class Task {
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH})
+            DETACH,
+            PERSIST})
     private Lesson lesson;
 
     public Task(TaskRequest request) {

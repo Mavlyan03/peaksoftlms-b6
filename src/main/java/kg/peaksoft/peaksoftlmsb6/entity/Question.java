@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "questions")
@@ -19,7 +19,7 @@ import static javax.persistence.CascadeType.ALL;
 public class Question {
 
     @Id
-    @SequenceGenerator(name = "question_seq", sequenceName = "question_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "question_seq", sequenceName = "question_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "question_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -28,7 +28,7 @@ public class Question {
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true)
+    @OneToMany(cascade = ALL)
     private List<Option> options;
 
     public void addOption(Option option) {

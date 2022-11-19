@@ -55,22 +55,22 @@ public class StudentService {
         String password = studentRequest.getPassword();
         student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
-        sendEmail(student.getUser().getEmail(), password);
+//        sendEmail(student.getUser().getEmail(), password);
         return studentRepository.getStudent(student.getId());
     }
 
-    private void sendEmail(String email, String password) throws MessagingException {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
-        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
-        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
-        messageHelper.setTo(user.getEmail());
-        messageHelper.setText("WELCOME TO PEAKSOFT SCHOOL! " +
-                " Username: " + user.getUsername() + "  Password: " + password, true);
-        javaMailSender.send(mimeMessage);
-    }
+//    private void sendEmail(String email, String password) throws MessagingException {
+//        User user = userRepository.findByEmail(email).orElseThrow(
+//                () -> new NotFoundException(String.format("Пользователь с email =%s не найден", email)));
+//        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+//        messageHelper.setSubject("[peaksoftlms-b6] send password and username");
+//        messageHelper.setFrom("peaksoftlms-b6@gmail.com");
+//        messageHelper.setTo(user.getEmail());
+//        messageHelper.setText("WELCOME TO PEAKSOFT SCHOOL! " +
+//                " Username: " + user.getUsername() + "  Password: " + password, true);
+//        javaMailSender.send(mimeMessage);
+//    }
 
     public StudentResponse update(Long id, StudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
@@ -153,7 +153,7 @@ public class StudentService {
                 group.addStudents(student);
 
                 students.add(student);
-                sendEmail(student.getUser().getEmail(), generatedPassword);
+//                sendEmail(student.getUser().getEmail(), generatedPassword);
             }
         }
         studentRepository.saveAll(students);
