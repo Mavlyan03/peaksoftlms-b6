@@ -33,7 +33,6 @@ public class Test {
             DETACH})
     private Lesson lesson;
 
-
     @OneToMany(cascade = ALL, mappedBy = "test")
     private List<Results> results;
 
