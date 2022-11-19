@@ -42,7 +42,8 @@ public class GroupService {
         for (Student student : group.getStudents()) {
             if (resultRepository.findResultByStudentsId(student.getId()) != null) {
                 Results results = resultRepository.findResultByStudentsId(student.getId());
-                results.setStudent(null);
+                results.setTest(null);
+                resultRepository.delete(results);
             }
         }
         groupRepository.delete(group);
@@ -81,5 +82,4 @@ public class GroupService {
                 () -> new NotFoundException("Группа не найдена"));
         return groupRepository.getGroup(group.getId());
     }
-
 }
