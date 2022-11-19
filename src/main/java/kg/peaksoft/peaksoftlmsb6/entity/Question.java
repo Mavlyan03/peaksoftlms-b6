@@ -24,7 +24,6 @@ public class Question {
     private Long id;
 
     private String question;
-
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 

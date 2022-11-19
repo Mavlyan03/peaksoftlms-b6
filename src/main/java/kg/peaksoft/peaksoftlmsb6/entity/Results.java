@@ -23,6 +23,10 @@ public class Results {
 
     private LocalDate dateOfPass;
 
+    private Integer amountOfCorrectAnswers;
+
+    private Integer amountOfIncorrectAnswers;
+
     private int percent;
 
     @OneToOne(cascade = {

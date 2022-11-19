@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface OptionRepository extends JpaRepository<Option, Long> {
 
@@ -23,4 +24,5 @@ public interface OptionRepository extends JpaRepository<Option, Long> {
     void update(@Param("id") Long id,
                 @Param("option") String option,
                 @Param("isTrue") Boolean isTrue);
+
 }
