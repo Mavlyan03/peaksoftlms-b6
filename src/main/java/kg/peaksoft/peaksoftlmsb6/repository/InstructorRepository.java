@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +20,6 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
             "i.specialization," +
             "i.user.email) from Instructor i")
     List<InstructorResponse> getAllInstructors();
-
-    @Query("select i from Instructor i where i.user.id = ?1")
-    Optional<Instructor> findByUserId(Long id);
 
     @Modifying
     @Transactional

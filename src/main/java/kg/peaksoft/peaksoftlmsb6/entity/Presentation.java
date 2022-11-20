@@ -17,7 +17,7 @@ import static javax.persistence.CascadeType.*;
 public class Presentation {
 
     @Id
-    @SequenceGenerator(name = "presentation_seq", sequenceName = "presentation_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "presentation_seq", sequenceName = "presentation_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "presentation_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -31,7 +31,8 @@ public class Presentation {
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH})
+            DETACH,
+            PERSIST})
     private Lesson lesson;
 
     public Presentation(PresentationRequest request) {

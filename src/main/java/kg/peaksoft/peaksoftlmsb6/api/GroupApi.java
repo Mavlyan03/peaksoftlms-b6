@@ -33,7 +33,7 @@ public class GroupApi {
     @Operation(summary = "Updates group",
             description = "Admin update group by id")
     public GroupResponse updateGroup(@PathVariable Long id,
-                                @RequestBody GroupRequest request) {
+                                     @RequestBody GroupRequest request) {
         return groupService.updateGroup(id, request);
     }
 
@@ -64,5 +64,4 @@ public class GroupApi {
     public GroupResponse getGroupById(@PathVariable Long id) {
         return groupService.getById(id);
     }
-
 }

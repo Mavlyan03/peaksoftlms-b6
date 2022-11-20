@@ -19,33 +19,22 @@ import static javax.persistence.CascadeType.*;
 public class Question {
 
     @Id
-    @SequenceGenerator(name = "question_seq", sequenceName = "question_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "question_seq", sequenceName = "question_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "question_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String question;
+
     @Enumerated(EnumType.STRING)
     private QuestionType questionType;
 
-    @OneToMany(cascade = ALL, mappedBy = "question")
+    @OneToMany(cascade = ALL)
     private List<Option> options;
-
-    @ManyToOne(cascade = {
-            PERSIST,
-            REFRESH,
-            MERGE,
-            DETACH})
-    private Test test;
 
     public void addOption(Option option) {
         if(this.options == null) {
             this.options = new ArrayList<>();
         }
         this.options.add(option);
-    }
-
-    public Question(String question, QuestionType questionType) {
-        this.question = question;
-        this.questionType = questionType;
     }
 }
