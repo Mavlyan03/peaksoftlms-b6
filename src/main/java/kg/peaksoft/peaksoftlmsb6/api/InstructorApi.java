@@ -2,7 +2,6 @@ package kg.peaksoft.peaksoftlmsb6.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kg.peaksoft.peaksoftlmsb6.dto.request.AssignGroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.InstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;

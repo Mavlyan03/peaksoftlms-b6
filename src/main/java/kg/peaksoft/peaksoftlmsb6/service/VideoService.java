@@ -9,6 +9,7 @@ import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,28 +17,38 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class VideoService {
 
     private final VideoRepository videoRepository;
+
     private final LessonRepository lessonRepository;
 
     public VideoResponse saveVideo(VideoRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Урок не найден"));
+                () -> {
+                    log.error("Lesson with id {} not found", request.getLessonId());
+                    throw new NotFoundException("Урок не найден");
+                });
         Video video = new Video(request);
         lesson.setVideo(video);
         video.setLesson(lesson);
         videoRepository.save(video);
+        log.info("New video successfully saved!");
         return videoRepository.getVideo(video.getId());
     }
 
     public VideoResponse updateVideo(Long id, VideoRequest request) {
         Video video = videoRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Видео не найдена"));
+                () -> {
+                    log.error("Video with id {} not found", id);
+                    throw new NotFoundException("Видео не найдена");
+                });
         videoRepository.update(id,
                 request.getVideoName(),
                 request.getDescription(),
                 request.getLink());
+        log.info("Update video with id {} was successfully", id);
         return new VideoResponse(
                 video.getId(),
                 request.getVideoName(),
@@ -47,15 +58,21 @@ public class VideoService {
 
     public SimpleResponse deleteById(Long id) {
         if (!videoRepository.existsById(id)) {
+            log.error("Video with id {} not found", id);
             throw new NotFoundException("Видео не найдена");
         }
         videoRepository.deleteVideoById(id);
+        log.info("Delete video by id {} was successfully", id);
         return new SimpleResponse("Видео удалено");
     }
 
     public VideoResponse getById(Long id) {
         Video video = videoRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Видео не найдена"));
+                () -> {
+                    log.error("Video with id {} not found", id);
+                    throw new NotFoundException("Видео не найдена");
+                });
+        log.info("Get video by id {} was successfully", id);
         return videoRepository.getVideo(video.getId());
     }
 }

@@ -19,12 +19,13 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Tag(name = "Authentication API", description = "User can login and resent password")
 public class AuthApi {
+
     private final UserService authService;
 
     @PostMapping("/login")
     @Operation(summary = "Login",
             description = "User can login by email and password")
-    public AuthResponse login(@RequestBody LoginRequest request){
+    public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
     }
 

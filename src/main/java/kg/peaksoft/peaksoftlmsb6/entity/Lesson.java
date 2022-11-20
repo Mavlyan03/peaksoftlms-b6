@@ -17,7 +17,7 @@ import static javax.persistence.CascadeType.*;
 public class Lesson {
 
     @Id
-    @SequenceGenerator(name = "lesson_seq", sequenceName = "lesson_seq", allocationSize = 1,initialValue = 2)
+    @SequenceGenerator(name = "lesson_seq", sequenceName = "lesson_seq", allocationSize = 1,initialValue = 10)
     @GeneratedValue(generator = "lesson_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
@@ -35,7 +35,7 @@ public class Lesson {
     @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Link link;
 
-    @OneToOne(cascade = ALL, mappedBy = "lesson", orphanRemoval = true)
+    @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Test test;
 
     public Lesson(LessonRequest request) {

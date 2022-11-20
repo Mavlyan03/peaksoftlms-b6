@@ -18,7 +18,7 @@ public class Link {
 
 
     @Id
-    @SequenceGenerator(name = "link_seq", sequenceName = "link_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "link_seq", sequenceName = "link_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "link_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 

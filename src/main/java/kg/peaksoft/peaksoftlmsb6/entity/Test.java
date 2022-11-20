@@ -18,13 +18,13 @@ import static javax.persistence.CascadeType.*;
 public class Test {
 
     @Id
-    @SequenceGenerator(name = "test_seq", sequenceName = "test_seq", allocationSize = 1, initialValue = 2)
+    @SequenceGenerator(name = "test_seq", sequenceName = "test_seq", allocationSize = 1, initialValue = 10)
     @GeneratedValue(generator = "test_seq", strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private String testName;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true)
+    @OneToMany(cascade = ALL)
     private List<Question> question;
 
     @OneToOne(cascade = {
@@ -32,6 +32,10 @@ public class Test {
             REFRESH,
             DETACH})
     private Lesson lesson;
+
+
+    @OneToMany(cascade = ALL, mappedBy = "test")
+    private List<Results> results;
 
     private Boolean isEnable;
 
