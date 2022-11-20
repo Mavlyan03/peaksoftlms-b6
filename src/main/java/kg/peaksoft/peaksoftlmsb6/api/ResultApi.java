@@ -22,13 +22,6 @@ public class ResultApi {
 
     private final ResultService resultService;
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get all results",
-            description = "Instructor get all results by test id")
-    public List<ResultResponse> getAllResults(@PathVariable Long id) {
-        return resultService.getAllResults(id);
-    }
-
     @PostMapping
     @Operation(summary = "Pass test",
             description = "Students pass test")
@@ -37,4 +30,17 @@ public class ResultApi {
         return resultService.passTest(passTestRequest, authentication);
     }
 
+    @GetMapping("/lesson/{id}")
+    @Operation(summary = "Get all results",
+            description = "Instructor get all results by test id")
+    public List<ResultResponse> getAllResults(@PathVariable Long id) {
+        return resultService.getAllResults(id);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get result by id",
+            description = "Instructor get result by id")
+    public ResultResponse getResultById(@PathVariable Long id) {
+        return resultService.getById(id);
+    }
 }

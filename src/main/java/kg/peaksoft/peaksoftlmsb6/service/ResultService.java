@@ -55,6 +55,12 @@ public class ResultService {
         return mapToResponse(resultRepository.findResultByTestId(test.getId()));
     }
 
+    public ResultResponse getById(Long id) {
+        Results results = resultRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Result not found"));
+        return resultRepository.getResult(results.getId());
+    }
+
     private List<ResultResponse> mapToResponse(List<Results> results) {
         List<ResultResponse> resultResponses = new ArrayList<>();
         for(Results result : results) {
