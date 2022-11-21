@@ -31,6 +31,9 @@ public class Question {
     @OneToMany(cascade = ALL)
     private List<Option> options;
 
+    public Question(String question, QuestionType questionType) {
+    }
+
     public void addOption(Option option) {
         if(this.options == null) {
             this.options = new ArrayList<>();

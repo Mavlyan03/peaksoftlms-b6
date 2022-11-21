@@ -58,11 +58,9 @@ public class TestService {
         }
         for(Question question : test.getQuestion()) {
             for(Option option : question.getOptions()) {
-                option.setQuestion(null);
                 question.setOptions(null);
                 optionRepository.deleteOptionById(option.getId());
             }
-            question.setTest(null);
             test.setQuestion(null);
             questionRepository.deleteQuestionById(question.getId());
         }
@@ -186,7 +184,6 @@ public class TestService {
                 int counter = 0;
                 for (OptionRequest optionRequest : questionRequest.getOptions()) {
                     Option option = new Option(optionRequest.getOption(), optionRequest.getIsTrue());
-                    option.setQuestion(question);
                     question.addOption(option);
                     if (optionRequest.getIsTrue().equals(true)) {
                         counter++;
@@ -202,7 +199,6 @@ public class TestService {
                 int counter = 0;
                 for (OptionRequest optionRequest : questionRequest.getOptions()) {
                     Option option = new Option(optionRequest.getOption(), optionRequest.getIsTrue());
-                    option.setQuestion(question);
                     question.addOption(option);
                     if (optionRequest.getIsTrue().equals(true)) {
                         counter++;
@@ -212,7 +208,6 @@ public class TestService {
                     throw new BadRequestException("Bad credentials");
                 }
             }
-            question.setTest(test);
             test.addQuestion(question);
         }
         return test;

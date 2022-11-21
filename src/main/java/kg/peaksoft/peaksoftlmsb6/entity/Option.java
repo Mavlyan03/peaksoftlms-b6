@@ -25,4 +25,8 @@ public class Option {
 
     private Boolean isTrue;
 
+    public Option(String option, Boolean isTrue) {
+        this.optionValue = option;
+        this.isTrue = isTrue;
+    }
 }
