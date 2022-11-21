@@ -2,10 +2,8 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.PassTestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
-import kg.peaksoft.peaksoftlmsb6.entity.Results;
-import kg.peaksoft.peaksoftlmsb6.entity.Student;
-import kg.peaksoft.peaksoftlmsb6.entity.Test;
-import kg.peaksoft.peaksoftlmsb6.entity.User;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
+import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
@@ -17,6 +15,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -30,24 +29,37 @@ public class ResultService {
     private final TestRepository testRepository;
     private final StudentRepository studentRepository;
 
-    public ResultResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
+    public SimpleResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
         Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
                 () -> new NotFoundException("Test not found"));
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findById(user.getId()).orElseThrow(
                 () -> new NotFoundException("User not found"));
-        if(user1.getRole().equals(Role.STUDENT)) {
-            Student student = studentRepository.findByUserId(user1.getId()).orElseThrow(
-                    () -> new NotFoundException("Student not found"));
-            Results results = new Results();
-            results.setTest(test);
-            results.setDateOfPass(LocalDate.now());
-            results.setStudent(student);
+        Integer amountOfCorrectAnswers = 0;
+        for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
+            for (Long optionId : answer.getValue()) {
+                Option option = optionRepository.findById(optionId).orElseThrow(
+                        () -> new NotFoundException("Result not found"));
+                if (option.getIsTrue()) {
+                    amountOfCorrectAnswers++;
+                }
+            }
         }
-
-        return null;
+        Student student = null;
+        if (user1.getRole().equals(Role.STUDENT)) {
+            student = studentRepository.findByUserId(user1.getId()).orElseThrow(
+                    () -> new NotFoundException("Student not found"));
+            Results results = new Results(
+                    test,
+                    LocalDate.now(),
+                    amountOfCorrectAnswers,
+                    test.getQuestion().size() + 1 - amountOfCorrectAnswers,
+                    amountOfCorrectAnswers,
+                    student);
+            resultRepository.save(results);
+        }
+        return new SimpleResponse("Набрано баллов "+amountOfCorrectAnswers+" из "+test.getQuestion().size());
     }
-
 
     public List<ResultResponse> getAllResults(Long id) {
         Test test = testRepository.findById(id).orElseThrow(
@@ -63,11 +75,12 @@ public class ResultService {
 
     private List<ResultResponse> mapToResponse(List<Results> results) {
         List<ResultResponse> resultResponses = new ArrayList<>();
-        for(Results result : results) {
+        for (Results result : results) {
             resultResponses.add(new ResultResponse(result));
         }
         return resultResponses;
     }
+
 
 }
 

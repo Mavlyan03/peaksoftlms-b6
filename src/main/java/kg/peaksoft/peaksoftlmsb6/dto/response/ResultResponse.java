@@ -22,4 +22,9 @@ public class ResultResponse {
         this.amountOfIncorrectAnswers = results.getAmountOfIncorrectAnswers();
         this.point = results.getPercent();
     }
+
+    public ResultResponse(Integer amountOfCorrectAnswers) {
+        this.amountOfCorrectAnswers = amountOfCorrectAnswers;
+    }
+
 }

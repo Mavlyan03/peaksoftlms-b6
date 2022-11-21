@@ -59,13 +59,12 @@ public class TestService {
         for(Question question : test.getQuestion()) {
             for(Option option : question.getOptions()) {
                 question.setOptions(null);
-                optionRepository.deleteOptionById(option.getId());
+                optionRepository.deleteById(option.getId());
             }
             test.setQuestion(null);
-            questionRepository.deleteQuestionById(question.getId());
+            questionRepository.deleteById(question.getId());
         }
         testRepository.deleteTestById(test.getId());
-
         return new SimpleResponse("Test deleted");
     }
 
@@ -102,35 +101,6 @@ public class TestService {
         return convertUpdateToResponse(id, test);
     }
 
-//    private TestInnerPageResponse convertUpdateToResponse(Long id, TestRequest request) {
-//        Test test = testRepository.findById(id).orElseThrow(
-//                () -> new NotFoundException(String.format("Test with id =%s not found", id)));
-//        TestInnerPageResponse innerPageResponse = new TestInnerPageResponse(id,request.getTestName());
-//        List<QuestionResponse> questionResponses = new ArrayList<>();
-//        List<OptionResponse> optionResponses = new ArrayList<>();
-//        for(QuestionRequest questionRequest : request.getQuestions()) {
-//            for (Question question : test.getQuestion()) {
-//                questionResponses.add(new QuestionResponse(
-//                        question.getId(),
-//                        questionRequest.getQuestion(),
-//                        questionRequest.getQuestionType()));
-//                for (OptionRequest optionRequest : questionRequest.getOptions()) {
-//                    for (Option option : question.getOptions()) {
-//                        optionResponses.add(new OptionResponse(
-//                                option.getId(),
-//                                optionRequest.getOption()));
-//                    }
-//                }
-//            }
-//        }
-//            for(QuestionResponse questionResponse : questionResponses) {
-//                questionResponse.setOptionResponses(optionResponses);
-//            }
-//        innerPageResponse.setQuestions(questionResponses);
-//        return innerPageResponse;
-//    }
-
-
     private TestInnerPageResponse convertUpdateToResponse(Long id, Test test) {
         Test tests = testRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(String.format("Test with id = %s not found",id)));
@@ -154,6 +124,7 @@ public class TestService {
         innerPageResponse.setQuestions(questionResponses);
         return innerPageResponse;
     }
+
     private TestInnerPageResponse convertToResponse(Test test) {
         TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
         List<QuestionResponse> questionResponses = new ArrayList<>();
@@ -205,7 +176,7 @@ public class TestService {
                     }
                 }
                 if (counter < 1) {
-                    throw new BadRequestException("Bad credentials");
+                    throw new BadRequestException("Bad request");
                 }
             }
             test.addQuestion(question);

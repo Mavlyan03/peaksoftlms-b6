@@ -39,4 +39,13 @@ public class Results {
             REFRESH,
             DETACH})
     private Test test;
+
+    public Results(Test test, LocalDate localDate, Integer amountOfCorrectAnswers, Integer amountOfIncorrectAnswers, Integer percent, Student student) {
+        this.test = test;
+        this.dateOfPass = localDate;
+        this.amountOfCorrectAnswers = amountOfCorrectAnswers;
+        this.amountOfIncorrectAnswers = amountOfIncorrectAnswers;
+        this.percent = percent;
+        this.student = student;
+    }
 }

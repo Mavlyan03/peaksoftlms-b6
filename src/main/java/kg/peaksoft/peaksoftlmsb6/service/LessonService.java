@@ -30,7 +30,7 @@ public class LessonService {
 
     private final ContentRepository contentRepository;
 
-    private final ResultsRepository resultsRepository;
+    private final ResultRepository resultsRepository;
 
 
     public SimpleResponse createLesson(LessonRequest request) {
@@ -63,9 +63,11 @@ public class LessonService {
         if (lesson.getTest() != null) {
             Test test = testRepository.findById(lesson.getTest().getId())
                     .orElseThrow(() -> new NotFoundException("Тест не найден"));
-            Results results = resultsRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Результат не найден"));
-            resultsRepository.delete(results);
+            if(test.getResults() == null) {
+                Results results = resultsRepository.findById(lesson.getTest().getId())
+                        .orElseThrow(() -> new NotFoundException("Результат не найден"));
+                resultsRepository.delete(results);
+            }
             testRepository.delete(test);
         }
 

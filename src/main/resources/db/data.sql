@@ -81,8 +81,8 @@ insert into questions_options(question_id,options_id)
 values (1,1),
        (1,2);
 
-insert into results(id, date_of_pass, percent, student_id,test_id)
-values (1, '2022/11/10', 100, 1,1),
-       (2,'2022/12/22',100,4,1)
+insert into results(id, amount_of_correct_answers, amount_of_incorrect_answers, date_of_pass, percent, student_id,test_id)
+values (1, 3,1,'2022/11/10', 100, 1,1),
+       (2,2,2,'2022/12/22',100,4,1);
 
 

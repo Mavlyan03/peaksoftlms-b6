@@ -32,6 +32,8 @@ public class Question {
     private List<Option> options;
 
     public Question(String question, QuestionType questionType) {
+        this.question = question;
+        this.questionType = questionType;
     }
 
     public void addOption(Option option) {
