@@ -59,7 +59,8 @@ values (1, 'Description', 'link.com', 'Lesson:19', 1),
        (3, 'Description', 'link.com', 'Lesson:19', 5);
 
 insert into tasks(id, task_name, lesson_id)
-values (1, 'Group crud', 1);
+values (1, 'Group crud', 1),
+       (2,'PeaksoftLMS',2);
 
 insert into contents(id, content_format, content_name, content_value, task_id)
 values (1, 'VIDEO', 'video link', 'aws', 1);
@@ -74,13 +75,13 @@ insert into options(id, is_true, option_value)
 values (1, true, 'String and primitive'),
        (2, false, 'Varchar');
 
-insert into tests_question(test_id,question_id)
+insert into tests_question(test_id, question_id)
 values (1,1);
 
-insert into questions_options(question_id,options_id)
+insert into questions_options(question_id, options_id)
 values (1,1),
        (1,2);
 
-insert into results(id, date_of_pass, percent, student_id,test_id)
+insert into results(id, date_of_pass, percent, student_id, test_id)
 values (1, '2022/11/10', 100, 1,1),
        (2,'2022/12/22',100,4,1)
