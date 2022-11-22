@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.VideoResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
 import kg.peaksoft.peaksoftlmsb6.entity.Video;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.VideoRepository;
@@ -30,10 +31,16 @@ public class VideoService {
                     log.error("Lesson with id {} not found", request.getLessonId());
                     throw new NotFoundException("Урок не найден");
                 });
-        Video video = new Video(request);
-        lesson.setVideo(video);
-        video.setLesson(lesson);
-        videoRepository.save(video);
+        Video video = null;
+        if(lesson.getVideo() == null) {
+            video = new Video(request);
+            lesson.setVideo(video);
+            video.setLesson(lesson);
+            videoRepository.save(video);
+        } else {
+            log.error("Lesson already have a video");
+            throw new BadRequestException("У урока уже есть видео");
+        }
         log.info("New video successfully saved!");
         return videoRepository.getVideo(video.getId());
     }
