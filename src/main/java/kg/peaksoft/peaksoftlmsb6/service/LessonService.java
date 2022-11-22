@@ -60,18 +60,18 @@ public class LessonService {
     public SimpleResponse deleteLesson(Long id) {
         Lesson lesson = lessonRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.error("Lesson with id {} not found");
+                    log.error("Lesson with id {} not found",id);
                     throw new NotFoundException("Урок не найден");
                 });
         if (lesson.getTest() != null) {
             Test test = testRepository.findById(lesson.getTest().getId())
                     .orElseThrow(() -> {
-                        log.error("Test with id {} not found");
+                        log.error("Test with id {} not found",lesson.getTest().getId());
                         throw new NotFoundException("Тест не найден");
                     });
             Results results = resultsRepository.findById(lesson.getTest().getId())
                     .orElseThrow(() -> {
-                        log.error("Result with id {} not found");
+                        log.error("Result with id {} not found",lesson.getTest().getId());
                         throw new NotFoundException("Результат не найден");
                     });
             resultsRepository.delete(results);
@@ -81,12 +81,12 @@ public class LessonService {
         if (lesson.getTask() != null) {
             Task task = taskRepository.findById(lesson.getTask().getId())
                     .orElseThrow(() -> {
-                        log.error("Task with id {} not found");
+                        log.error("Task with id {} not found",lesson.getTask().getId());
                         throw new NotFoundException("Задача не найдена");
                     });
             Content content = contentRepository.findById(lesson.getTask().getId())
                     .orElseThrow(() -> {
-                        log.error("Content with id {} not found");
+                        log.error("Content with id {} not found",lesson.getTask().getId());
                         throw new NotFoundException("Контент не найден");
                     });
             contentRepository.delete(content);
