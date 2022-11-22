@@ -189,7 +189,7 @@ public class CourseService {
                 }
                 break;
             case "INSTRUCTOR":
-                Instructor instructor = instructorRepository.findById(user.getId()).orElseThrow(
+                Instructor instructor = instructorRepository.findByUserId(user.getId()).orElseThrow(
                         () -> {
                             log.error("Instructor with id {} not found", user1.getId());
                             throw new NotFoundException("Инструктор не найден");
