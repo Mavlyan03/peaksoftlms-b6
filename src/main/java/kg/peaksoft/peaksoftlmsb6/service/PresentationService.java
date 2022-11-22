@@ -32,7 +32,7 @@ public class PresentationService {
                     throw new NotFoundException("Урок не найден");
                 });
         Presentation presentation = null;
-        if(lesson.getPresentation() == null) {
+        if (lesson.getPresentation() == null) {
             presentation = new Presentation(request);
             lesson.setPresentation(presentation);
             presentation.setLesson(lesson);
