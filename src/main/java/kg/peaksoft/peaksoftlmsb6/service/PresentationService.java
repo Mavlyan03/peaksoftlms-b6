@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.PresentationResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Lesson;
 import kg.peaksoft.peaksoftlmsb6.entity.Presentation;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LessonRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.PresentationRepository;
@@ -30,10 +31,15 @@ public class PresentationService {
                     log.error("Lesson with id {} not found", request.getLessonId());
                     throw new NotFoundException("Урок не найден");
                 });
-        Presentation presentation = new Presentation(request);
-        lesson.setPresentation(presentation);
-        presentation.setLesson(lesson);
-        presentationRepository.save(presentation);
+        Presentation presentation = null;
+        if(lesson.getPresentation() == null) {
+            presentation = new Presentation(request);
+            lesson.setPresentation(presentation);
+            presentation.setLesson(lesson);
+            presentationRepository.save(presentation);
+        } else {
+            throw new BadRequestException("У урока уже есть презентация");
+        }
         log.info("New presentation successfully saved!");
         return presentationRepository.getPresentation(presentation.getId());
     }
