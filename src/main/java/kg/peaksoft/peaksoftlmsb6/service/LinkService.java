@@ -38,7 +38,7 @@ public class LinkService {
             link.setLesson(lesson);
             linkRepository.save(link);
         } else {
-
+            log.error("Lesson already have a link");
             throw new BadRequestException("У урока уже есть ссылка");
         }
         log.info("New lesson successfully saved!");

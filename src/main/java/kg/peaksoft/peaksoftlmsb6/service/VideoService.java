@@ -38,6 +38,7 @@ public class VideoService {
             video.setLesson(lesson);
             videoRepository.save(video);
         } else {
+            log.error("Lesson already have a video");
             throw new BadRequestException("У урока уже есть видео");
         }
         log.info("New video successfully saved!");

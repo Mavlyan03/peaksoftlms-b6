@@ -38,6 +38,7 @@ public class PresentationService {
             presentation.setLesson(lesson);
             presentationRepository.save(presentation);
         } else {
+            log.error("Lesson already have a presentation");
             throw new BadRequestException("У урока уже есть презентация");
         }
         log.info("New presentation successfully saved!");
