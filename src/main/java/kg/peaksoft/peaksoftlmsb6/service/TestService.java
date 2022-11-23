@@ -27,6 +27,14 @@ public class TestService {
     private final ResultRepository resultRepository;
     private final LessonRepository lessonRepository;
 
+    public SimpleResponse isEnable(Long testId) {
+        Test test = testRepository.findById(testId).orElseThrow(
+                () -> new NotFoundException("Test not found"));
+        test.setIsEnable(!test.getIsEnable());
+        List<Results> results = resultRepository.findResultByTestId(test.getId());
+        return new SimpleResponse(String.format("%s answers",results.size()));
+    }
+
     public TestResponse createTest(TestRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> new NotFoundException(String.format("Lesson with id =%s not found", request.getLessonId())));

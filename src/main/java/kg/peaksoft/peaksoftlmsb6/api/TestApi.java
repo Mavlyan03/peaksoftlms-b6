@@ -2,7 +2,6 @@ package kg.peaksoft.peaksoftlmsb6.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kg.peaksoft.peaksoftlmsb6.dto.request.EnableTestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.EnableTestResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
@@ -52,4 +51,10 @@ public class TestApi {
         return testService.getTestById(id);
     }
 
+    @PutMapping("/enable/{id}")
+    @Operation(summary = "Test is enable",
+            description = "Admin switch enable or disable status of test")
+    public SimpleResponse isEnable(@PathVariable Long id) {
+        return testService.isEnable(id);
+    }
 }

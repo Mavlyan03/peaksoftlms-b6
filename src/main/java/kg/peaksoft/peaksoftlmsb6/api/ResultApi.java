@@ -2,9 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kg.peaksoft.peaksoftlmsb6.dto.request.EnableTestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.PassTestRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.response.EnableTestResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.service.ResultService;
@@ -45,11 +43,6 @@ public class ResultApi {
             description = "Instructor get result by id")
     public ResultResponse getResultById(@PathVariable Long id) {
         return resultService.getById(id);
-    }
-
-
-    public EnableTestResponse isEnable(EnableTestRequest testRequest) {
-        return resultService.isEnable(testRequest);
     }
 
 }

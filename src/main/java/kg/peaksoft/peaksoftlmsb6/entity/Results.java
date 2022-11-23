@@ -35,9 +35,9 @@ public class Results {
     private Student student;
 
     @ManyToOne(cascade = {
+            DETACH,
             MERGE,
-            REFRESH,
-            DETACH})
+            REFRESH})
     private Test test;
 
     public Results(Test test, LocalDate localDate, Integer amountOfCorrectAnswers, Integer amountOfIncorrectAnswers, Integer percent, Student student) {

@@ -1,8 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
-import kg.peaksoft.peaksoftlmsb6.dto.request.EnableTestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.PassTestRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.response.EnableTestResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
@@ -63,18 +61,10 @@ public class ResultService {
                 resultRepository.save(results);
             }
             else {
-                throw new BadRequestException("You can't pass the test");
+                new SimpleResponse("You can't pass the test");
             }
         }
         return new SimpleResponse("Набрано баллов "+amountOfCorrectAnswers+" из "+test.getQuestion().size());
-    }
-
-    public EnableTestResponse isEnable(EnableTestRequest testRequest) {
-        Test test = testRepository.findById(testRequest.getTestId()).orElseThrow(
-                () -> new NotFoundException("Test not found"));
-        test.setIsEnable(false);
-        List<Results> results = resultRepository.findResultByTestId(test.getId());
-        return new EnableTestResponse(results.size());
     }
 
     public List<ResultResponse> getAllResults(Long id) {
