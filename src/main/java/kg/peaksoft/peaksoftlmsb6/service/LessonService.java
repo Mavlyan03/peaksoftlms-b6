@@ -59,13 +59,22 @@ public class LessonService {
 
     public SimpleResponse deleteLesson(Long id) {
         Lesson lesson = lessonRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Урок не найден"));
+                .orElseThrow(() -> {
+                    log.error("Lesson with id {} not found", id);
+                    throw new NotFoundException("Урок не найден");
+                });
         if (lesson.getTest() != null) {
             Test test = testRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> new NotFoundException("Тест не найден"));
+                    .orElseThrow(() -> {
+                        log.error("Test with id {} not found", lesson.getTest().getId());
+                        throw new NotFoundException("Тест не найден");
+                    });
             if(test.getResults() == null) {
                 Results results = resultsRepository.findById(lesson.getTest().getId())
-                        .orElseThrow(() -> new NotFoundException("Результат не найден"));
+                        .orElseThrow(() -> {
+                            log.error("Result with id {} not found", lesson.getTest().getId());
+                            throw new NotFoundException("Результат не найден");
+                        });
                 resultsRepository.delete(results);
             }
             testRepository.delete(test);
@@ -73,9 +82,15 @@ public class LessonService {
 
         if (lesson.getTask() != null) {
             Task task = taskRepository.findById(lesson.getTask().getId())
-                    .orElseThrow(() -> new NotFoundException("Задача не найдена"));
+                    .orElseThrow(() -> {
+                        log.error("Task with id {} not found", lesson.getTask().getId());
+                        throw new NotFoundException("Задача не найдена");
+                    });
             Content content = contentRepository.findById(lesson.getTask().getId())
-                    .orElseThrow(() -> new NotFoundException("Контент не найден"));
+                    .orElseThrow(() -> {
+                        log.error("Content with id {} not found", lesson.getTask().getId());
+                        throw new NotFoundException("Контент не найден");
+                    });
             contentRepository.delete(content);
             taskRepository.delete(task);
         }

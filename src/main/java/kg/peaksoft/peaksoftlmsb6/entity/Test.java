@@ -33,9 +33,12 @@ public class Test {
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
-            DETACH,
-            PERSIST})
+            DETACH})
     private Lesson lesson;
+
+
+    @OneToMany(cascade = ALL, mappedBy = "test")
+    private List<Results> results;
 
     private Boolean isEnable;
 

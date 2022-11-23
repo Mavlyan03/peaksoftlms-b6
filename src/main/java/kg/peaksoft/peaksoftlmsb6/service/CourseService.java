@@ -8,6 +8,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -128,18 +129,23 @@ public class CourseService {
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
         Instructor instructor = instructorRepository.findById(request.getInstructorId())
                 .orElseThrow(
-                () -> {
-                    log.error("Instructor with id {} not found", request.getInstructorId());
-                    throw new NotFoundException("Инструктор не найден");
-                });
+                        () -> {
+                            log.error("Instructor with id {} not found", request.getInstructorId());
+                            throw new NotFoundException("Инструктор не найден");
+                        });
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        instructor.addCourse(course);
-        course.addInstructor(instructor);
-        courseRepository.save(course);
+        if (course.getInstructors().contains(instructor)) {
+            log.error("Instructor has already assigned the course");
+            throw new BadRequestException("Инструктор уже назначен на курс");
+        } else {
+            instructor.addCourse(course);
+            course.addInstructor(instructor);
+            courseRepository.save(course);
+        }
         log.info("Assign instructor {} to course was successfully", instructor.getUser().getEmail());
         return new SimpleResponse("Инструктор назначен на курс");
     }
@@ -189,7 +195,7 @@ public class CourseService {
                 }
                 break;
             case "INSTRUCTOR":
-                Instructor instructor = instructorRepository.findById(user.getId()).orElseThrow(
+                Instructor instructor = instructorRepository.findByUserId(user.getId()).orElseThrow(
                         () -> {
                             log.error("Instructor with id {} not found", user1.getId());
                             throw new NotFoundException("Инструктор не найден");
