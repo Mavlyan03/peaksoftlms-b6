@@ -169,10 +169,10 @@ public class TestService {
                     }
                 }
                 if (counter > 1) {
-                    throw new BadRequestException("Bad request");
+                    throw new BadRequestException("You must write only one option");
                 }
                 if (counter < 1) {
-                    throw new BadRequestException("Bad request");
+                    throw new BadRequestException("You must write only one option");
                 }
             } else {
                 int counter = 0;
@@ -184,7 +184,7 @@ public class TestService {
                     }
                 }
                 if (counter < 1) {
-                    throw new BadRequestException("Bad request");
+                    throw new BadRequestException("You should write 1 or more options");
                 }
             }
             test.addQuestion(question);
