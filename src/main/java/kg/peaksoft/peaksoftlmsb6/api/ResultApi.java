@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.PassTestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResultResponse;
 import kg.peaksoft.peaksoftlmsb6.service.ResultService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,11 +24,20 @@ public class ResultApi {
 
     private final ResultService resultService;
 
+//    @PostMapping
+//    @Operation(summary = "Pass test",
+//            description = "Students pass test")
+//    @PreAuthorize("hasAnyAuthority('STUDENT')")
+//    public SimpleResponse saveResult(Authentication authentication, @RequestBody PassTestRequest passTestRequest) {
+//        return resultService.passTest(passTestRequest, authentication);
+//    }
+
     @PostMapping
     @Operation(summary = "Pass test",
             description = "Students pass test")
     @PreAuthorize("hasAnyAuthority('STUDENT')")
-    public SimpleResponse saveResult(Authentication authentication, @RequestBody PassTestRequest passTestRequest) {
+    public StudentResultResponse saveResult(Authentication authentication,
+                                            @RequestBody PassTestRequest passTestRequest) {
         return resultService.passTest(passTestRequest, authentication);
     }
 
