@@ -36,10 +36,6 @@ public class Test {
             DETACH})
     private Lesson lesson;
 
-
-    @OneToMany(cascade = ALL, mappedBy = "test")
-    private List<Results> results;
-
     private Boolean isEnable;
 
     public void addQuestion(Question question) {
