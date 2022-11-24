@@ -40,8 +40,8 @@ public class ResultService {
                 () -> new NotFoundException("User not found"));
         Integer amountOfCorrectAnswers = 0;
         Map<Long, List<Long>> map = new HashMap<>();
+        List<Long> amount = new ArrayList<>();
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
-            List<Long> amount = new ArrayList<>();
             long counter = 0L;
             for (Long optionId : answer.getValue()) {
                 Option option = optionRepository.findById(optionId).orElseThrow(
@@ -50,8 +50,9 @@ public class ResultService {
                     amountOfCorrectAnswers++;
                     amount.add(counter++);
                 }
+                map.put(answer.getKey(), amount);
             }
-            map.put(answer.getKey(), amount);
+
         }
         Student student = null;
         if (user1.getRole().equals(Role.STUDENT)) {
