@@ -13,9 +13,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class UpdateStudentRequest {
-    @NotNull(message = "First name must be not null")
-    private String firstName;
-    private String lastName;
+    @NotNull(message = "Full name must be not null")
+    private String fullName;
     private Long groupId;
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;

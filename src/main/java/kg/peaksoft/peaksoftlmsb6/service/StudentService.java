@@ -96,10 +96,13 @@ public class StudentService {
                 });
         student.setGroup(group);
         group.addStudents(student);
+        int index = studentRequest.getFullName().lastIndexOf(' ');
+        String firstName = studentRequest.getFullName().substring(0,index);
+        String lastName = studentRequest.getFullName().substring(index + 1);
         studentRepository.update(
                 student.getId(),
-                studentRequest.getFirstName(),
-                studentRequest.getLastName(),
+                firstName,
+                lastName,
                 studentRequest.getStudyFormat(),
                 studentRequest.getPhoneNumber());
         User user = userRepository.findById(student.getUser().getId())
