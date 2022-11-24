@@ -127,48 +127,51 @@ public class CourseService {
     }
 
     public SimpleResponse assignInstructorToCourse(AssignInstructorRequest request) {
-        Instructor instructor = instructorRepository.findById(request.getInstructorId())
-                .orElseThrow(
-                        () -> {
-                            log.error("Instructor with id {} not found", request.getInstructorId());
-                            throw new NotFoundException("Инструктор не найден");
-                        });
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        if (course.getInstructors().contains(instructor)) {
-            log.error("Instructor has already assigned the course");
-            throw new BadRequestException("Инструктор уже назначен на курс");
-        } else {
-            instructor.addCourse(course);
-            course.addInstructor(instructor);
-            courseRepository.save(course);
+        for(Long id : request.getInstructorId()) {
+            Instructor instructor = instructorRepository.findById(id)
+                    .orElseThrow(
+                            () -> {
+                                log.error("Instructor with id {} not found", request.getInstructorId());
+                                throw new NotFoundException("Инструктор не найден");
+                            });
+            if (course.getInstructors().contains(instructor)) {
+                log.error("Instructor has already assigned the course");
+                throw new BadRequestException("Инструктор уже назначен на курс");
+            } else {
+                instructor.addCourse(course);
+                course.addInstructor(instructor);
+                courseRepository.save(course);
+            }
+            log.info("Assign instructor {} to course was successfully", instructor.getUser().getEmail());
         }
-        log.info("Assign instructor {} to course was successfully", instructor.getUser().getEmail());
         return new SimpleResponse("Инструктор назначен на курс");
     }
 
     public SimpleResponse unassigned(AssignInstructorRequest request) {
-        Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
-                () -> {
-                    log.error("Instructor with id {} not found", request.getInstructorId());
-                    throw new NotFoundException("Инструктор не найден");
-                });
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        for (Instructor instructor1 : course.getInstructors()) {
-            instructor1.getCourses().remove(course);
+        for(Long id : request.getInstructorId()) {
+            Instructor instructor = instructorRepository.findById(id).orElseThrow(
+                    () -> {
+                        log.error("Instructor with id {} not found", request.getInstructorId());
+                        throw new NotFoundException("Инструктор не найден");
+                    });
+            if (course.getInstructors().contains(instructor)) {
+                for (Course course1 : instructor.getCourses()) {
+                course1.getInstructors().remove(instructor);
+            }
+                instructor.getCourses().remove(course);
+            }
+            courseRepository.save(course);
         }
-        for (Course course1 : instructor.getCourses()) {
-            course1.getInstructors().remove(instructor);
-        }
-        courseRepository.save(course);
-        instructorRepository.save(instructor);
         log.info("Unassigned instructor from course was successfully");
         return new SimpleResponse("Инструктор удален с курса");
     }
@@ -210,38 +213,49 @@ public class CourseService {
     }
 
     public SimpleResponse assignGroupToCourse(AssignGroupRequest request) {
-        Group group = groupRepository.findById(request.getGroupId()).orElseThrow(
-                () -> {
-                    log.error("Group with id {} not found", request.getGroupId());
-                    throw new NotFoundException("Группа не найдена");
-                });
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        if(course.getGroup().contains(group)){
-            throw new BadRequestException("Group is already exists");
+        for(Long id : request.getGroupId()) {
+            Group group = groupRepository.findById(id).orElseThrow(
+                    () -> {
+                        log.error("Group with id {} not found", id);
+                        throw new NotFoundException("Группа не найдена");
+                    });
+            if (course.getGroup().contains(group)) {
+                throw new BadRequestException("Group is already exists");
+            }
+            group.addCourse(course);
+            course.addGroup(group);
+            courseRepository.save(course);
         }
-        group.addCourse(course);
-        course.addGroup(group);
-        courseRepository.save(course);
         log.info("Assign group to course was successfully");
         return new SimpleResponse("Группа назначена на курс");
     }
 
-    public SimpleResponse deleteGroupFromCourse(Long id) {
-        Group group = groupRepository.findById(id).orElseThrow(
+    public SimpleResponse deleteGroupFromCourse(AssignGroupRequest request) {
+        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
-                    log.error("Group with id {} not found", id);
-                    throw new NotFoundException("Группа не найдена");
+                    log.error("Course with id {} not found", request.getCourseId());
+                    throw new NotFoundException("Курс не найден");
                 });
-        for (Course course : group.getCourses()) {
-            course.getGroup().remove(group);
+        for(Long id : request.getGroupId()) {
+            Group group = groupRepository.findById(id).orElseThrow(
+                    () -> {
+                        log.error("Group with id {} not found", id);
+                        throw new NotFoundException("Группа не найдена");
+                    });
+            if(course.getGroup().contains(group)) {
+                for(Course course1 : group.getCourses()) {
+                    course1.getGroup().remove(group);
+                }
+                group.getCourses().remove(course);
+            }
+            groupRepository.save(group);
+            log.info("Delete group from course by id {} was successfully", id);
         }
-        group.setCourses(null);
-        groupRepository.save(group);
-        log.info("Delete group from course by id {} was successfully", id);
         return new SimpleResponse("Группа удалена с курса");
     }
 }

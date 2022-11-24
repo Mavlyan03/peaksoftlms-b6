@@ -4,11 +4,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Getter
 @Setter
 @NotBlank
 public class AssignGroupRequest {
-    private Long groupId;
+    private List<Long> groupId;
     private Long courseId;
 }
