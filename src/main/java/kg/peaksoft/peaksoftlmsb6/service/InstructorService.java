@@ -48,9 +48,12 @@ public class InstructorService {
                     log.error("Instructor with id {} not found", id);
                     throw new NotFoundException("Инструктор не найден");
                 });
+        int index = request.getFullName().lastIndexOf(' ');
+        String firstName = request.getFullName().substring(0,index);
+        String lastName = request.getFullName().substring(index + 1);
         instructorRepository.update(instructor.getId(),
-                request.getFirstName(),
-                request.getLastName(),
+                firstName,
+                lastName,
                 request.getSpecialization(),
                 request.getPhoneNumber());
         User user = userRepository.findById(instructor.getUser().getId())

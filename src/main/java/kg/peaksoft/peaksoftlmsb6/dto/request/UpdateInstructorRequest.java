@@ -15,8 +15,7 @@ import javax.validation.constraints.NotNull;
 @RequiredArgsConstructor
 public class UpdateInstructorRequest {
     @NotNull
-    private String firstName;
-    private String lastName;
+    private String fullName;
     private String phoneNumber;
     @Email
     private String email;
