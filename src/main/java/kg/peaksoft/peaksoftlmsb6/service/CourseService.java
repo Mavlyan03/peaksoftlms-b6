@@ -8,6 +8,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
+import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -214,6 +215,9 @@ public class CourseService {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
+        if(course.getGroup().contains(group)){
+            throw new BadRequestException("Group is already exists");
+        }
         group.addCourse(course);
         course.addGroup(group);
         courseRepository.save(course);
