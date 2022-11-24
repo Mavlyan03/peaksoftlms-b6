@@ -89,6 +89,7 @@ public class CourseApi {
     @PostMapping("/assign/group")
     @Operation(summary = "Assign group to course",
             description = "Instructor assign group to course by their id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public SimpleResponse assignGroupToCourse(@RequestBody AssignGroupRequest request) {
         return courseService.assignGroupToCourse(request);
     }
