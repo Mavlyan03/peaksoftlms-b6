@@ -132,7 +132,7 @@ public class CourseService {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        for(Long id : request.getInstructorId()) {
+        for (Long id : request.getInstructorId()) {
             Instructor instructor = instructorRepository.findById(id)
                     .orElseThrow(
                             () -> {
@@ -158,7 +158,7 @@ public class CourseService {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        for(Long id : request.getInstructorId()) {
+        for (Long id : request.getInstructorId()) {
             Instructor instructor = instructorRepository.findById(id).orElseThrow(
                     () -> {
                         log.error("Instructor with id {} not found", request.getInstructorId());
@@ -166,8 +166,8 @@ public class CourseService {
                     });
             if (course.getInstructors().contains(instructor)) {
                 for (Course course1 : instructor.getCourses()) {
-                course1.getInstructors().remove(instructor);
-            }
+                    course1.getInstructors().remove(instructor);
+                }
                 instructor.getCourses().remove(course);
             }
             courseRepository.save(course);
@@ -218,19 +218,17 @@ public class CourseService {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        for(Long id : request.getGroupId()) {
-            Group group = groupRepository.findById(id).orElseThrow(
-                    () -> {
-                        log.error("Group with id {} not found", id);
-                        throw new NotFoundException("Группа не найдена");
-                    });
-            if (course.getGroup().contains(group)) {
-                throw new BadRequestException("Group is already exists");
-            }
-            group.addCourse(course);
-            course.addGroup(group);
-            courseRepository.save(course);
+        Group group = groupRepository.findById(request.getGroupId()).orElseThrow(
+                () -> {
+                    log.error("Group with id {} not found", request.getGroupId());
+                    throw new NotFoundException("Группа не найдена");
+                });
+        if (course.getGroup().contains(group)) {
+            throw new BadRequestException("Group is already exists");
         }
+        group.addCourse(course);
+        course.addGroup(group);
+        courseRepository.save(course);
         log.info("Assign group to course was successfully");
         return new SimpleResponse("Группа назначена на курс");
     }
@@ -241,20 +239,18 @@ public class CourseService {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        for(Long id : request.getGroupId()) {
-            Group group = groupRepository.findById(id).orElseThrow(
-                    () -> {
-                        log.error("Group with id {} not found", id);
-                        throw new NotFoundException("Группа не найдена");
-                    });
-            if(course.getGroup().contains(group)) {
-                for(Course course1 : group.getCourses()) {
-                    course1.getGroup().remove(group);
-                }
-                group.getCourses().remove(course);
+        Group group = groupRepository.findById(request.getGroupId()).orElseThrow(
+                () -> {
+                    log.error("Group with id {} not found", request.getGroupId());
+                    throw new NotFoundException("Группа не найдена");
+                });
+        if (course.getGroup().contains(group)) {
+            for (Course course1 : group.getCourses()) {
+                course1.getGroup().remove(group);
             }
+            group.getCourses().remove(course);
             groupRepository.save(group);
-            log.info("Delete group from course by id {} was successfully", id);
+            log.info("Delete group from course by id {} was successfully", request.getCourseId());
         }
         return new SimpleResponse("Группа удалена с курса");
     }
