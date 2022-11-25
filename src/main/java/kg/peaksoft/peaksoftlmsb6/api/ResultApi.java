@@ -41,7 +41,7 @@ public class ResultApi {
         return resultService.passTest(passTestRequest, authentication);
     }
 
-    @GetMapping("/lesson/{id}")
+    @GetMapping("/test/{id}")
     @Operation(summary = "Get all results",
             description = "Instructor get all results by test id")
     public List<ResultResponse> getAllResults(@PathVariable Long id) {
