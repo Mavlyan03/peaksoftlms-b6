@@ -2,8 +2,6 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateContentRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ContentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
@@ -54,7 +52,7 @@ public class TaskService {
                 task.addContent(content);
                 content.setTask(task);
             }
-        }else {
+        } else {
             throw new BadRequestException("У урока уже есть задача");
         }
         return task;
@@ -63,7 +61,7 @@ public class TaskService {
     private TaskResponse convertToResponse(Task task) {
         TaskResponse taskResponse = new TaskResponse(task.getId(), task.getTaskName());
         List<ContentResponse> contentResponses = new ArrayList<>();
-        for(Content content : task.getContents()) {
+        for (Content content : task.getContents()) {
             ContentResponse contentResponse = new ContentResponse(
                     content.getId(),
                     content.getContentName(),
@@ -75,21 +73,21 @@ public class TaskService {
         return taskResponse;
     }
 
-//    public SimpleResponse updateTask(Long id, TaskRequest taskRequest) {
-//        Task task = taskRepository.findById(id).orElseThrow(
-//                () -> new NotFoundException("Задача не найдена"));
-//        taskRepository.update(task.getId(), taskRequest.getTaskName());
-//        for(ContentRequest contentRequest : taskRequest.getContentRequests()) {
-//            Content content = new Content(task, contentRequest);
-//            task.addContent(content);
-//        }
-//        return new SimpleResponse("Task update successfully");
-//    }
+    public SimpleResponse updateTask(Long id, TaskRequest taskRequest) {
+        Task task = taskRepository.findById(id).orElseThrow();
+        task.setTaskName(taskRequest.getTaskName());
+        List<Content> contents = new ArrayList<>();
+        for (ContentRequest c : taskRequest.getContentRequests()) {
+            contents.add(new Content(c.getContentName(), c.getContentFormat(), c.getContentValue()));
+        }
+        task.setContents(contents);
+        return new SimpleResponse("Task update successfully");
+    }
 
     public SimpleResponse deleteById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Задача не найдена"));
-        for(Content content : task.getContents()) {
+        for (Content content : task.getContents()) {
             content.setTask(null);
             task.setContents(null);
             contentRepository.deleteById(content.getId());
@@ -103,5 +101,4 @@ public class TaskService {
                 () -> new NotFoundException("Задача не найдена"));
         return convertToResponse(task);
     }
-
 }

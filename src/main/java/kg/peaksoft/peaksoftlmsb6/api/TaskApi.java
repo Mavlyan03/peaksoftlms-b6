@@ -3,7 +3,6 @@ package kg.peaksoft.peaksoftlmsb6.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
 import kg.peaksoft.peaksoftlmsb6.service.TaskService;
@@ -29,12 +28,12 @@ public class TaskApi {
     }
 
 
-//    @PutMapping("/{id}")
-//    @Operation(summary = "Update task",
-//            description = "Instructor update task by id")
-//    public SimpleResponse updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
-//        return taskService.updateTask(id, taskRequest);
-//    }
+    @PutMapping("/{id}")
+    @Operation(summary = "Update task",
+            description = "Instructor update task by id")
+    public SimpleResponse updateTask(@PathVariable Long id, @RequestBody TaskRequest taskRequest) {
+        return taskService.updateTask(id, taskRequest);
+    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete task",
