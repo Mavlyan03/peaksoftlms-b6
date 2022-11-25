@@ -5,6 +5,7 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResultResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
@@ -39,20 +40,37 @@ public class ResultService {
         User user1 = userRepository.findById(user.getId()).orElseThrow(
                 () -> new NotFoundException("User not found"));
         Integer amountOfCorrectAnswers = 0;
-        Map<Long, List<Long>> map = new HashMap<>();
-        List<Long> amount = new ArrayList<>();
+        Map<Long, List<Long>> mapper = new HashMap<>();
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
+            Map<Long, List<Long>> map = new HashMap<>();
+            List<Long> amount = new ArrayList<>();
             long counter = 0L;
-            for (Long optionId : answer.getValue()) {
-                Option option = optionRepository.findById(optionId).orElseThrow(
-                        () -> new NotFoundException("Result not found"));
-                if (option.getIsTrue()) {
-                    amountOfCorrectAnswers++;
-                    amount.add(counter++);
+            Question question = questionRepository.findById(answer.getKey()).orElseThrow(
+                    () -> new NotFoundException("Question not found"));
+            if(question.getQuestionType().equals(QuestionType.SINGLETON)) {
+                for (Long optionId : answer.getValue()) {
+                    Option option = optionRepository.findById(optionId).orElseThrow(
+                            () -> new NotFoundException("Result not found"));
+                    if (option.getIsTrue()) {
+                        amountOfCorrectAnswers++;
+                    }
                 }
+            } else if(question.getQuestionType().equals(QuestionType.MULTIPLE)) {
+                for (Long optionId : answer.getValue()) {
+                    Option option = optionRepository.findById(optionId).orElseThrow(
+                            () -> new NotFoundException("Result not found"));
+                    if (option.getIsTrue().equals(true)) {
+                        amountOfCorrectAnswers++;
+                        counter++;
+                    }
+                    else {
+                        amountOfCorrectAnswers--;
+                        counter--;
+                    }
+                }
+                amount.add(counter);
                 map.put(answer.getKey(), amount);
             }
-
         }
         Student student = null;
         if (user1.getRole().equals(Role.STUDENT)) {
@@ -72,8 +90,9 @@ public class ResultService {
             }
         }
         return new StudentResultResponse("Набрано баллов "
-                + amountOfCorrectAnswers + " из " + test.getQuestion().size(), map);
+                + amountOfCorrectAnswers + " из " + test.getQuestion().size(), mapper);
     }
+
 
 //    public SimpleResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
 //        Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
