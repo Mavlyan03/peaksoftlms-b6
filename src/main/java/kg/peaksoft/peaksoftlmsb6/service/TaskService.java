@@ -31,7 +31,6 @@ public class TaskService {
     private final LessonRepository lessonRepository;
     private final ContentRepository contentRepository;
 
-
     public TaskResponse createTask(TaskRequest request) {
         Task task = convertToEntity(request);
         taskRepository.save(task);
