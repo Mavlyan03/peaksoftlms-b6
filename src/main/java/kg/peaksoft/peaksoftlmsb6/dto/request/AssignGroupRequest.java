@@ -10,6 +10,6 @@ import java.util.List;
 @Setter
 @NotBlank
 public class AssignGroupRequest {
-    private List<Long> groupId;
+    private Long groupId;
     private Long courseId;
 }
