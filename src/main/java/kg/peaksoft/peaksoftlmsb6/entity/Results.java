@@ -23,10 +23,6 @@ public class Results {
 
     private LocalDate dateOfPass;
 
-    private Integer amountOfCorrectAnswers;
-
-    private Integer amountOfIncorrectAnswers;
-
     private int percent;
 
     @OneToOne(cascade = {
@@ -40,11 +36,9 @@ public class Results {
             REFRESH})
     private Test test;
 
-    public Results(Test test, LocalDate localDate, Integer amountOfCorrectAnswers, Integer amountOfIncorrectAnswers, Integer percent, Student student) {
+    public Results(Test test, LocalDate localDate, Integer percent, Student student) {
         this.test = test;
         this.dateOfPass = localDate;
-        this.amountOfCorrectAnswers = amountOfCorrectAnswers;
-        this.amountOfIncorrectAnswers = amountOfIncorrectAnswers;
         this.percent = percent;
         this.student = student;
     }

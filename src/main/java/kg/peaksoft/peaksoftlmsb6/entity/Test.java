@@ -36,7 +36,7 @@ public class Test {
             DETACH})
     private Lesson lesson;
 
-    private Boolean isEnable;
+    private Boolean isEnable = true;
 
     public void addQuestion(Question question) {
         if(this.question == null) {
