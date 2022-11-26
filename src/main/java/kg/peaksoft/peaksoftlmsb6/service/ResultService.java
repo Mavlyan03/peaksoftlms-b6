@@ -56,33 +56,31 @@ public class ResultService {
                 }
                 map.put(question, options);
             } else {
-                double countOfCorrect = 0.0;
-                double amount = 0.0;
+                List<Option> countOfCorrect = new ArrayList<>();
+                List<Option> countOfIncorrect = new ArrayList<>();
+                Integer counter = 0;
                 for (Option o : question.getOptions()) {
                     Option option = optionRepository.findById(o.getId()).orElseThrow(
                             () -> new NotFoundException("Option not found"));
                     if (option.getIsTrue().equals(true)) {
-                        amount++;
+                        counter++;
                     }
                 }
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
                             () -> new NotFoundException("Option not found"));
                     if (option.getIsTrue().equals(true)) {
-                        countOfCorrect++;
+                        countOfCorrect.add(option);
                     } else {
-                        countOfCorrect--;
+                        countOfIncorrect.add(option);
                     }
                 }
-                if (countOfCorrect < 0) {
-                    countOfCorrect = 0;
+                int count = 0;
+                for (int i = 0; i < countOfCorrect.size(); i++) {
+                    count++;
                 }
-                if(countOfCorrect == 0) {
-                    percent = 0;
-                } else if(countOfCorrect == amount) {
-                    percent = 100.0 / test.getQuestion().size();
-                } else if(countOfCorrect < amount) {
-                    percent = (100.0 % amount) * countOfCorrect;
+                if(count < 0) {
+                    count = 0;
                 }
             }
         }
