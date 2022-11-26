@@ -52,7 +52,7 @@ public class StudentService {
 
     public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
         if (userRepository.existsByEmail(studentRequest.getEmail())) {
-            throw new BadRequestException("Student already exists");
+            throw new BadRequestException("Студент уже существует");
         }
         Group group = groupRepository.findById(studentRequest.getGroupId()).orElseThrow(
                 () -> {

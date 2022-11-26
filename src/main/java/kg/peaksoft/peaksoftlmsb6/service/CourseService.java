@@ -224,7 +224,7 @@ public class CourseService {
                     throw new NotFoundException("Группа не найдена");
                 });
         if (course.getGroup().contains(group)) {
-            throw new BadRequestException("Group is already exists");
+            throw new BadRequestException("Группа уже назначена на курс");
         }
         group.addCourse(course);
         course.addGroup(group);
