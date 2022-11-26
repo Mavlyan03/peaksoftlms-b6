@@ -3,6 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateStudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
@@ -38,7 +39,7 @@ public class StudentApi {
     @Operation(summary = "Update student",
             description = "Admin update student by id")
     public StudentResponse updateStudent(@PathVariable Long id,
-                                         @RequestBody StudentRequest studentRequest) {
+                                         @RequestBody UpdateStudentRequest studentRequest) {
         return studentService.update(id, studentRequest);
     }
 

@@ -25,7 +25,7 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         UserDetails userDetails = userDetailsService.loadUserByUsername(authentication.getName());
 
         if (!passwordEncoder.matches(authentication.getCredentials().toString(), userDetails.getPassword())) {
-            throw new BadCredentialsException("Bad credentials");
+            throw new BadCredentialsException("Неправильные данные");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
