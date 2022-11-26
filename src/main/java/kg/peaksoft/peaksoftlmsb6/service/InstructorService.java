@@ -33,7 +33,7 @@ public class InstructorService {
 
     public InstructorResponse createInstructor(InstructorRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("Student already exists");
+            throw new BadRequestException("Инструктор уже существует");
         }
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         Instructor instructor = new Instructor(request);
