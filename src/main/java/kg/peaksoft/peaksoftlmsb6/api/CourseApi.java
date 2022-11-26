@@ -89,15 +89,16 @@ public class CourseApi {
     @PostMapping("/assign/group")
     @Operation(summary = "Assign group to course",
             description = "Instructor assign group to course by their id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public SimpleResponse assignGroupToCourse(@RequestBody AssignGroupRequest request) {
         return courseService.assignGroupToCourse(request);
     }
 
-    @DeleteMapping("/group/{id}")
+    @PostMapping("/unassigned/group")
     @Operation(summary = "Delete group from course",
             description = "Instructor delete group from course by id")
-    public SimpleResponse deleteGroupFromCourse(@PathVariable Long id) {
-        return courseService.deleteGroupFromCourse(id);
+    public SimpleResponse deleteGroupFromCourse(@RequestBody AssignGroupRequest request) {
+        return courseService.deleteGroupFromCourse(request);
     }
 
     @GetMapping("/{id}")

@@ -20,27 +20,27 @@ import javax.transaction.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class LinkService {
+
     private final LinkRepository linkRepository;
+
     private final LessonRepository lessonRepository;
 
     public LinkResponse createLink(LinkRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> {
-                    log.error("Lesson with id {} not found",request.getLessonId());
+                    log.error("Lesson with id {} not found", request.getLessonId());
                     throw new NotFoundException("Урок не найден");
                 });
         Link link = null;
-        if (lesson.getLink() == null) {
+        if(lesson.getLink() == null) {
             link = new Link(request);
             lesson.setLink(link);
             link.setLesson(lesson);
+            linkRepository.save(link);
         } else {
+            log.error("Lesson already have a link");
             throw new BadRequestException("У урока уже есть ссылка");
         }
-        link = new Link(request);
-        lesson.setLink(link);
-        link.setLesson(lesson);
-        linkRepository.save(link);
         log.info("New lesson successfully saved!");
         return linkRepository.getLink(link.getId());
     }

@@ -3,6 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.InstructorRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.service.InstructorService;
@@ -33,7 +34,7 @@ public class InstructorApi {
     @Operation(summary = "Updates instructor",
             description = "Admin update instructor by id")
     public InstructorResponse updateInstructor(@PathVariable Long id,
-                                               @RequestBody @Valid InstructorRequest request) {
+                                               @RequestBody UpdateInstructorRequest request) {
         return instructorService.updateInstructor(id, request);
     }
 

@@ -27,16 +27,20 @@ public class VideoService {
 
     public VideoResponse saveVideo(VideoRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Урок не найден"));
+                () -> {
+                    log.error("Lesson with id {} not found", request.getLessonId());
+                    throw new NotFoundException("Урок не найден");
+                });
         Video video = null;
-        if (lesson.getVideo() == null) {
+        if(lesson.getVideo() == null) {
             video = new Video(request);
             lesson.setVideo(video);
             video.setLesson(lesson);
+            videoRepository.save(video);
         } else {
+            log.error("Lesson already have a video");
             throw new BadRequestException("У урока уже есть видео");
         }
-        videoRepository.save(video);
         log.info("New video successfully saved!");
         return videoRepository.getVideo(video.getId());
     }

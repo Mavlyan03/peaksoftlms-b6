@@ -5,6 +5,7 @@ import com.poiji.exception.PoijiExcelType;
 import com.poiji.option.PoijiOptions;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentExcelRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateStudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
@@ -82,7 +83,7 @@ public class StudentService {
 //        javaMailSender.send(mimeMessage);
 //    }
 
-    public StudentResponse update(Long id, StudentRequest studentRequest) {
+    public StudentResponse update(Long id, UpdateStudentRequest studentRequest) {
         Student student = studentRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Student with id {} not found", id);
@@ -95,17 +96,18 @@ public class StudentService {
                 });
         student.setGroup(group);
         group.addStudents(student);
+        int index = studentRequest.getFullName().lastIndexOf(' ');
+        String firstName = studentRequest.getFullName().substring(0,index);
+        String lastName = studentRequest.getFullName().substring(index + 1);
         studentRepository.update(
                 student.getId(),
-                studentRequest.getFirstName(),
-                studentRequest.getLastName(),
+                firstName,
+                lastName,
                 studentRequest.getStudyFormat(),
                 studentRequest.getPhoneNumber());
-        student.getUser().setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         User user = userRepository.findById(student.getUser().getId())
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         user.setEmail(studentRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
         studentRepository.save(student);
         log.info("Update student with id {} was successfully", id);
         return studentRepository.getStudent(student.getId());

@@ -27,16 +27,20 @@ public class PresentationService {
 
     public PresentationResponse savePresentation(PresentationRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException("Урок не найден"));
+                () -> {
+                    log.error("Lesson with id {} not found", request.getLessonId());
+                    throw new NotFoundException("Урок не найден");
+                });
         Presentation presentation = null;
         if (lesson.getPresentation() == null) {
             presentation = new Presentation(request);
             lesson.setPresentation(presentation);
             presentation.setLesson(lesson);
+            presentationRepository.save(presentation);
         } else {
+            log.error("Lesson already have a presentation");
             throw new BadRequestException("У урока уже есть презентация");
         }
-        presentationRepository.save(presentation);
         log.info("New presentation successfully saved!");
         return presentationRepository.getPresentation(presentation.getId());
     }
