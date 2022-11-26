@@ -37,13 +37,12 @@ public class ResultService {
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findById(user.getId()).orElseThrow(
                 () -> new NotFoundException("User not found"));
-        int amountOfCorrectAnswers = 0;
+        double percent = 0;
         Map<Question, List<Option>> map = new HashMap<>();
         Map<QuestionResponse, List<OptionResponse>> mapper = new HashMap<>();
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
                     () -> new NotFoundException("Question not found"));
-            double percent = 0;
             List<Option> options = new ArrayList<>();
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
                 for (Long optionId : answer.getValue()) {
@@ -57,7 +56,6 @@ public class ResultService {
                 map.put(question, options);
             } else {
                 List<Option> countOfCorrect = new ArrayList<>();
-                List<Option> countOfIncorrect = new ArrayList<>();
                 Integer counter = 0;
                 for (Option o : question.getOptions()) {
                     Option option = optionRepository.findById(o.getId()).orElseThrow(
@@ -72,17 +70,39 @@ public class ResultService {
                     if (option.getIsTrue().equals(true)) {
                         countOfCorrect.add(option);
                     } else {
-                        countOfIncorrect.add(option);
+                        countOfCorrect.add(option);
                     }
+                    options.add(option);
                 }
+                map.put(question, options);
                 int count = 0;
-                for (int i = 0; i < countOfCorrect.size(); i++) {
-                    count++;
+                double maxGrade = 100.0 / test.getQuestion().size();
+                for(Option option : countOfCorrect) {
+                    if(option.getIsTrue().equals(true)) {
+                        count++;
+                    } else {
+                        count--;
+                    }
                 }
                 if(count < 0) {
                     count = 0;
                 }
+                if(count == 0) {
+                    percent = 0;
+                } else if(count == counter) {
+                    percent = maxGrade;
+                } else if(count < counter) {
+                    percent = (maxGrade / counter) * count;
+                }
             }
+        }
+        for(Map.Entry<Question, List<Option>> maps : map.entrySet()) {
+            List<OptionResponse> optionResponses = new ArrayList<>();
+            QuestionResponse questionResponse = new QuestionResponse(maps.getKey());
+            for(Option option : maps.getValue()) {
+                optionResponses.add(new OptionResponse(option));
+            }
+            mapper.put(questionResponse, optionResponses);
         }
         Student student = null;
         if (user1.getRole().equals(Role.STUDENT)) {
@@ -92,7 +112,7 @@ public class ResultService {
                 Results results = new Results(
                         test,
                         LocalDate.now(),
-                        amountOfCorrectAnswers,
+                        percent,
                         student);
                 resultRepository.save(results);
             } else if (test.getIsEnable().equals(false)) {
@@ -100,65 +120,9 @@ public class ResultService {
             }
         }
         return new StudentResultResponse("Набрано баллов "
-                + amountOfCorrectAnswers + " из " + test.getQuestion().size(), mapper);
+                + percent + " из " + test.getQuestion().size(), mapper);
     }
 
-
-//        int amountOfCorrectAnswers = 0;
-//        Map<Long, List<Long>> mapper = new HashMap<>();
-//        for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
-//            List<Long> amount = new ArrayList<>();
-//            Question question = questionRepository.findById(answer.getKey()).orElseThrow(
-//                    () -> new NotFoundException("Question not found"));
-//            if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
-//                for (Long optionId : answer.getValue()) {
-//                    Option option = optionRepository.findById(optionId).orElseThrow(
-//                            () -> new NotFoundException("Option not found"));
-//                    if (option.getIsTrue()) {
-//                        amountOfCorrectAnswers++;
-//                    }
-//                }
-//            } else if (question.getQuestionType().equals(QuestionType.MULTIPLE)) {
-//                long counter = 0L;
-//                for (Long optionId : answer.getValue()) {
-//                    Option option = optionRepository.findById(optionId).orElseThrow(
-//                            () -> new NotFoundException("Option not found"));
-//                    if (option.getIsTrue().equals(true)) {
-//                        amountOfCorrectAnswers++;
-//                        counter++;
-//                    } else if (option.getIsTrue().equals(false) && amountOfCorrectAnswers != 0) {
-////                        amountOfCorrectAnswers--;
-//                        counter--;
-//                    }
-//                }
-//                if (counter < 0) {
-//                    counter = 0;
-//                    amount.add(counter);
-//                    mapper.put(answer.getKey(), amount);
-//                } else {
-//                    amount.add(counter);
-//                    mapper.put(answer.getKey(), amount);
-//                }
-//            }
-//        }
-//        Student student = null;
-//        if (user1.getRole().equals(Role.STUDENT)) {
-//            student = studentRepository.findByUserId(user1.getId()).orElseThrow(
-//                    () -> new NotFoundException("Student not found"));
-//            if (test.getIsEnable().equals(true)) {
-//                Results results = new Results(
-//                        test,
-//                        LocalDate.now(),
-//                        amountOfCorrectAnswers,
-//                        student);
-//                resultRepository.save(results);
-//            } else if (test.getIsEnable().equals(false)) {
-//                throw new BadRequestException("You can't pass the test");
-//            }
-//        }
-//        return new StudentResultResponse("Набрано баллов "
-//                + amountOfCorrectAnswers + " из " + test.getQuestion().size(), mapper);
-//    }
 
     public List<ResultResponse> getAllResults(Long id) {
         Test test = testRepository.findById(id).orElseThrow(

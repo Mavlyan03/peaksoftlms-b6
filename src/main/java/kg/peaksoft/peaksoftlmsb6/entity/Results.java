@@ -23,7 +23,7 @@ public class Results {
 
     private LocalDate dateOfPass;
 
-    private int percent;
+    private Double percent;
 
     @OneToOne(cascade = {
             MERGE,
@@ -36,7 +36,7 @@ public class Results {
             REFRESH})
     private Test test;
 
-    public Results(Test test, LocalDate localDate, Integer percent, Student student) {
+    public Results(Test test, LocalDate localDate, Double percent, Student student) {
         this.test = test;
         this.dateOfPass = localDate;
         this.percent = percent;

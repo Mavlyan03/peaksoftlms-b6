@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.dto.response;
 
+import kg.peaksoft.peaksoftlmsb6.entity.Option;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +13,10 @@ public class OptionResponse {
     public OptionResponse(Long id, String optionValue) {
         this.id = id;
         this.optionValue = optionValue;
+    }
+
+    public OptionResponse(Option option) {
+        this.id = option.getId();
+        this.optionValue = option.getOptionValue();
     }
 }
