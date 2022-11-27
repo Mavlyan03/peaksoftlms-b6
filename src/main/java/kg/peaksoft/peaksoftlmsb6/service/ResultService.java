@@ -33,81 +33,80 @@ public class ResultService {
 
     public StudentResultResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
         Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
-                () -> new NotFoundException("Test not found"));
+                () -> new NotFoundException("Тест не найден"));
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findById(user.getId()).orElseThrow(
-                () -> new NotFoundException("User not found"));
-        double percent = 0;
-        Map<Question, List<Option>> map = new HashMap<>();
-        Map<QuestionResponse, List<OptionResponse>> mapper = new HashMap<>();
+                () -> new NotFoundException("Пользователь не найден"));
+        List<QuestionResponse> mapper = new ArrayList<>();
+        List<Question> map = new ArrayList<>();
+        int percent = 0;
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
-                    () -> new NotFoundException("Question not found"));
-            List<Option> options = new ArrayList<>();
+                    () -> new NotFoundException("Вопрос не найден"));
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
+                question.setOptions(null);
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
-                            () -> new NotFoundException("Option not found"));
-                    options.add(option);
+                            () -> new NotFoundException("Вариант не найден"));
                     if (option.getIsTrue().equals(true)) {
-                        percent = 100.0 / test.getQuestion().size();
+                        percent += 100 % test.getQuestion().size();
                     }
+                    question.addOption(option);
                 }
-                map.put(question, options);
-            } else {
-                List<Option> countOfCorrect = new ArrayList<>();
-                Integer counter = 0;
+                map.add(question);
+            } else if (question.getQuestionType().equals(QuestionType.MULTIPLE)) {
+                int countOfCorrect = 0;
+                int counter = 0;
                 for (Option o : question.getOptions()) {
                     Option option = optionRepository.findById(o.getId()).orElseThrow(
-                            () -> new NotFoundException("Option not found"));
+                            () -> new NotFoundException("Вариант не найден"));
                     if (option.getIsTrue().equals(true)) {
                         counter++;
                     }
                 }
+                int point = 100 % test.getQuestion().size();
+                Long duplicate = 0L;
+                question.setOptions(null);
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
-                            () -> new NotFoundException("Option not found"));
+                            () -> new NotFoundException("Вариант не найден"));
+                    if(option.getId().equals(duplicate)) {
+                        throw new BadRequestException("Нельзя выбирать один вариант несколько раз");
+                    }
                     if (option.getIsTrue().equals(true)) {
-                        countOfCorrect.add(option);
+                        countOfCorrect++;
                     } else {
-                        countOfCorrect.add(option);
+                        countOfCorrect--;
                     }
-                    options.add(option);
+                    question.addOption(option);
+                    duplicate = option.getId();
                 }
-                map.put(question, options);
-                int count = 0;
-                double maxGrade = 100.0 / test.getQuestion().size();
-                for(Option option : countOfCorrect) {
-                    if(option.getIsTrue().equals(true)) {
-                        count++;
-                    } else {
-                        count--;
-                    }
+                if (countOfCorrect < 0) {
+                    countOfCorrect = 0;
                 }
-                if(count < 0) {
-                    count = 0;
+                if (countOfCorrect == 0) {
+                    percent += 0;
+                } else if (countOfCorrect == counter) {
+                    percent += point;
+                } else if (countOfCorrect < counter) {
+                    percent += (point % counter) * countOfCorrect;
                 }
-                if(count == 0) {
-                    percent = 0;
-                } else if(count == counter) {
-                    percent = maxGrade;
-                } else if(count < counter) {
-                    percent = (maxGrade / counter) * count;
-                }
+                map.add(question);
             }
         }
-        for(Map.Entry<Question, List<Option>> maps : map.entrySet()) {
+        for (Question question : map) {
+            QuestionResponse questionResponse = new QuestionResponse(question);
             List<OptionResponse> optionResponses = new ArrayList<>();
-            QuestionResponse questionResponse = new QuestionResponse(maps.getKey());
-            for(Option option : maps.getValue()) {
+            for (Option option : question.getOptions()) {
                 optionResponses.add(new OptionResponse(option));
             }
-            mapper.put(questionResponse, optionResponses);
+            questionResponse.setOptionResponses(optionResponses);
+            mapper.add(questionResponse);
         }
         Student student = null;
         if (user1.getRole().equals(Role.STUDENT)) {
             student = studentRepository.findByUserId(user1.getId()).orElseThrow(
-                    () -> new NotFoundException("Student not found"));
+                    () -> new NotFoundException("Студент не найден"));
             if (test.getIsEnable().equals(true)) {
                 Results results = new Results(
                         test,
@@ -116,7 +115,7 @@ public class ResultService {
                         student);
                 resultRepository.save(results);
             } else if (test.getIsEnable().equals(false)) {
-                throw new BadRequestException("You can't pass the test");
+                throw new BadRequestException("Вы не можете пойти тест");
             }
         }
         return new StudentResultResponse("Набрано баллов "
@@ -126,13 +125,13 @@ public class ResultService {
 
     public List<ResultResponse> getAllResults(Long id) {
         Test test = testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Test not found"));
+                () -> new NotFoundException("Тест не найден"));
         return mapToResponse(resultRepository.findResultByTestId(test.getId()));
     }
 
     public ResultResponse getById(Long id) {
         Results results = resultRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Result not found"));
+                () -> new NotFoundException("Результат не найден"));
         return resultRepository.getResult(results.getId());
     }
 

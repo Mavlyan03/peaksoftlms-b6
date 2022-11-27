@@ -24,14 +24,14 @@ public class ResultApi {
 
     private final ResultService resultService;
 
-//    @PostMapping
-//    @Operation(summary = "Pass test",
-//            description = "Students pass test")
-//    @PreAuthorize("hasAnyAuthority('STUDENT')")
-//    public StudentResultResponse saveResult(Authentication authentication,
-//                                            @RequestBody PassTestRequest passTestRequest) {
-//        return resultService.passTest(passTestRequest, authentication);
-//    }
+    @PostMapping
+    @Operation(summary = "Pass test",
+            description = "Students pass test")
+    @PreAuthorize("hasAnyAuthority('STUDENT')")
+    public StudentResultResponse saveResult(Authentication authentication,
+                                            @RequestBody PassTestRequest passTestRequest) {
+        return resultService.passTest(passTestRequest, authentication);
+    }
 
     @GetMapping("/test/{id}")
     @Operation(summary = "Get all results",

@@ -21,7 +21,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestService {
     private final TestRepository testRepository;
-    private final StudentRepository studentRepository;
     private final QuestionRepository questionRepository;
     private final OptionRepository optionRepository;
     private final ResultRepository resultRepository;
@@ -29,15 +28,15 @@ public class TestService {
 
     public SimpleResponse isEnable(Long testId) {
         Test test = testRepository.findById(testId).orElseThrow(
-                () -> new NotFoundException("Test not found"));
+                () -> new NotFoundException("Тест не найден"));
         test.setIsEnable(!test.getIsEnable());
         List<Results> results = resultRepository.findResultByTestId(test.getId());
-        return new SimpleResponse(String.format("%s answers",results.size()));
+        return new SimpleResponse(String.format("%s ответов",results.size()));
     }
 
     public TestResponse createTest(TestRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
-                () -> new NotFoundException(String.format("Lesson with id =%s not found", request.getLessonId())));
+                () -> new NotFoundException("Урок не найден"));
         Test test = null;
         if (lesson.getTest() == null) {
             test = convertToEntity(request);
@@ -52,13 +51,13 @@ public class TestService {
 
     public TestInnerPageResponse getTestById(Long id) {
         return convertToResponse(testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("not found")
+                () -> new NotFoundException("Тест не найден")
         ));
     }
 
     public SimpleResponse deleteById(Long id) {
         Test test = testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Test with id =%s not found", id)));
+                () -> new NotFoundException("Тест не найден"));
         for (Results results : test.getResults()) {
             test.setResults(null);
             results.setTest(null);
@@ -73,12 +72,12 @@ public class TestService {
             questionRepository.deleteById(question.getId());
         }
         testRepository.deleteTestById(test.getId());
-        return new SimpleResponse("Test deleted");
+        return new SimpleResponse("Тест удалён");
     }
 
     public TestInnerPageResponse updateTest(Long id, TestRequest testRequest) {
         Test test = testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Test with id = %s not found",id)));
+                () -> new NotFoundException("Тест на найден"));
         testRepository.update(test.getId(), testRequest.getTestName());
         Question question1 = null;
         Option option1 = null;
@@ -169,10 +168,10 @@ public class TestService {
                     }
                 }
                 if (counter > 1) {
-                    throw new BadRequestException("You must write only one option");
+                    throw new BadRequestException("Вы должны написать лишь один правильный вариант");
                 }
                 if (counter < 1) {
-                    throw new BadRequestException("You must write only one option");
+                    throw new BadRequestException("Вы должны написать лишь один правильный вариант");
                 }
             } else {
                 int counter = 0;
@@ -184,13 +183,11 @@ public class TestService {
                     }
                 }
                 if (counter < 1) {
-                    throw new BadRequestException("You should write 1 or more options");
+                    throw new BadRequestException("Вы должны написать минимум один правильный вариант");
                 }
             }
             test.addQuestion(question);
         }
         return test;
     }
-
-
 }

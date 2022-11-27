@@ -12,5 +12,6 @@ import java.util.Map;
 @AllArgsConstructor
 public class StudentResultResponse {
     private String totalPoint;
-    private Map<QuestionResponse, List<OptionResponse>> points;
+//    private Map<QuestionResponse, List<OptionResponse>> points;
+    private List<QuestionResponse> points;
 }
