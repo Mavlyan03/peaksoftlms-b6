@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse(" +
-            "i.id,"+
+            "i.id," +
             "concat(i.firstName,' ',i.lastName) ," +
             "i.phoneNumber," +
             "i.specialization," +

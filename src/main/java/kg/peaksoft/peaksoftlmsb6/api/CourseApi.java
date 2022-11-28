@@ -57,7 +57,7 @@ public class CourseApi {
         return courseService.assignInstructorToCourse(request);
     }
 
-    @PostMapping("/unassigned")
+    @PostMapping("/unassigned/")
     @Operation(summary = "Unassigned course",
             description = "Admin unassigned instructor from course by their id")
     public SimpleResponse unassigned(@RequestBody AssignInstructorRequest request) {

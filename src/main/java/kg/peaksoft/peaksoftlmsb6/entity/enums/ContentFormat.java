@@ -5,10 +5,9 @@ public enum ContentFormat {
 
     LINK,
 
-    VIDEO,
+    IMAGE,
 
     CODE,
 
     FILE
-
 }
