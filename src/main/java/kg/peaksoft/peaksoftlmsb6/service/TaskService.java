@@ -91,14 +91,20 @@ public class TaskService {
                 break;
             }
         }
-        return convertUpdateResponse(task, task.getContents());
+        return convertUpdateResponse(task, taskRequest.getContentRequests());
     }
 
-    public TaskResponse convertUpdateResponse(Task task, List<Content> contents) {
+    public TaskResponse convertUpdateResponse(Task task, List<ContentRequest> contents) {
         TaskResponse taskResponse = new TaskResponse(task);
         List<ContentResponse> contentResponses = new ArrayList<>();
-        for(Content content : contents) {
-            contentResponses.add(new ContentResponse(content));
+        int i = 0;
+        for(ContentRequest content : contents) {
+            if(i < task.getContents().size()) {
+                Content content1 = task.getContents().get(i);
+                contentResponses.add(new ContentResponse(content, content1.getId()));
+            } else {
+                break;
+            }
         }
         taskResponse.setContentResponses(contentResponses);
         return taskResponse;

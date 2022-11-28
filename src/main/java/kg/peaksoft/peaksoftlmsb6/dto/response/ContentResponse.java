@@ -16,8 +16,8 @@ public class ContentResponse {
     private ContentFormat contentFormat;
     private String contentValue;
 
-    public ContentResponse(Content content) {
-        this.id = content.getId();
+    public ContentResponse(ContentRequest content, Long id) {
+        this.id = id;
         this.contentName = content.getContentName();
         this.contentFormat = content.getContentFormat();
         this.contentValue = content.getContentValue();
