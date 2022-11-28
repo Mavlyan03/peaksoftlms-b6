@@ -36,6 +36,12 @@ public class Question {
         this.questionType = questionType;
     }
 
+    public Question(Question question) {
+        this.id = question.getId();
+        this.question = question.getQuestion();
+        this.questionType = question.getQuestionType();
+    }
+
     public void addOption(Option option) {
         if(this.options == null) {
             this.options = new ArrayList<>();

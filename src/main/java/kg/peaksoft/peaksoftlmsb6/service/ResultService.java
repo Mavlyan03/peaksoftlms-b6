@@ -1,7 +1,10 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.PassTestRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.response.*;
+import kg.peaksoft.peaksoftlmsb6.dto.response.OptionResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.QuestionResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResultResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
@@ -15,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,15 +45,18 @@ public class ResultService {
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
                     () -> new NotFoundException("Вопрос не найден"));
+            Question question1 = new Question(question);
+            question1.setId(question.getId());
+            question1.setQuestion(question.getQuestion());
+            question1.setQuestionType(question.getQuestionType());
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
-                question.setOptions(null);
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
                             () -> new NotFoundException("Вариант не найден"));
                     if (option.getIsTrue().equals(true)) {
                         percent += 100 % test.getQuestion().size();
                     }
-                    question.addOption(option);
+                    question1.addOption(option);
                 }
                 map.add(question);
             } else if (question.getQuestionType().equals(QuestionType.MULTIPLE)) {
@@ -66,20 +71,23 @@ public class ResultService {
                 }
                 int point = 100 % test.getQuestion().size();
                 Long duplicate = 0L;
-                question.setOptions(null);
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
                             () -> new NotFoundException("Вариант не найден"));
-                    if(option.getId().equals(duplicate)) {
-                        throw new BadRequestException("Нельзя выбирать один вариант несколько раз");
-                    }
-                    if (option.getIsTrue().equals(true)) {
-                        countOfCorrect++;
+                    if (question.getOptions().contains(option)) {
+                        if (option.getId().equals(duplicate)) {
+                            throw new BadRequestException("Нельзя выбирать один вариант несколько раз");
+                        }
+                        if (option.getIsTrue().equals(true)) {
+                            countOfCorrect++;
+                        } else {
+                            countOfCorrect--;
+                        }
+                        question1.addOption(option);
+                        duplicate = option.getId();
                     } else {
-                        countOfCorrect--;
+                        throw new BadRequestException("Вариант относится к другому вопросу");
                     }
-                    question.addOption(option);
-                    duplicate = option.getId();
                 }
                 if (countOfCorrect < 0) {
                     countOfCorrect = 0;
@@ -91,7 +99,7 @@ public class ResultService {
                 } else if (countOfCorrect < counter) {
                     percent += (point % counter) * countOfCorrect;
                 }
-                map.add(question);
+                map.add(question1);
             }
         }
         for (Question question : map) {
@@ -110,12 +118,14 @@ public class ResultService {
             if (test.getIsEnable().equals(true)) {
                 Results results = new Results(
                         test,
-                        LocalDate.now(),
                         percent,
+                        test.getQuestion().size() - percent,
+                        LocalDate.now(),
+                        percent * 10,
                         student);
                 resultRepository.save(results);
             } else if (test.getIsEnable().equals(false)) {
-                throw new BadRequestException("Вы не можете пойти тест");
+                throw new BadRequestException("Вы не можете пройти тест");
             }
         }
         return new StudentResultResponse("Набрано баллов "
@@ -143,6 +153,7 @@ public class ResultService {
         return resultResponses;
     }
 }
+
 
 //    public StudentResultResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
 //        Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(

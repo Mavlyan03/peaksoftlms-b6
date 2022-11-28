@@ -13,7 +13,9 @@ public interface ResultRepository extends JpaRepository<Results, Long> {
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse(" +
             "r.id," +
             "concat(r.student.firstName,' ',r.student.lastName)," +
-            "r.percent )from Results r where r.id = ?1")
+            "r.amountOfCorrectAnswers," +
+            "r.amountOfIncorrectAnswers," +
+            "r.percent)from Results r where r.id = ?1")
     ResultResponse getResult(Long id);
 
     @Query("select r from Results r where r.test.id = ?1")
