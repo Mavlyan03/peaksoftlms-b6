@@ -1,0 +1,32 @@
+<configuration>
+    <!-- Use shutdownHook so that we can close gracefully and finish the log drain -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <appender name="LogzioLogbackAppender" class="io.logz.logback.LogzioLogbackAppender">
+        <token>teOGJDKmZOvlFPziQKWMKTTfYMcUSqYV</token>
+        <logzioUrl>https://listener.logz.io:8071</logzioUrl>
+        <logzioType>java-application</logzioType>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <appender name="Console"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+
+
+    <root level="debug">
+        <appender-ref ref="LogzioLogbackAppender"/>
+    </root>
+
+    <springProfile name="!prod">
+        <root  level="INFO">
+            <appender-ref ref="Console" />
+        </root>
+        <!-- configuration to be enabled when the "prod" profile is not active -->
+    </springProfile>
+</configuration>
