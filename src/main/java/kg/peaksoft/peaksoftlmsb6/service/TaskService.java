@@ -2,7 +2,6 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ContentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
@@ -73,7 +72,7 @@ public class TaskService {
         return taskResponse;
     }
 
-    public SimpleResponse updateTask(Long id, UpdateTaskRequest taskRequest) {
+    public TaskResponse updateTask(Long id, TaskRequest taskRequest) {
         Task task = taskRepository.findById(id).orElseThrow(
                 ()-> new NotFoundException("Задача не найдена")
         );
@@ -92,7 +91,17 @@ public class TaskService {
                 break;
             }
         }
-        return new SimpleResponse("Task update successfully");
+        return convertUpdateResponse(task, task.getContents());
+    }
+
+    public TaskResponse convertUpdateResponse(Task task, List<Content> contents) {
+        TaskResponse taskResponse = new TaskResponse(task);
+        List<ContentResponse> contentResponses = new ArrayList<>();
+        for(Content content : contents) {
+            contentResponses.add(new ContentResponse(content));
+        }
+        taskResponse.setContentResponses(contentResponses);
+        return taskResponse;
     }
 
     public SimpleResponse deleteById(Long id) {
