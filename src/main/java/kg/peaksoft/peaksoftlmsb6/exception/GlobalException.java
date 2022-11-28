@@ -25,4 +25,5 @@ public class GlobalException {
     public ExceptionResponse badCredentials(BadCredentialsException e) {
         return new ExceptionResponse(e.getMessage(),HttpStatus.UNAUTHORIZED);
     }
+
 }

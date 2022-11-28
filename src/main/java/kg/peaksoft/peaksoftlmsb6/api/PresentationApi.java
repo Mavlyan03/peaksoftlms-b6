@@ -23,7 +23,7 @@ public class PresentationApi {
     @PostMapping
     @Operation(summary = "Save presentation",
             description = "To save a new presentation by Instructor")
-    public PresentationResponse savePresentation(@RequestBody PresentationRequest request) {
+    public PresentationResponse createPresentation(@RequestBody PresentationRequest request) {
         return presentationService.savePresentation(request);
     }
 
