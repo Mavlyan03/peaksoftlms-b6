@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ContentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
@@ -72,8 +73,10 @@ public class TaskService {
         return taskResponse;
     }
 
-    public SimpleResponse updateTask(Long id, TaskRequest taskRequest) {
-        Task task = taskRepository.findById(id).orElseThrow();
+    public SimpleResponse updateTask(Long id, UpdateTaskRequest taskRequest) {
+        Task task = taskRepository.findById(id).orElseThrow(
+                ()-> new NotFoundException("Задача не найдена")
+        );
         task.setTaskName(taskRequest.getTaskName());
         List<Content> contents = new ArrayList<>();
         for (ContentRequest c : taskRequest.getContentRequests()) {

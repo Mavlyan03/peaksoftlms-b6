@@ -64,7 +64,7 @@ insert into tasks(id, task_name, lesson_id)
 values (1, 'Group crud', 1);
 
 insert into contents(id, content_format, content_name, content_value, task_id)
-values (1, 'VIDEO', 'video link', 'aws', 1);
+values (1, 'IMAGE', 'image link', 'aws', 1);
 
 insert into tests(id, is_enable, test_name, lesson_id)
 values (1, false, 'Java core', 1);

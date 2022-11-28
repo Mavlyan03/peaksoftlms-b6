@@ -8,7 +8,6 @@ import java.util.List;
 @Getter
 @Setter
 public class UpdateTaskRequest {
-    private Long lessonId;
     private String taskName;
-    private List<ContentRequest> contentRequestList;
+    private List<ContentRequest> contentRequests;
 }
