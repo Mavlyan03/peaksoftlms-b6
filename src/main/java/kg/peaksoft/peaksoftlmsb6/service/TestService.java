@@ -79,58 +79,17 @@ public class TestService {
         Test test = testRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Тест на найден"));
         testRepository.update(test.getId(), testRequest.getTestName());
-        Question question1 = null;
-        Option option1 = null;
-        for(Question question : test.getQuestion()) {
-            question1 = questionRepository.findById(question.getId()).orElseThrow(
-                    () -> new NotFoundException(String.format("Question with id = %s not found", question.getId())));
-            for (Option option : question.getOptions()) {
-                option1 = optionRepository.findById(option.getId()).orElseThrow(
-                        () -> new NotFoundException(String.format("Option with id = %s not found", option.getId())));
-
+        List<Question> questions = new ArrayList<>();
+        List<Option> options = new ArrayList<>();
+        for(QuestionRequest questionRequest : testRequest.getQuestions()) {
+            for(OptionRequest optionRequest : questionRequest.getOptions()) {
+                options.add(new Option(optionRequest));
             }
-            for (QuestionRequest questionRequest : testRequest.getQuestions()) {
-                assert question1 != null;
-                questionRepository.update(
-                        question1.getId(),
-                        questionRequest.getQuestion(),
-                        questionRequest.getQuestionType());
-                for (OptionRequest optionRequest : questionRequest.getOptions()) {
-                    assert option1 != null;
-                    optionRepository.update(
-                            option1.getId(),
-                            optionRequest.getOption(),
-                            optionRequest.getIsTrue());
-                }
-            }
+            questions.add(new Question(questionRequest));
         }
-        testRepository.save(test);
-        return convertUpdateToResponse(id, test);
+        return null;
     }
 
-    private TestInnerPageResponse convertUpdateToResponse(Long id, Test test) {
-        Test tests = testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(String.format("Test with id = %s not found",id)));
-        TestInnerPageResponse innerPageResponse = new TestInnerPageResponse(tests.getId(), test.getTestName());
-        List<QuestionResponse> questionResponses = new ArrayList<>();
-        List<OptionResponse> optionResponses = new ArrayList<>();
-        for(Question question : test.getQuestion()) {
-            QuestionResponse questionResponse = new QuestionResponse(
-                    question.getId(),
-                    question.getQuestion(),
-                    question.getQuestionType());
-            for(Option option : question.getOptions()) {
-                OptionResponse optionResponse = new OptionResponse(
-                        option.getId(),
-                        option.getOptionValue());
-                optionResponses.add(optionResponse);
-            }
-            questionResponse.setOptionResponses(optionResponses);
-            questionResponses.add(questionResponse);
-        }
-        innerPageResponse.setQuestions(questionResponses);
-        return innerPageResponse;
-    }
 
     private TestInnerPageResponse convertToResponse(Test test) {
         TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());

@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.OptionRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,5 +29,10 @@ public class Option {
     public Option(String option, Boolean isTrue) {
         this.optionValue = option;
         this.isTrue = isTrue;
+    }
+
+    public Option(OptionRequest optionRequest) {
+        this.optionValue = optionRequest.getOption();
+        this.isTrue = optionRequest.getIsTrue();
     }
 }
