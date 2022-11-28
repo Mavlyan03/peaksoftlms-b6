@@ -82,10 +82,12 @@ public class TestService {
         List<Question> questions = new ArrayList<>();
         List<Option> options = new ArrayList<>();
         for(QuestionRequest questionRequest : testRequest.getQuestions()) {
+            Question question = new Question();
             for(OptionRequest optionRequest : questionRequest.getOptions()) {
                 options.add(new Option(optionRequest));
             }
-            questions.add(new Question(questionRequest));
+            question.setOptions(options);
+            questions.add(question);
         }
         return null;
     }
