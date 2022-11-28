@@ -74,6 +74,7 @@ public class CourseApi {
     @GetMapping("/students/{id}")
     @Operation(summary = "Get all students from course",
             description = "Admin get all students from course by course id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public List<StudentResponse> getAllStudentsFromCourse(@PathVariable("id") Long id) {
         return courseService.getAllStudentsFromCourse(id);
     }
@@ -104,6 +105,7 @@ public class CourseApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get course by id",
             description = "Get course by id for admin")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public CourseResponse getCourseById(@PathVariable Long id) {
         return courseService.getById(id);
     }
