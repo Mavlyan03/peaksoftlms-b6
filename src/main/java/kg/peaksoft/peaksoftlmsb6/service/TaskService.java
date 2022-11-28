@@ -78,11 +78,20 @@ public class TaskService {
                 ()-> new NotFoundException("Задача не найдена")
         );
         task.setTaskName(taskRequest.getTaskName());
-        List<Content> contents = new ArrayList<>();
-        for (ContentRequest c : taskRequest.getContentRequests()) {
-            contents.add(new Content(c.getContentName(), c.getContentFormat(), c.getContentValue()));
+        int i = 0;
+        for(ContentRequest contentRequest : taskRequest.getContentRequests()) {
+            if(i < task.getContents().size()) {
+                Content content = task.getContents().get(i);
+                contentRepository.update(
+                        content.getId(),
+                        contentRequest.getContentName(),
+                        contentRequest.getContentFormat(),
+                        contentRequest.getContentValue());
+                i++;
+            } else {
+                break;
+            }
         }
-        task.setContents(contents);
         return new SimpleResponse("Task update successfully");
     }
 

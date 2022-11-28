@@ -75,23 +75,42 @@ public class TestService {
         return new SimpleResponse("Тест удалён");
     }
 
-    public TestInnerPageResponse updateTest(Long id, TestRequest testRequest) {
+//    public TestInnerPageResponse updateTest(Long id, TestRequest testRequest) {
+//        Test test = testRepository.findById(id).orElseThrow(
+//                () -> new NotFoundException("Тест на найден"));
+//        testRepository.update(test.getId(), testRequest.getTestName());
+//        List<Question> questions = new ArrayList<>();
+//        List<Option> options = new ArrayList<>();
+//        for(QuestionRequest questionRequest : testRequest.getQuestions()) {
+//            Question question = new Question();
+//            for(OptionRequest optionRequest : questionRequest.getOptions()) {
+//                options.add(new Option(optionRequest));
+//            }
+//            question.setOptions(options);
+//            questions.add(question);
+//        }
+//        test.setQuestion(questions);
+//        testRepository.save(test);
+//        return null;
+//    }
+
+    public SimpleResponse updateTest(Long id, TestRequest testRequest) {
         Test test = testRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Тест на найден"));
         testRepository.update(test.getId(), testRequest.getTestName());
         List<Question> questions = new ArrayList<>();
         List<Option> options = new ArrayList<>();
         for(QuestionRequest questionRequest : testRequest.getQuestions()) {
-            Question question = new Question();
+            Question question = new Question(questionRequest);
             for(OptionRequest optionRequest : questionRequest.getOptions()) {
                 options.add(new Option(optionRequest));
             }
             question.setOptions(options);
             questions.add(question);
         }
-        return null;
+        test.setQuestion(questions);
+        return new SimpleResponse("Test update successfully");
     }
-
 
     private TestInnerPageResponse convertToResponse(Test test) {
         TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
