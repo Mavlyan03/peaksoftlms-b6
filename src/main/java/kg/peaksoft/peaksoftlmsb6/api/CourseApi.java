@@ -57,11 +57,11 @@ public class CourseApi {
         return courseService.assignInstructorToCourse(request);
     }
 
-    @PostMapping("/unassigned/{id}")
+    @PostMapping("/unassigned/")
     @Operation(summary = "Unassigned course",
             description = "Admin unassigned instructor from course by their id")
-    public SimpleResponse unassigned(@PathVariable Long id) {
-        return courseService.unassigned(id);
+    public SimpleResponse unassigned(@RequestBody AssignInstructorRequest request) {
+        return courseService.unassigned(request);
     }
 
     @GetMapping("/instructors/{id}")
