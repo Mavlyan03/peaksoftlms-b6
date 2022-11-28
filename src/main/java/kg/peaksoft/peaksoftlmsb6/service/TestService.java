@@ -75,43 +75,70 @@ public class TestService {
         return new SimpleResponse("Тест удалён");
     }
 
-//    public TestInnerPageResponse updateTest(Long id, TestRequest testRequest) {
-//        Test test = testRepository.findById(id).orElseThrow(
-//                () -> new NotFoundException("Тест на найден"));
-//        testRepository.update(test.getId(), testRequest.getTestName());
-//        List<Question> questions = new ArrayList<>();
-//        List<Option> options = new ArrayList<>();
-//        for(QuestionRequest questionRequest : testRequest.getQuestions()) {
-//            Question question = new Question();
-//            for(OptionRequest optionRequest : questionRequest.getOptions()) {
-//                options.add(new Option(optionRequest));
-//            }
-//            question.setOptions(options);
-//            questions.add(question);
-//        }
-//        test.setQuestion(questions);
-//        testRepository.save(test);
-//        return null;
-//    }
-
-    public SimpleResponse updateTest(Long id, TestRequest testRequest) {
+    public TestInnerPageResponse updateTest(Long id, TestRequest testRequest) {
         Test test = testRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Тест на найден"));
-        testRepository.update(test.getId(), testRequest.getTestName());
-        List<Question> questions = new ArrayList<>();
-        List<Option> options = new ArrayList<>();
+        test.setTestName(testRequest.getTestName());
+        int i = 0;
         for(QuestionRequest questionRequest : testRequest.getQuestions()) {
-            Question question = new Question(questionRequest);
-            for(OptionRequest optionRequest : questionRequest.getOptions()) {
-                options.add(new Option(optionRequest));
+            if(i < test.getQuestion().size()) {
+                Question question = test.getQuestion().get(i);
+                questionRepository.update(
+                        question.getId(),
+                        questionRequest.getQuestion(),
+                        questionRequest.getQuestionType());
+                int j = 0;
+                for(OptionRequest optionRequest : questionRequest.getOptions()) {
+                    if(j < question.getOptions().size()) {
+                        Option option = question.getOptions().get(j);
+                        optionRepository.update(
+                                option.getId(),
+                                optionRequest.getOption(),
+                                option.getIsTrue());
+                        j++;
+                    } else {
+                        break;
+                    }
+                }
+                i++;
+            } else {
+                break;
             }
-            question.setOptions(options);
-            questions.add(question);
         }
-        test.setQuestion(questions);
-        return new SimpleResponse("Test update successfully");
+        return convertUpdateResponse(test, testRequest.getQuestions());
     }
 
+    public TestInnerPageResponse convertUpdateResponse(Test test, List<QuestionRequest> questions) {
+        TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
+        List<QuestionResponse> questionResponses = new ArrayList<>();
+        List<OptionResponse> optionResponses = new ArrayList<>();
+        int i = 0;
+        for(QuestionRequest question : questions) {
+            if(i < test.getQuestion().size()) {
+                Question question1 = test.getQuestion().get(i);
+                QuestionResponse questionResponse = new QuestionResponse(question, question1.getId());
+                int j = 0;
+                for(OptionRequest option : question.getOptions()) {
+                    if(j < question1.getOptions().size()) {
+                        Option option1 = question1.getOptions().get(j);
+                        optionResponses.add(new OptionResponse(option, option1.getId()));
+                    } else {
+                        break;
+                    }
+                }
+                questionResponse.setOptionResponses(optionResponses);
+                questionResponses.add(new QuestionResponse(
+                        questionResponse.getId(),
+                        questionResponse.getQuestion(),
+                        questionResponse.getQuestionType()));
+
+            } else {
+                break;
+            }
+        }
+        testResponse.setQuestions(questionResponses);
+        return testResponse;
+     }
     private TestInnerPageResponse convertToResponse(Test test) {
         TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
         List<QuestionResponse> questionResponses = new ArrayList<>();

@@ -33,7 +33,7 @@ public class TestApi {
     @PutMapping("/{id}")
     @Operation(summary = "Update test",
             description = "Instructor update test by id")
-    public SimpleResponse updateTest(@PathVariable Long id, @RequestBody TestRequest testRequest) {
+    public TestInnerPageResponse updateTest(@PathVariable Long id, @RequestBody TestRequest testRequest) {
         return testService.updateTest(id, testRequest);
     }
 

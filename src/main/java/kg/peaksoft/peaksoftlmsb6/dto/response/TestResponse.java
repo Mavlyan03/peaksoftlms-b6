@@ -12,7 +12,4 @@ import java.util.List;
 public class TestResponse {
     private Long testId;
     private String testName;
-//    private List<QuestionResponse> questionResponseList;
-
-
 }

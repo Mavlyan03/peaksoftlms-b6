@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.dto.response;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.QuestionRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.Question;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,11 @@ public class QuestionResponse {
         this.questionType = questionType;
     }
 
+    public QuestionResponse(QuestionRequest request, Long id) {
+        this.id = id;
+        this.question = request.getQuestion();
+        this.questionType = request.getQuestionType();
+    }
     public QuestionResponse(Question question) {
         this.id = question.getId();
         this.question = question.getQuestion();
