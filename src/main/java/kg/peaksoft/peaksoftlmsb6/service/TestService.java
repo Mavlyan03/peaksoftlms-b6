@@ -88,16 +88,39 @@ public class TestService {
                         questionRequest.getQuestion(),
                         questionRequest.getQuestionType());
                 int j = 0;
-                for(OptionRequest optionRequest : questionRequest.getOptions()) {
-                    if(j < question.getOptions().size()) {
-                        Option option = question.getOptions().get(j);
-                        optionRepository.update(
-                                option.getId(),
-                                optionRequest.getOption(),
-                                option.getIsTrue());
-                        j++;
-                    } else {
-                        break;
+                if(questionRequest.getQuestionType().equals(QuestionType.SINGLETON)) {
+                    int counter = 0;
+                    for(OptionRequest optionRequest : questionRequest.getOptions()) {
+                        if(optionRequest.getIsTrue().equals(true)) {
+                            counter++;
+                        }
+                        if(j < question.getOptions().size()) {
+                            Option option = question.getOptions().get(j);
+                            if(counter == 1) {
+                                optionRepository.update(
+                                        option.getId(),
+                                        optionRequest.getOption(),
+                                        optionRequest.getIsTrue());
+                                j++;
+                            } else {
+                                throw new BadRequestException("Вы должны написать лишь один правильный вариант");
+                            }
+                        } else {
+                            break;
+                        }
+                    }
+                } else if(questionRequest.getQuestionType().equals(QuestionType.MULTIPLE)) {
+                    for(OptionRequest optionRequest : questionRequest.getOptions()) {
+                        if(j < question.getOptions().size()) {
+                            Option option = question.getOptions().get(j);
+                                optionRepository.update(
+                                        option.getId(),
+                                        optionRequest.getOption(),
+                                        optionRequest.getIsTrue());
+                                j++;
+                        } else {
+                            break;
+                        }
                     }
                 }
                 i++;
@@ -111,27 +134,30 @@ public class TestService {
     public TestInnerPageResponse convertUpdateResponse(Test test, List<QuestionRequest> questions) {
         TestInnerPageResponse testResponse = new TestInnerPageResponse(test.getId(), test.getTestName());
         List<QuestionResponse> questionResponses = new ArrayList<>();
-        List<OptionResponse> optionResponses = new ArrayList<>();
         int i = 0;
         for(QuestionRequest question : questions) {
             if(i < test.getQuestion().size()) {
                 Question question1 = test.getQuestion().get(i);
                 QuestionResponse questionResponse = new QuestionResponse(question, question1.getId());
                 int j = 0;
+                List<OptionResponse> optionResponses = new ArrayList<>();
                 for(OptionRequest option : question.getOptions()) {
                     if(j < question1.getOptions().size()) {
                         Option option1 = question1.getOptions().get(j);
                         optionResponses.add(new OptionResponse(option, option1.getId()));
+                        j++;
                     } else {
                         break;
                     }
+
                 }
                 questionResponse.setOptionResponses(optionResponses);
                 questionResponses.add(new QuestionResponse(
                         questionResponse.getId(),
                         questionResponse.getQuestion(),
-                        questionResponse.getQuestionType()));
-
+                        questionResponse.getQuestionType(),
+                        questionResponse.getOptionResponses()));
+                i++;
             } else {
                 break;
             }

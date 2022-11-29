@@ -12,6 +12,7 @@ import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import java.util.Map;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class ResultService {
 
     private final ResultRepository resultRepository;
@@ -35,16 +37,22 @@ public class ResultService {
 
     public StudentResultResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
         Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
-                () -> new NotFoundException("Тест не найден"));
+                () -> {
+                    throw new NotFoundException("Тест не найден");
+                });
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findById(user.getId()).orElseThrow(
-                () -> new NotFoundException("Пользователь не найден"));
+                () -> {
+                    throw new NotFoundException("Пользователь не найден");
+                });
         List<QuestionResponse> mapper = new ArrayList<>();
         List<Question> map = new ArrayList<>();
         int percent = 0;
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
-                    () -> new NotFoundException("Вопрос не найден"));
+                    () -> {
+                        throw new NotFoundException("Вопрос не найден");
+                    });
             Question question1 = new Question(question);
             question1.setId(question.getId());
             question1.setQuestion(question.getQuestion());
@@ -52,7 +60,9 @@ public class ResultService {
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
-                            () -> new NotFoundException("Вариант не найден"));
+                            () -> {
+                                throw new NotFoundException("Вариант не найден");
+                            });
                     if (option.getIsTrue().equals(true)) {
                         percent += 100 % test.getQuestion().size();
                     }
@@ -64,7 +74,9 @@ public class ResultService {
                 int counter = 0;
                 for (Option o : question.getOptions()) {
                     Option option = optionRepository.findById(o.getId()).orElseThrow(
-                            () -> new NotFoundException("Вариант не найден"));
+                            () -> {
+                                throw new NotFoundException("Вариант не найден");
+                            });
                     if (option.getIsTrue().equals(true)) {
                         counter++;
                     }
@@ -73,7 +85,9 @@ public class ResultService {
                 Long duplicate = 0L;
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
-                            () -> new NotFoundException("Вариант не найден"));
+                            () -> {
+                                throw new NotFoundException("Вариант не найден");
+                            });
                     if (question.getOptions().contains(option)) {
                         if (option.getId().equals(duplicate)) {
                             throw new BadRequestException("Нельзя выбирать один вариант несколько раз");
@@ -128,6 +142,7 @@ public class ResultService {
                 throw new BadRequestException("Вы не можете пройти тест");
             }
         }
+        log.info("User pass the test successfully");
         return new StudentResultResponse("Набрано баллов "
                 + percent + " из " + test.getQuestion().size(), mapper);
     }
@@ -136,6 +151,7 @@ public class ResultService {
     public List<ResultResponse> getAllResults(Long id) {
         Test test = testRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Тест не найден"));
+        log.info("Instructor get all results successfully");
         return mapToResponse(resultRepository.findResultByTestId(test.getId()));
     }
 
@@ -153,66 +169,3 @@ public class ResultService {
         return resultResponses;
     }
 }
-
-
-//    public StudentResultResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
-//        Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
-//                () -> new NotFoundException("Test not found"));
-//        User user = (User) authentication.getPrincipal();
-//        User user1 = userRepository.findById(user.getId()).orElseThrow(
-//                () -> new NotFoundException("User not found"));
-//        int amountOfCorrectAnswers = 0;
-//        Map<Long, List<Long>> mapper = new HashMap<>();
-//        for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
-//            List<Long> amount = new ArrayList<>();
-//            Question question = questionRepository.findById(answer.getKey()).orElseThrow(
-//                    () -> new NotFoundException("Question not found"));
-//            if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
-//                for (Long optionId : answer.getValue()) {
-//                    Option option = optionRepository.findById(optionId).orElseThrow(
-//                            () -> new NotFoundException("Option not found"));
-//                    if (option.getIsTrue()) {
-//                        amountOfCorrectAnswers++;
-//                    }
-//                }
-//            } else if (question.getQuestionType().equals(QuestionType.MULTIPLE)) {
-//                long counter = 0L;
-//                for (Long optionId : answer.getValue()) {
-//                    Option option = optionRepository.findById(optionId).orElseThrow(
-//                            () -> new NotFoundException("Option not found"));
-//                    if (option.getIsTrue().equals(true)) {
-//                        amountOfCorrectAnswers++;
-//                        counter++;
-//                    } else if (option.getIsTrue().equals(false) && amountOfCorrectAnswers != 0) {
-////                        amountOfCorrectAnswers--;
-//                        counter--;
-//                    }
-//                }
-//                if (counter < 0) {
-//                    counter = 0;
-//                    amount.add(counter);
-//                    mapper.put(answer.getKey(), amount);
-//                } else {
-//                    amount.add(counter);
-//                    mapper.put(answer.getKey(), amount);
-//                }
-//            }
-//        }
-//        Student student = null;
-//        if (user1.getRole().equals(Role.STUDENT)) {
-//            student = studentRepository.findByUserId(user1.getId()).orElseThrow(
-//                    () -> new NotFoundException("Student not found"));
-//            if (test.getIsEnable().equals(true)) {
-//                Results results = new Results(
-//                        test,
-//                        LocalDate.now(),
-//                        amountOfCorrectAnswers,
-//                        student);
-//                resultRepository.save(results);
-//            } else if (test.getIsEnable().equals(false)) {
-//                throw new BadRequestException("You can't pass the test");
-//            }
-//        }
-//        return new StudentResultResponse("Набрано баллов "
-//                + amountOfCorrectAnswers + " из " + test.getQuestion().size(), mapper);
-//    }

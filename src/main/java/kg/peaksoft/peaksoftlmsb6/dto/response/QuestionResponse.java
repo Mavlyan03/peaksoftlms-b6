@@ -24,6 +24,7 @@ public class QuestionResponse {
         this.questionType = questionType;
     }
 
+
     public QuestionResponse(QuestionRequest request, Long id) {
         this.id = id;
         this.question = request.getQuestion();
