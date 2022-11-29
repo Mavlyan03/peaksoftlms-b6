@@ -38,11 +38,13 @@ public class ResultService {
     public StudentResultResponse passTest(PassTestRequest passTestRequest, Authentication authentication) {
         Test test = testRepository.findById(passTestRequest.getTestId()).orElseThrow(
                 () -> {
+                    log.error("Test with id {} not found", passTestRequest.getTestId());
                     throw new NotFoundException("Тест не найден");
                 });
         User user = (User) authentication.getPrincipal();
         User user1 = userRepository.findById(user.getId()).orElseThrow(
                 () -> {
+                    log.error("User with id {} not found", user.getId());
                     throw new NotFoundException("Пользователь не найден");
                 });
         List<QuestionResponse> mapper = new ArrayList<>();
@@ -51,6 +53,7 @@ public class ResultService {
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
                     () -> {
+                        log.error("Question with id {} not found", answer.getKey());
                         throw new NotFoundException("Вопрос не найден");
                     });
             Question question1 = new Question(question);
@@ -61,6 +64,7 @@ public class ResultService {
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
                             () -> {
+                                log.error("Option with id {} not found", optionId);
                                 throw new NotFoundException("Вариант не найден");
                             });
                     if (option.getIsTrue().equals(true)) {
@@ -75,6 +79,7 @@ public class ResultService {
                 for (Option o : question.getOptions()) {
                     Option option = optionRepository.findById(o.getId()).orElseThrow(
                             () -> {
+                                log.error("Option with id {} not found", o.getId());
                                 throw new NotFoundException("Вариант не найден");
                             });
                     if (option.getIsTrue().equals(true)) {
@@ -86,6 +91,7 @@ public class ResultService {
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
                             () -> {
+                                log.error("Option with id {} not found", optionId);
                                 throw new NotFoundException("Вариант не найден");
                             });
                     if (question.getOptions().contains(option)) {
@@ -128,7 +134,10 @@ public class ResultService {
         Student student = null;
         if (user1.getRole().equals(Role.STUDENT)) {
             student = studentRepository.findByUserId(user1.getId()).orElseThrow(
-                    () -> new NotFoundException("Студент не найден"));
+                    () -> {
+                        log.error("Student with id {} not found", user1.getId());
+                        throw new NotFoundException("Студент не найден");
+                    });
             if (test.getIsEnable().equals(true)) {
                 Results results = new Results(
                         test,
@@ -142,7 +151,7 @@ public class ResultService {
                 throw new BadRequestException("Вы не можете пройти тест");
             }
         }
-        log.info("User pass the test successfully");
+        log.info("User pass the test was successfully");
         return new StudentResultResponse("Набрано баллов "
                 + percent + " из " + test.getQuestion().size(), mapper);
     }
@@ -150,14 +159,21 @@ public class ResultService {
 
     public List<ResultResponse> getAllResults(Long id) {
         Test test = testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Тест не найден"));
-        log.info("Instructor get all results successfully");
+                () -> {
+                    log.error("Test with id {} not found", id);
+                    throw new NotFoundException("Тест не найден");
+                });
+        log.info("Instructor get all results by id {} was successfully", id);
         return mapToResponse(resultRepository.findResultByTestId(test.getId()));
     }
 
     public ResultResponse getById(Long id) {
         Results results = resultRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Результат не найден"));
+                () -> {
+                    log.error("Result with id {} not found", id);
+                    throw new NotFoundException("Результат не найден");
+                });
+        log.info("Get result by id {} was successfully", id);
         return resultRepository.getResult(results.getId());
     }
 
