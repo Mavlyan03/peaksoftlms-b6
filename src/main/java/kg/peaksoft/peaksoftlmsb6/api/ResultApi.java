@@ -46,5 +46,4 @@ public class ResultApi {
     public ResultResponse getResultById(@PathVariable Long id) {
         return resultService.getById(id);
     }
-
 }
