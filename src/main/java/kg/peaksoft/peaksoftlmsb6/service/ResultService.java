@@ -96,6 +96,7 @@ public class ResultService {
                             });
                     if (question.getOptions().contains(option)) {
                         if (option.getId().equals(duplicate)) {
+                            log.error("You couldn't chose one option more time");
                             throw new BadRequestException("Нельзя выбирать один вариант несколько раз");
                         }
                         if (option.getIsTrue().equals(true)) {
@@ -106,6 +107,7 @@ public class ResultService {
                         question1.addOption(option);
                         duplicate = option.getId();
                     } else {
+                        log.error("Option assigned to the other question");
                         throw new BadRequestException("Вариант относится к другому вопросу");
                     }
                 }
@@ -148,6 +150,7 @@ public class ResultService {
                         student);
                 resultRepository.save(results);
             } else if (test.getIsEnable().equals(false)) {
+                log.error("You couldn't pass the test");
                 throw new BadRequestException("Вы не можете пройти тест");
             }
         }

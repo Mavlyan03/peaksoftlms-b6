@@ -42,7 +42,7 @@ public class LessonService {
         Lesson lesson = new Lesson(request);
         lesson.setCourse(course);
         lessonRepository.save(lesson);
-        log.info("Save a new lesson by request was successfully");
+        log.info("New lesson successfully saved");
         return new SimpleResponse("Урок сохранён");
     }
 
