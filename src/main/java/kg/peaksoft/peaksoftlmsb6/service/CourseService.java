@@ -3,6 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignGroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.DeleteInstructorFromCourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
@@ -152,26 +153,25 @@ public class CourseService {
         return new SimpleResponse("Инструктор назначен на курс");
     }
 
-    public SimpleResponse unassigned(AssignInstructorRequest request) {
+    public SimpleResponse unassigned(DeleteInstructorFromCourseRequest request) {
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", request.getCourseId());
                     throw new NotFoundException("Курс не найден");
                 });
-        for (Long id : request.getInstructorId()) {
-            Instructor instructor = instructorRepository.findById(id).orElseThrow(
-                    () -> {
-                        log.error("Instructor with id {} not found", request.getInstructorId());
-                        throw new NotFoundException("Инструктор не найден");
-                    });
-            if (course.getInstructors().contains(instructor)) {
-                for (Course course1 : instructor.getCourses()) {
-                    course1.getInstructors().remove(instructor);
-                }
-                instructor.getCourses().remove(course);
+        Instructor instructor = instructorRepository.findById(request.getInstructorId()).orElseThrow(
+                () -> {
+                    log.error("Instructor with id {} not found", request.getInstructorId());
+                    throw new NotFoundException("Инструктор не найден");
+                });
+        if (course.getInstructors().contains(instructor)) {
+            for (Course course1 : instructor.getCourses()) {
+                course1.getInstructors().remove(instructor);
             }
-            courseRepository.save(course);
+            instructor.getCourses().remove(course);
         }
+        courseRepository.save(course);
+
         log.info("Unassigned instructor from course was successfully");
         return new SimpleResponse("Инструктор удален с курса");
     }
