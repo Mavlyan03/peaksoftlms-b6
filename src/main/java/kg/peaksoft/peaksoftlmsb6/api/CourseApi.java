@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignGroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.DeleteInstructorFromCourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
@@ -60,7 +61,7 @@ public class CourseApi {
     @PostMapping("/unassigned/")
     @Operation(summary = "Unassigned course",
             description = "Admin unassigned instructor from course by their id")
-    public SimpleResponse unassigned(@RequestBody AssignInstructorRequest request) {
+    public SimpleResponse unassigned(@RequestBody DeleteInstructorFromCourseRequest request) {
         return courseService.unassigned(request);
     }
 
