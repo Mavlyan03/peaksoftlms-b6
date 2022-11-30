@@ -109,10 +109,12 @@ public class TestService {
                 int j = 0;
                 if (questionRequest.getQuestionType().equals(QuestionType.SINGLETON)) {
                     int counter = 0;
-                    for (OptionRequest optionRequest : questionRequest.getOptions()) {
-                        if (optionRequest.getIsTrue().equals(true)) {
+                    for(OptionRequest request : questionRequest.getOptions()) {
+                        if(request.getIsTrue().equals(true)) {
                             counter++;
                         }
+                    }
+                    for (OptionRequest optionRequest : questionRequest.getOptions()) {
                         if (j < question.getOptions().size()) {
                             Option option = question.getOptions().get(j);
                             if (counter == 1) {
@@ -130,14 +132,25 @@ public class TestService {
                         }
                     }
                 } else if (questionRequest.getQuestionType().equals(QuestionType.MULTIPLE)) {
+                    int counter = 0;
+                    for(OptionRequest request : questionRequest.getOptions()) {
+                        if(request.getIsTrue().equals(true)) {
+                            counter++;
+                        }
+                    }
                     for (OptionRequest optionRequest : questionRequest.getOptions()) {
                         if (j < question.getOptions().size()) {
                             Option option = question.getOptions().get(j);
-                            optionRepository.update(
-                                    option.getId(),
-                                    optionRequest.getOption(),
-                                    optionRequest.getIsTrue());
-                            j++;
+                            if(counter >= 1) {
+                                optionRepository.update(
+                                        option.getId(),
+                                        optionRequest.getOption(),
+                                        optionRequest.getIsTrue());
+                                j++;
+                            } else {
+                                log.error("You should to write one or more correct option");
+                                throw new BadRequestException("Вы дожны написать минимум один правильный вариант");
+                            }
                         } else {
                             break;
                         }
@@ -197,7 +210,7 @@ public class TestService {
                     question.getQuestionType());
             List<OptionResponse> optionResponses = new ArrayList<>();
             for (Option option : question.getOptions()) {
-                OptionResponse optionResponse = new OptionResponse(option.getId(), option.getOptionValue());
+                OptionResponse optionResponse = new OptionResponse(option);
                 optionResponses.add(optionResponse);
             }
             questionResponse.setOptionResponses(optionResponses);
