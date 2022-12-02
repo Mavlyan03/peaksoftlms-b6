@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse(" +
-            "i.id,"+
+            "i.id," +
             "concat(i.firstName,' ',i.lastName) ," +
             "i.phoneNumber," +
             "i.specialization," +
@@ -39,8 +39,8 @@ public interface InstructorRepository extends JpaRepository<Instructor, Long> {
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse(" +
             "i.id," +
             "concat(i.firstName,' ',i.lastName)," +
-            "i.specialization," +
             "i.phoneNumber," +
+            "i.specialization," +
             "i.user.email) from Instructor i where i.id = ?1")
     InstructorResponse getInstructor(Long id);
 

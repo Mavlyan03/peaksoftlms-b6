@@ -47,6 +47,7 @@ public class GroupApi {
     @GetMapping
     @Operation(summary = "Gets all groups",
             description = "Admin get all groups")
+    @PreAuthorize("hasAnyAuthority('ADMIN','INSTRUCTOR')")
     public List<GroupResponse> getAllGroups() {
         return groupService.getAllGroups();
     }

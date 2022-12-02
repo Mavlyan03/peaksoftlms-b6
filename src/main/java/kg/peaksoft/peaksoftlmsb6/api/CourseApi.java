@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignGroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.AssignInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.DeleteInstructorFromCourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
@@ -57,10 +58,10 @@ public class CourseApi {
         return courseService.assignInstructorToCourse(request);
     }
 
-    @PostMapping("/unassigned")
+    @PostMapping("/unassigned/")
     @Operation(summary = "Unassigned course",
             description = "Admin unassigned instructor from course by their id")
-    public SimpleResponse unassigned(@RequestBody AssignInstructorRequest request) {
+    public SimpleResponse unassigned(@RequestBody DeleteInstructorFromCourseRequest request) {
         return courseService.unassigned(request);
     }
 
@@ -74,6 +75,7 @@ public class CourseApi {
     @GetMapping("/students/{id}")
     @Operation(summary = "Get all students from course",
             description = "Admin get all students from course by course id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public List<StudentResponse> getAllStudentsFromCourse(@PathVariable("id") Long id) {
         return courseService.getAllStudentsFromCourse(id);
     }
@@ -89,20 +91,22 @@ public class CourseApi {
     @PostMapping("/assign/group")
     @Operation(summary = "Assign group to course",
             description = "Instructor assign group to course by their id")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public SimpleResponse assignGroupToCourse(@RequestBody AssignGroupRequest request) {
         return courseService.assignGroupToCourse(request);
     }
 
-    @DeleteMapping("/group/{id}")
+    @PostMapping("/unassigned/group")
     @Operation(summary = "Delete group from course",
             description = "Instructor delete group from course by id")
-    public SimpleResponse deleteGroupFromCourse(@PathVariable Long id) {
-        return courseService.deleteGroupFromCourse(id);
+    public SimpleResponse deleteGroupFromCourse(@RequestBody AssignGroupRequest request) {
+        return courseService.deleteGroupFromCourse(request);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get course by id",
             description = "Get course by id for admin")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','ADMIN')")
     public CourseResponse getCourseById(@PathVariable Long id) {
         return courseService.getById(id);
     }

@@ -38,6 +38,12 @@ public class Lesson {
     @OneToOne(cascade = ALL, mappedBy = "lesson")
     private Test test;
 
+    @ManyToOne(cascade = {
+            DETACH,
+            MERGE,
+            REFRESH})
+    private Course course;
+
     public Lesson(LessonRequest request) {
         this.lessonName = request.getLessonName();
         this.video = getVideo();
@@ -47,9 +53,4 @@ public class Lesson {
         this.test = getTest();
     }
 
-    @ManyToOne(cascade = {
-            DETACH,
-            MERGE,
-            REFRESH})
-    private Course course;
 }

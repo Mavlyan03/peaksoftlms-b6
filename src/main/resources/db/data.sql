@@ -5,7 +5,8 @@ VALUES (1, 'admin@gmail.com', '$2a$12$3A5GynoSX9x.o1Tgq4G1juWOLfL5ozqZqjib1fBYm5
        (4, 'mavlyan@gmail.com', '$2a$12$9tlaIRbbKDpCjYKBUIoIuu3mUT8fBMlgd1Aqd1sdkUpxf/BPRWNPW', 'STUDENT'),
        (5, 'aiperi@gmail.com', '$$2a$12$IGMz1xjHhhbOahL5ASEvTO4aWxA6ceaJT27uq1F/q5/9J//LUdVIm', 'STUDENT'),
        (6, 'nurmatbek@gmail.com', '$2a$12$YS2goV2TOi4/kvzH1U1yeuZhb7LZWuwUS5E4NiTJ144qbFQNp1goa', 'STUDENT'),
-       (7, 'nursultan@gmail.com', '$2a$12$ha29GR7qvop96HpsN.QvDuALIbqP86mUs6rD5/MuwAm1OKmCNnbU.', 'STUDENT');
+       (7, 'nursultan@gmail.com', '$2a$12$ha29GR7qvop96HpsN.QvDuALIbqP86mUs6rD5/MuwAm1OKmCNnbU.', 'STUDENT'),
+       (8,'chyngyz@gmail.com','$2a$12$WVy1fSSd3ylf7kEJ6fJyguO5oVAxeOrpRJgg.eXuqmsIsp3f0X.Tm','INSTRUCTOR');
 
 insert into groups(id, date_of_start, group_description, group_image, group_name)
 values (1, '2022/11/10', 'Group Description', 'Group image link', 'Group name'),
@@ -21,7 +22,8 @@ values (1, 1),
        (1, 2);
 
 insert into instructors(id, first_name, last_name, phone_number, specialization, user_id)
-values (1, 'Instructor name', 'Instructor lastname', '555231245', 'Java developer', 2);
+values (1, 'Instructor name', 'Instructor lastname', '555231245', 'Java developer', 2),
+       (2,'Chyngyz','Sharshekeev','4020424','Java developer',8);
 
 insert into instructors_courses(instructors_id, courses_id)
 values (1, 1),
@@ -62,7 +64,7 @@ insert into tasks(id, task_name, lesson_id)
 values (1, 'Group crud', 1);
 
 insert into contents(id, content_format, content_name, content_value, task_id)
-values (1, 'VIDEO', 'video link', 'aws', 1);
+values (1, 'IMAGE', 'image link', 'aws', 1);
 
 insert into tests(id, is_enable, test_name, lesson_id)
 values (1, false, 'Java core', 1);
