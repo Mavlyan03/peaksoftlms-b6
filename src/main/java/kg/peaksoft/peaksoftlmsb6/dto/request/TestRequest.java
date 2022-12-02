@@ -7,7 +7,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UpdateTaskRequest {
-    private String taskName;
-    private List<ContentRequest> contentRequests;
+public class TestRequest {
+    private Long lessonId;
+    private String testName;
+    private List<QuestionRequest> questions;
+
 }

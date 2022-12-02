@@ -1,8 +1,5 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
-import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateContentRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateTaskRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.ContentFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
