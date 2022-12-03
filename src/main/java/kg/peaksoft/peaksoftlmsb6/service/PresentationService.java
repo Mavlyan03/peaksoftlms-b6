@@ -25,7 +25,7 @@ public class PresentationService {
 
     private final LessonRepository lessonRepository;
 
-    public PresentationResponse savePresentation(PresentationRequest request) {
+    public PresentationResponse createPresentation(PresentationRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> {
                     log.error("Lesson with id {} not found", request.getLessonId());

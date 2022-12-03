@@ -24,7 +24,7 @@ public class PresentationApi {
     @Operation(summary = "Save presentation",
             description = "To save a new presentation by Instructor")
     public PresentationResponse createPresentation(@RequestBody PresentationRequest request) {
-        return presentationService.savePresentation(request);
+        return presentationService.createPresentation(request);
     }
 
     @PutMapping("/{id}")
