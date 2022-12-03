@@ -50,7 +50,7 @@ public class InstructorService {
                     throw new NotFoundException("Инструктор не найден");
                 });
         int index = request.getFullName().lastIndexOf(' ');
-        String firstName = request.getFullName().substring(0,index);
+        String firstName = request.getFullName().substring(0, index);
         String lastName = request.getFullName().substring(index + 1);
         instructorRepository.update(instructor.getId(),
                 firstName,
