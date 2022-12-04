@@ -3,6 +3,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 import kg.peaksoft.peaksoftlmsb6.dto.request.InstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateInstructorRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.InstructorRepository;
@@ -62,15 +63,10 @@ class InstructorServiceTest {
 
     @Test
     void deleteInstructorById() {
-        InstructorRequest request = new InstructorRequest(
-                "FirstName", "LastName",
-                "2020303", "ins@gmail.com",
-                "Java", "Instructor");
+        SimpleResponse simpleResponse = instructorService.deleteInstructorById(1L);
 
-        InstructorResponse instructor = instructorService.createInstructor(request);
-
-        instructorRepository.deleteById(instructor.getId());
-        assertThatThrownBy(() -> instructorService.getById(instructor.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> instructorService.getById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

@@ -1,6 +1,7 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.VideoRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.VideoResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Video;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
@@ -61,16 +62,10 @@ class VideoServiceTest {
 
     @Test
     void deleteById() {
-        VideoRequest request = new VideoRequest();
-        request.setLink("link.com");
-        request.setVideoName("link");
-        request.setDescription("video about test");
-        request.setLessonId(6L);
+        SimpleResponse simpleResponse = videoService.deleteById(1L);
 
-        VideoResponse video = videoService.createVideo(request);
-
-        videoRepository.deleteById(video.getId());
-        assertThatThrownBy(() -> videoService.getById(video.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> videoService.getById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

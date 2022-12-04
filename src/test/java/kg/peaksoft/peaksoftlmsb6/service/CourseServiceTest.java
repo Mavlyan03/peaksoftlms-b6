@@ -79,16 +79,10 @@ class CourseServiceTest {
 
     @Test
     void deleteCourseById() {
-        CourseRequest request = new CourseRequest();
-        request.setCourseName("Java");
-        request.setDescription("Java course");
-        request.setDateOfStart(LocalDate.now());
-        request.setImage("image");
+        SimpleResponse simpleResponse = courseService.deleteById(1L);
 
-        CourseResponse course = courseService.createCourse(request);
-
-        courseRepository.deleteById(course.getId());
-        assertThatThrownBy(() -> courseService.getById(course.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> courseService.getById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

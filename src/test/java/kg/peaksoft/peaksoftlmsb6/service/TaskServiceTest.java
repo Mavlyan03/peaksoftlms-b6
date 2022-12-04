@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.ContentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.request.TaskRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TaskResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Task;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.ContentFormat;
@@ -76,22 +77,10 @@ class TaskServiceTest {
 
     @Test
     void deleteById() {
-        TaskRequest request = new TaskRequest();
-        request.setTaskName("MVC");
-        request.setLessonId(7L);
-        List<ContentRequest> contents = new ArrayList<>();
-        ContentRequest contentRequest = new ContentRequest();
-        contentRequest.setContentName("link");
-        contentRequest.setContentFormat(ContentFormat.LINK);
-        contentRequest.setContentValue("link about interview");
-        contents.add(contentRequest);
+        SimpleResponse simpleResponse = taskService.deleteById(1L);
 
-        request.setContentRequests(contents);
-
-        TaskResponse task = taskService.createTask(request);
-
-        taskRepository.deleteById(task.getId());
-        assertThatThrownBy(() -> taskService.getTaskById(task.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> taskService.getTaskById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

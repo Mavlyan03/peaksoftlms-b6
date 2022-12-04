@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.PresentationRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.PresentationResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Presentation;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.PresentationRepository;
@@ -60,16 +61,10 @@ class PresentationServiceTest {
 
     @Test
     void deleteById() {
-        PresentationRequest request = new PresentationRequest();
-        request.setPresentationName("interview");
-        request.setPresentationLink("inter.com");
-        request.setDescription("presentation about interview");
-        request.setLessonId(7L);
+        SimpleResponse simpleResponse = presentationService.deleteById(1L);
 
-        PresentationResponse presentation = presentationService.createPresentation(request);
-
-        presentationRepository.deleteById(presentation.getId());
-        assertThatThrownBy(() -> presentationService.getById(presentation.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> presentationService.getById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

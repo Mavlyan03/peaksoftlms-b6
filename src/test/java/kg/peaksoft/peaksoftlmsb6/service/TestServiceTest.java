@@ -81,30 +81,9 @@ class TestServiceTest {
 
     @Test
     void deleteById() {
-        TestRequest request = new TestRequest();
-        request.setTestName("Spring Boot");
-        request.setLessonId(7L);
-        List<QuestionRequest> questions = new ArrayList<>();
-        List<OptionRequest> options = new ArrayList<>();
-
-        QuestionRequest questionRequest = new QuestionRequest();
-        OptionRequest optionRequest = new OptionRequest();
-
-        questionRequest.setQuestion("What is Spring?");
-        questionRequest.setQuestionType(QuestionType.SINGLETON);
-
-        optionRequest.setOption("Framework");
-        optionRequest.setIsTrue(true);
-
-        options.add(optionRequest);
-        questionRequest.setOptions(options);
-        questions.add(questionRequest);
-        request.setQuestions(questions);
-
-        TestResponse test = testService.createTest(request);
-
-        testRepository.deleteById(test.getTestId());
-        assertThatThrownBy(() -> testService.getTestById(test.getTestId())).isInstanceOf(NotFoundException.class);
+        SimpleResponse simpleResponse = testService.deleteById(1L);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> testService.getTestById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.GroupRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.GroupResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
@@ -69,16 +70,10 @@ class GroupServiceTest {
 
     @Test
     void testDeleteGroup() {
-        GroupRequest request = new GroupRequest();
-        request.setGroupName("groupName");
-        request.setDescription("description");
-        request.setDateOfStart(LocalDate.of(2020, 1, 1));
-        request.setImage("image");
+        SimpleResponse simpleResponse = groupService.deleteById(1L);
 
-        GroupResponse group = groupService.createGroup(request);
-
-        groupRepository.deleteById(group.getId());
-        assertThatThrownBy(() -> groupService.getById(group.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> groupService.getById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

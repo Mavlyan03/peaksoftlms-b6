@@ -61,20 +61,14 @@ class LessonServiceTest {
         assertEquals(response.getTaskId(), lesson.getTask().getId());
         assertEquals(response.getTestId(), lesson.getTest().getId());
         assertEquals(response.getPresentationId(), lesson.getPresentation().getId());
-
     }
 
     @Test
     void deleteLesson() {
-        LessonRequest request = new LessonRequest();
-        request.setLessonName("EC2");
-        request.setCourseId(1L);
+        SimpleResponse simpleResponse = lessonService.deleteLesson(1L);
 
-        Lesson lesson = new Lesson(request);
-        lessonRepository.save(lesson);
-
-        lessonRepository.deleteById(lesson.getId());
-        assertThatThrownBy(() -> lessonService.getById(lesson.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> lessonService.getById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test

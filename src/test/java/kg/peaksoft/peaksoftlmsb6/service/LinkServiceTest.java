@@ -2,6 +2,7 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.LinkRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.LinkResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Link;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.LinkRepository;
@@ -56,15 +57,10 @@ class LinkServiceTest {
 
     @Test
     void deleteById() {
-        LinkRequest request = new LinkRequest();
-        request.setLink("linkedin");
-        request.setLinkText("hello world");
-        request.setLessonId(7L);
+        SimpleResponse simpleResponse = linkService.deleteById(1L);
 
-        LinkResponse link = linkService.createLink(request);
-
-        linkRepository.deleteById(link.getId());
-        assertThatThrownBy(() -> linkService.getLinkById(link.getId())).isInstanceOf(NotFoundException.class);
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> linkService.getLinkById(1L)).isInstanceOf(NotFoundException.class);
     }
 
     @Test
