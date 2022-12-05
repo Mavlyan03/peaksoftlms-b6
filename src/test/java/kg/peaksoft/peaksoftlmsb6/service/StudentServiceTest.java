@@ -1,114 +1,170 @@
 package kg.peaksoft.peaksoftlmsb6.service;
 
-import kg.peaksoft.peaksoftlmsb6.dto.request.StudentRequest;
-import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateStudentRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.GroupRequest;
+import kg.peaksoft.peaksoftlmsb6.dto.request.StudentExcelRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
+import kg.peaksoft.peaksoftlmsb6.entity.Group;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
-import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
-import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
+import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
-import javax.transaction.Transactional;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@Transactional
+@ExtendWith(MockitoExtension.class)
 class StudentServiceTest {
 
-    @Autowired
-    private StudentService studentService;
+    @Mock
+    private StudentRepository mockStudentRepository;
+    @Mock
+    private PasswordEncoder mockPasswordEncoder;
+    @Mock
+    private GroupRepository mockGroupRepository;
+    @Mock
+    private UserRepository mockUserRepository;
+    @Mock
+    private JavaMailSender mockJavaMailSender;
 
-    @Autowired
-    private GroupService groupService;
+    private StudentService studentServiceUnderTest;
 
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Test
-    void createStudent() throws MessagingException {
-        StudentRequest request = new StudentRequest();
-        request.setFirstName("Mavlyan");
-        request.setLastName("Sadirov");
-        request.setPhoneNumber("0220390009");
-        request.setEmail("mavlyansadirov@gmail.com");
-        request.setStudyFormat(StudyFormat.OFFLINE);
-        request.setGroupId(2L);
-        request.setPassword("Mavlyan07");
-
-        StudentResponse student = studentService.createStudent(request);
-
-        assertNotNull(student);
-        assertEquals(student.getFullName(), request.getFirstName() + " " + request.getLastName());
-        assertEquals(student.getPhoneNumber(), request.getPhoneNumber());
-        assertEquals(student.getStudyFormat(), request.getStudyFormat());
-        assertEquals(student.getEmail(), request.getEmail());
-        assertEquals(student.getGroupName(), groupService.getById(request.getGroupId()).getGroupName());
+    @BeforeEach
+    void setUp() {
+        studentServiceUnderTest = new StudentService(mockStudentRepository, mockPasswordEncoder, mockGroupRepository,
+                mockUserRepository, mockJavaMailSender);
     }
 
     @Test
-    void update() {
-        UpdateStudentRequest request = new UpdateStudentRequest();
-        request.setFullName("Maksat Kairullaev");
-        request.setPhoneNumber("44050304");
-        request.setEmail("max@gmail.com");
-        request.setStudyFormat(StudyFormat.ONLINE);
-        request.setGroupId(2L);
+    void testImportExcel() throws Exception {
+        // Setup
+        final MultipartFile multipartFile = null;
 
-        Student student = studentRepository.findById(2L).orElseThrow(
-                () -> new NotFoundException("Student not found"));
-        StudentResponse response = studentService.update(student.getId(), request);
+        // Configure GroupRepository.findById(...).
+        final GroupRequest request = new GroupRequest();
+        request.setGroupName("groupName");
+        request.setDescription("description");
+        request.setDateOfStart(LocalDate.of(2020, 1, 1));
+        request.setImage("image");
+        final Optional<Group> group = Optional.of(new Group(request));
+        when(mockGroupRepository.findById(0L)).thenReturn(group);
 
-        assertNotNull(response);
-        assertEquals(response.getFullName(), request.getFullName());
-        assertEquals(response.getPhoneNumber(), request.getPhoneNumber());
-        assertEquals(response.getStudyFormat(), request.getStudyFormat());
-        assertEquals(response.getEmail(), request.getEmail());
-        assertEquals(response.getGroupName(), groupService.getById(request.getGroupId()).getGroupName());
+        when(mockStudentRepository.existsByUserEmail("email")).thenReturn(false);
+        when(mockPasswordEncoder.encode("rawPassword")).thenReturn("encode");
+
+        // Configure StudentRepository.saveAll(...).
+        final StudentExcelRequest studentExcelRequest = new StudentExcelRequest();
+        studentExcelRequest.setIndexRow(0);
+        studentExcelRequest.setName("name");
+        studentExcelRequest.setLastName("lastName");
+        studentExcelRequest.setPhoneNumber("phoneNumber");
+        studentExcelRequest.setStudyFormat(StudyFormat.ONLINE);
+        studentExcelRequest.setEmail("email");
+        final List<Student> students = List.of(new Student(studentExcelRequest, "encode"));
+        when(mockStudentRepository.saveAll(List.of(new Student(new StudentExcelRequest(), "encode"))))
+                .thenReturn(students);
+
+        // Run the test
+        final SimpleResponse result = studentServiceUnderTest.importExcel(0L, multipartFile);
+
+        // Verify the results
+        verify(mockStudentRepository).saveAll(List.of(new Student(new StudentExcelRequest(), "encode")));
     }
 
     @Test
-    void deleteStudent() {
-        SimpleResponse simpleResponse = studentService.deleteStudent(1L);
+    void testImportExcel_GroupRepositoryReturnsAbsent() {
+        // Setup
+        final MultipartFile multipartFile = null;
+        when(mockGroupRepository.findById(0L)).thenReturn(Optional.empty());
 
-        assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> studentService.getById(1L)).isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("Студент не найден");
+        // Run the test
+        assertThatThrownBy(() -> studentServiceUnderTest.importExcel(0L, multipartFile))
+                .isInstanceOf(NoSuchElementException.class);
     }
 
     @Test
-    void getAllStudent() {
-        List<StudentResponse> students = studentService.getAllStudent(StudyFormat.ALL);
-        List<StudentResponse> allStudent = studentService.getAllStudent(StudyFormat.OFFLINE);
-        List<StudentResponse> student = studentService.getAllStudent(StudyFormat.ONLINE);
+    void testImportExcel_ThrowsIOException() {
+        // Setup
+        final MultipartFile multipartFile = null;
 
-        assertEquals(5, students.size());
-        assertEquals(4, allStudent.size());
-        assertEquals(1, student.size());
+        // Configure GroupRepository.findById(...).
+        final GroupRequest request = new GroupRequest();
+        request.setGroupName("groupName");
+        request.setDescription("description");
+        request.setDateOfStart(LocalDate.of(2020, 1, 1));
+        request.setImage("image");
+        final Optional<Group> group = Optional.of(new Group(request));
+        when(mockGroupRepository.findById(0L)).thenReturn(group);
+
+        when(mockStudentRepository.existsByUserEmail("email")).thenReturn(false);
+        when(mockPasswordEncoder.encode("rawPassword")).thenReturn("encode");
+
+        // Configure StudentRepository.saveAll(...).
+        final StudentExcelRequest studentExcelRequest = new StudentExcelRequest();
+        studentExcelRequest.setIndexRow(0);
+        studentExcelRequest.setName("name");
+        studentExcelRequest.setLastName("lastName");
+        studentExcelRequest.setPhoneNumber("phoneNumber");
+        studentExcelRequest.setStudyFormat(StudyFormat.ONLINE);
+        studentExcelRequest.setEmail("email");
+        final List<Student> students = List.of(new Student(studentExcelRequest, "encode"));
+        when(mockStudentRepository.saveAll(List.of(new Student(new StudentExcelRequest(), "encode"))))
+                .thenReturn(students);
+
+        // Run the test
+        assertThatThrownBy(() -> studentServiceUnderTest.importExcel(0L, multipartFile))
+                .isInstanceOf(IOException.class);
+        verify(mockStudentRepository).saveAll(List.of(new Student(new StudentExcelRequest(), "encode")));
     }
 
     @Test
-    void getById() {
-        StudentResponse student = studentService.getById(1L);
+    void testImportExcel_ThrowsMessagingException() {
+        // Setup
+        final MultipartFile multipartFile = null;
 
-        assertNotNull(student);
-        assertEquals(student.getId(), 1L);
-    }
+        // Configure GroupRepository.findById(...).
+        final GroupRequest request = new GroupRequest();
+        request.setGroupName("groupName");
+        request.setDescription("description");
+        request.setDateOfStart(LocalDate.of(2020, 1, 1));
+        request.setImage("image");
+        final Optional<Group> group = Optional.of(new Group(request));
+        when(mockGroupRepository.findById(0L)).thenReturn(group);
 
-    @Test
-    void importExcel() {
+        when(mockStudentRepository.existsByUserEmail("email")).thenReturn(false);
+        when(mockPasswordEncoder.encode("rawPassword")).thenReturn("encode");
+
+        // Configure StudentRepository.saveAll(...).
+        final StudentExcelRequest studentExcelRequest = new StudentExcelRequest();
+        studentExcelRequest.setIndexRow(0);
+        studentExcelRequest.setName("name");
+        studentExcelRequest.setLastName("lastName");
+        studentExcelRequest.setPhoneNumber("phoneNumber");
+        studentExcelRequest.setStudyFormat(StudyFormat.ONLINE);
+        studentExcelRequest.setEmail("email");
+        final List<Student> students = List.of(new Student(studentExcelRequest, "encode"));
+        when(mockStudentRepository.saveAll(List.of(new Student(new StudentExcelRequest(), "encode"))))
+                .thenReturn(students);
+
+        // Run the test
+        assertThatThrownBy(() -> studentServiceUnderTest.importExcel(0L, multipartFile))
+                .isInstanceOf(MessagingException.class);
+        verify(mockStudentRepository).saveAll(List.of(new Student(new StudentExcelRequest(), "encode")));
     }
 }
