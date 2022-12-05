@@ -28,7 +28,6 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
                 @Param("dateOfStart") LocalDate dateOfStart,
                 @Param("image") String image);
 
-
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.AssignInstructorResponse(" +
             "i.id," +
             "concat(i.firstName,' ',i.lastName)," +

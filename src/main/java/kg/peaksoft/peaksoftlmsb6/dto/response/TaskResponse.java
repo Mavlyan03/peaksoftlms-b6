@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.dto.response;
 
+import kg.peaksoft.peaksoftlmsb6.entity.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +18,10 @@ public class TaskResponse {
     public TaskResponse(Long id, String taskName) {
         this.id = id;
         this.taskName = taskName;
+    }
+
+    public TaskResponse(Task task) {
+        this.id = task.getId();
+        this.taskName = task.getTaskName();
     }
 }

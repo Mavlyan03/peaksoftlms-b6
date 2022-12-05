@@ -50,7 +50,7 @@ public class GroupService {
             if (resultRepository.findResultByStudentsId(student.getId()) != null) {
                 Results results = resultRepository.findResultByStudentsId(student.getId());
                 results.setTest(null);
-                resultRepository.delete(results);
+                resultRepository.deleteById(results.getId());
             }
         }
         groupRepository.delete(group);

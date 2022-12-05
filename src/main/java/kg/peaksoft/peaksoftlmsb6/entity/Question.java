@@ -1,5 +1,6 @@
 package kg.peaksoft.peaksoftlmsb6.entity;
 
+import kg.peaksoft.peaksoftlmsb6.dto.request.QuestionRequest;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,23 @@ public class Question {
 
     @OneToMany(cascade = ALL)
     private List<Option> options;
+
+    public Question(String question, QuestionType questionType) {
+        this.question = question;
+        this.questionType = questionType;
+    }
+
+    public Question(Question question) {
+        this.id = question.getId();
+        this.question = question.getQuestion();
+        this.questionType = question.getQuestionType();
+    }
+
+    public Question(QuestionRequest question) {
+        this.question = question.getQuestion();
+        this.questionType = question.getQuestionType();
+    }
+
 
     public void addOption(Option option) {
         if(this.options == null) {
