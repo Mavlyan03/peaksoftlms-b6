@@ -108,21 +108,7 @@ class CourseServiceTest {
     }
 
     void getAllCourses() {
-        CourseRequest request = new CourseRequest();
-        request.setCourseName("Java");
-        request.setDescription("Java course");
-        request.setDateOfStart(LocalDate.now());
-        request.setImage("image");
 
-        courseService.createCourse(request);
-
-        CourseRequest request1 = new CourseRequest();
-        request1.setCourseName("Java");
-        request1.setDescription("Java course");
-        request1.setDateOfStart(LocalDate.now());
-        request1.setImage("image");
-
-        courseService.createCourse(request);
     }
 
     @Test

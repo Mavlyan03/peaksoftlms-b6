@@ -28,7 +28,7 @@ class GroupServiceTest {
     private GroupRepository groupRepository;
 
     @Autowired
-    private ResultRepository mockResultRepository;
+    private ResultRepository resultRepository;
     @Autowired
     private GroupService groupService;
 
