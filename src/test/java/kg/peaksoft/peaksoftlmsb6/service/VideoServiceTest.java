@@ -65,7 +65,8 @@ class VideoServiceTest {
         SimpleResponse simpleResponse = videoService.deleteById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> videoService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> videoService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Видео не найдена");
     }
 
     @Test

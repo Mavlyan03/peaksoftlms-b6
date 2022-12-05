@@ -73,7 +73,8 @@ class GroupServiceTest {
         SimpleResponse simpleResponse = groupService.deleteById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> groupService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> groupService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Группа не найдена");
     }
 
     @Test

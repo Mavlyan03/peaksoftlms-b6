@@ -82,8 +82,9 @@ class TestServiceTest {
     @Test
     void deleteById() {
         SimpleResponse simpleResponse = testService.deleteById(1L);
+
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> testService.getTestById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> testService.getTestById(1L)).isInstanceOf(NullPointerException.class);
     }
 
     @Test

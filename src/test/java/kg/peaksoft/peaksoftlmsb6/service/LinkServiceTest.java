@@ -60,7 +60,8 @@ class LinkServiceTest {
         SimpleResponse simpleResponse = linkService.deleteById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> linkService.getLinkById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> linkService.getLinkById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Ссылка не найдена");
     }
 
     @Test

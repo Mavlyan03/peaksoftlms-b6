@@ -85,7 +85,8 @@ class StudentServiceTest {
         SimpleResponse simpleResponse = studentService.deleteStudent(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> studentService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> studentService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Студент не найден");
     }
 
     @Test

@@ -66,7 +66,8 @@ class InstructorServiceTest {
         SimpleResponse simpleResponse = instructorService.deleteInstructorById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> instructorService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> instructorService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Инструктор не найден");
     }
 
     @Test

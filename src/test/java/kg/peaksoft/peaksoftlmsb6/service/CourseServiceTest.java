@@ -95,7 +95,8 @@ class CourseServiceTest {
         SimpleResponse simpleResponse = courseService.deleteById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> courseService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> courseService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Курс не найден");
     }
 
     @Test

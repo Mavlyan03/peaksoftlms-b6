@@ -64,7 +64,8 @@ class PresentationServiceTest {
         SimpleResponse simpleResponse = presentationService.deleteById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> presentationService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> presentationService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Презентация не найдена");
     }
 
     @Test

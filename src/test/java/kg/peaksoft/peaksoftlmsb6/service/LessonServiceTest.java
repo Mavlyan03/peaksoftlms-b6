@@ -68,7 +68,8 @@ class LessonServiceTest {
         SimpleResponse simpleResponse = lessonService.deleteLesson(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> lessonService.getById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> lessonService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Урок не найден");
     }
 
     @Test

@@ -80,7 +80,7 @@ class TaskServiceTest {
         SimpleResponse simpleResponse = taskService.deleteById(1L);
 
         assertNotNull(simpleResponse);
-        assertThatThrownBy(() -> taskService.getTaskById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> taskService.getTaskById(1L)).isInstanceOf(NullPointerException.class);
     }
 
     @Test
