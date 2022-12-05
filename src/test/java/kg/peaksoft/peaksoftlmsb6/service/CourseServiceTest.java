@@ -104,11 +104,11 @@ class CourseServiceTest {
         CourseResponse course = courseService.getById(1L);
 
         assertNotNull(course);
-        assertEquals(course.getId(), 1L);
+        assertEquals(1L, course.getId());
     }
 
+    @Test
     void getAllCourses() {
-
     }
 
     @Test
