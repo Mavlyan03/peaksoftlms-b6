@@ -9,16 +9,24 @@ import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Course;
+import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.CourseRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.InstructorRepository;
+import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
+import kg.peaksoft.peaksoftlmsb6.security.UserDetailsServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.Deque;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -41,6 +49,11 @@ class CourseServiceTest {
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
     @Test
     void createCourse() {
         CourseRequest request = new CourseRequest();
@@ -189,4 +202,20 @@ class CourseServiceTest {
         assertThat(course.getGroup().contains(groupRepository.findById(2L)
                 .orElseThrow(() -> new NotFoundException("Group not found")))).isFalse();
     }
+
+    @Test
+    void testGetAllCourses() {
+        UserDetails userDetails = userDetailsService.loadUserByUsername("admin@gmail.com");
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails.getUsername(),
+                userDetails.getPassword(),
+                userDetails.getAuthorities());
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        Deque<CourseResponse> courses = courseService.getAllCourses(authentication);
+
+        assertNotNull(courses);
+        assertEquals(2, courses.size());
+    }
+
 }

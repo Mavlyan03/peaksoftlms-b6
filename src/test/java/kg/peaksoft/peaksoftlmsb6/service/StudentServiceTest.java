@@ -57,9 +57,6 @@ class StudentServiceTest {
         assertEquals(student.getStudyFormat(), request.getStudyFormat());
         assertEquals(student.getEmail(), request.getEmail());
         assertEquals(student.getGroupName(), groupService.getById(request.getGroupId()).getGroupName());
-        User user = userRepository.findByEmail(student.getEmail()).orElseThrow(
-                () -> new NotFoundException("User not found"));
-        assertEquals(user.getPassword(), user.getPassword());
     }
 
     @Test

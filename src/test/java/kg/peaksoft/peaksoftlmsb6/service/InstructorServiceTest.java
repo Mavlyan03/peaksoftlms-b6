@@ -39,10 +39,10 @@ class InstructorServiceTest {
         InstructorResponse instructor = instructorService.createInstructor(request);
 
         assertNotNull(instructor);
-        assertEquals(request.getFirstName() + " " + request.getLastName(), instructor.getFullName());
-        assertEquals(request.getEmail(), instructor.getEmail());
-        assertEquals(request.getSpecialization(), instructor.getSpecialization());
-        assertEquals(request.getPhoneNumber(), instructor.getPhoneNumber());
+        assertEquals(instructor.getFullName(), request.getFirstName() + " " + request.getLastName());
+        assertEquals(instructor.getEmail(), request.getEmail());
+        assertEquals(instructor.getSpecialization(), request.getSpecialization());
+        assertEquals(instructor.getPhoneNumber(), request.getPhoneNumber());
     }
 
     @Test
