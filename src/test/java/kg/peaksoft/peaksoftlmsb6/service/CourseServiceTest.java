@@ -2,55 +2,32 @@ package kg.peaksoft.peaksoftlmsb6.service;
 
 import kg.peaksoft.peaksoftlmsb6.dto.request.CourseRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.CourseResponse;
-import kg.peaksoft.peaksoftlmsb6.repository.*;
-import org.junit.jupiter.api.DisplayName;
+import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
+import kg.peaksoft.peaksoftlmsb6.entity.Course;
+import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
+import kg.peaksoft.peaksoftlmsb6.repository.CourseRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.ConstraintViolationException;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @Transactional
 class CourseServiceTest {
 
     @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
     private CourseService courseService;
 
-    @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
-    private InstructorRepository instructorRepository;
-
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private GroupRepository groupRepository;
-
-//    @Test
-//    @DisplayName("Should throw an exception when the course is invalid")
-//    void createCourseWhenCourseIsInvalidThenThrowException() {
-//        CourseRequest request = new CourseRequest();
-//        request.setCourseName("");
-//        request.setDescription("");
-//        request.setDateOfStart(LocalDate.now());
-//        request.setImage("");
-//
-//        assertThrows(ConstraintViolationException.class, () -> courseService.createCourse(request));
-//    }
-
     @Test
-    @DisplayName("Should save the course when the course is valid")
-    void createCourseWhenCourseIsValid() {
+    void createCourse() {
         CourseRequest request = new CourseRequest();
         request.setCourseName("Java");
         request.setDescription("Java course");
@@ -64,5 +41,41 @@ class CourseServiceTest {
         assertEquals(request.getDescription(), response.getDescription());
         assertEquals(request.getDateOfStart(), response.getDateOfStart());
         assertEquals(request.getImage(), response.getImage());
+    }
+
+    @Test
+    void updateCourse() {
+        CourseRequest request = new CourseRequest();
+        request.setCourseName("Python");
+        request.setDescription("light language");
+        request.setDateOfStart(LocalDate.of(2007, 3, 22));
+        request.setImage("habr.com");
+
+        Course course = courseRepository.findById(1L).orElseThrow(
+                () -> new NotFoundException("Course not found"));
+        CourseResponse response = courseService.updateCourse(course.getId(), request);
+
+        assertNotNull(response);
+        assertEquals(response.getCourseName(), request.getCourseName());
+        assertEquals(response.getDescription(), request.getDescription());
+        assertEquals(response.getDateOfStart(),request.getDateOfStart());
+        assertEquals(response.getImage(),  request.getImage());
+    }
+
+    @Test
+    void deleteCourseById() {
+        SimpleResponse simpleResponse = courseService.deleteById(1L);
+
+        assertNotNull(simpleResponse);
+        assertThatThrownBy(() -> courseService.getById(1L)).isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Курс не найден");
+    }
+
+    @Test
+    void getById() {
+        CourseResponse course = courseService.getById(1L);
+
+        assertNotNull(course);
+        assertEquals(1L, course.getId());
     }
 }
