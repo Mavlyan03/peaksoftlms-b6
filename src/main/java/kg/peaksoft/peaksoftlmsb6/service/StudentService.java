@@ -155,7 +155,6 @@ public class StudentService {
         InputStream inputStream = multipartFile.getInputStream();
 
         if (multipartFile.isEmpty()) {
-            log.error("File is empty");
             throw new BadRequestException("Файл пуст");
         }
 
