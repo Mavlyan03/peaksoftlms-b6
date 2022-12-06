@@ -24,7 +24,7 @@ public class VideoApi {
     @Operation(summary = "Save video",
             description = "To save a new video by Instructor")
     public VideoResponse saveVideo(@RequestBody VideoRequest request) {
-        return videoService.createVideo(request);
+        return videoService.saveVideo(request);
     }
 
     @PutMapping("/{id}")

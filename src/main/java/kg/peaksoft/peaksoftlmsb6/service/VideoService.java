@@ -25,7 +25,7 @@ public class VideoService {
 
     private final LessonRepository lessonRepository;
 
-    public VideoResponse createVideo(VideoRequest request) {
+    public VideoResponse saveVideo(VideoRequest request) {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(
                 () -> {
                     log.error("Lesson with id {} not found", request.getLessonId());
