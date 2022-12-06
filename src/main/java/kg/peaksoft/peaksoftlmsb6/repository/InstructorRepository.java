@@ -2,7 +2,6 @@ package kg.peaksoft.peaksoftlmsb6.repository;
 
 import kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Instructor;
-import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +14,7 @@ import java.util.Optional;
 public interface InstructorRepository extends JpaRepository<Instructor, Long> {
 
     @Query("select new kg.peaksoft.peaksoftlmsb6.dto.response.InstructorResponse(" +
-            "i.id,"+
+            "i.id," +
             "concat(i.firstName,' ',i.lastName) ," +
             "i.phoneNumber," +
             "i.specialization," +

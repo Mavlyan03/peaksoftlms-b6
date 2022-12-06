@@ -30,7 +30,7 @@ public class LessonService {
 
     private final ContentRepository contentRepository;
 
-    private final ResultsRepository resultsRepository;
+    private final ResultRepository resultsRepository;
 
 
     public SimpleResponse createLesson(LessonRequest request) {
@@ -42,7 +42,7 @@ public class LessonService {
         Lesson lesson = new Lesson(request);
         lesson.setCourse(course);
         lessonRepository.save(lesson);
-        log.info("Save a new lesson by request was successfully");
+        log.info("New lesson successfully saved");
         return new SimpleResponse("Урок сохранён");
     }
 
@@ -69,12 +69,14 @@ public class LessonService {
                         log.error("Test with id {} not found", lesson.getTest().getId());
                         throw new NotFoundException("Тест не найден");
                     });
-            Results results = resultsRepository.findById(lesson.getTest().getId())
-                    .orElseThrow(() -> {
-                        log.error("Result with id {} not found", lesson.getTest().getId());
-                        throw new NotFoundException("Результат не найден");
-                    });
-            resultsRepository.delete(results);
+            if(test.getResults() == null) {
+                Results results = resultsRepository.findById(lesson.getTest().getId())
+                        .orElseThrow(() -> {
+                            log.error("Result with id {} not found", lesson.getTest().getId());
+                            throw new NotFoundException("Результат не найден");
+                        });
+                resultsRepository.delete(results);
+            }
             testRepository.delete(test);
         }
 

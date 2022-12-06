@@ -27,14 +27,14 @@ public class Test {
     @OneToMany(cascade = ALL)
     private List<Question> question;
 
+    @OneToMany(cascade = ALL, mappedBy = "test")
+    private List<Results> results;
+
     @OneToOne(cascade = {
             MERGE,
             REFRESH,
             DETACH})
     private Lesson lesson;
-
-    @OneToMany(cascade = ALL, mappedBy = "test")
-    private List<Results> results;
 
     private Boolean isEnable = true;
 
@@ -43,5 +43,9 @@ public class Test {
             this.question = new ArrayList<>();
         }
         this.question.add(question);
+    }
+
+    public Test(String testName) {
+        this.testName = testName;
     }
 }

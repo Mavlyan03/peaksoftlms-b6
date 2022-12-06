@@ -22,7 +22,6 @@ public class Content {
     private Long id;
 
     private String contentName;
-
     @Enumerated(EnumType.STRING)
     private ContentFormat contentFormat;
 
@@ -34,4 +33,17 @@ public class Content {
             REFRESH,
             DETACH})
     private Task task;
+
+    public Content(String contentName, ContentFormat contentFormat, String contentValue) {
+        this.contentName = contentName;
+        this.contentFormat = contentFormat;
+        this.contentValue = contentValue;
+    }
+
+    public Content(Long id, String contentName, ContentFormat contentFormat, String contentValue) {
+        this.id = id;
+        this.contentName = contentName;
+        this.contentFormat = contentFormat;
+        this.contentValue = contentValue;
+    }
 }
