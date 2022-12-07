@@ -68,11 +68,11 @@ public class ResultService {
                                 throw new NotFoundException("Вариант не найден");
                             });
                     if (option.getIsTrue().equals(true)) {
-                        percent += 100 % test.getQuestion().size();
+                        percent = 100 % test.getQuestion().size();
                     }
                     question1.addOption(option);
                 }
-                map.add(question);
+                map.add(question1);
             } else if (question.getQuestionType().equals(QuestionType.MULTIPLE)) {
                 int countOfCorrect = 0;
                 int counter = 0;
