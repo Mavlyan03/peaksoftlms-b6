@@ -31,7 +31,7 @@ public class GroupService {
     public GroupResponse createGroup(GroupRequest request) {
         Group group = new Group(request);
         groupRepository.save(group);
-        log.info("New course successfully saved!");
+        log.info("New group successfully saved!");
         return groupRepository.getGroup(group.getId());
     }
 
