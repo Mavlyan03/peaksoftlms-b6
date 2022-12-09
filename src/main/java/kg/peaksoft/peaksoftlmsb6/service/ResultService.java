@@ -49,7 +49,8 @@ public class ResultService {
                 });
         List<QuestionResponse> mapper = new ArrayList<>();
         List<Question> map = new ArrayList<>();
-        int percent = 0;
+        int countCorrectAnswer = 0;
+//        int percent = 0;
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
                     () -> {
@@ -68,11 +69,12 @@ public class ResultService {
                                 throw new NotFoundException("Вариант не найден");
                             });
                     if (option.getIsTrue().equals(true)) {
-                        percent += 100 % test.getQuestion().size();
+                        countCorrectAnswer++;
+//                        percent = 100 % test.getQuestion().size();
                     }
                     question1.addOption(option);
                 }
-                map.add(question);
+                map.add(question1);
             } else if (question.getQuestionType().equals(QuestionType.MULTIPLE)) {
                 int countOfCorrect = 0;
                 int counter = 0;
@@ -86,7 +88,7 @@ public class ResultService {
                         counter++;
                     }
                 }
-                int point = 100 % test.getQuestion().size();
+//                int point = 100 % test.getQuestion().size();
                 Long duplicate = 0L;
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
@@ -101,7 +103,7 @@ public class ResultService {
                         }
                         if (option.getIsTrue().equals(true)) {
                             countOfCorrect++;
-                        } else {
+                        } else if(option.getIsTrue().equals(false)) {
                             countOfCorrect--;
                         }
                         question1.addOption(option);
@@ -113,13 +115,17 @@ public class ResultService {
                 }
                 if (countOfCorrect < 0) {
                     countOfCorrect = 0;
+                    countCorrectAnswer += 0;
                 }
                 if (countOfCorrect == 0) {
-                    percent += 0;
+                    countCorrectAnswer += 0;
+//                    percent += 0;
                 } else if (countOfCorrect == counter) {
-                    percent += point;
+                    countCorrectAnswer++;
+//                    percent += point;
                 } else if (countOfCorrect < counter) {
-                    percent += (point % counter) * countOfCorrect;
+                    countCorrectAnswer += 0;
+//                    percent += (point % counter) * countOfCorrect;
                 }
                 map.add(question1);
             }
@@ -143,10 +149,10 @@ public class ResultService {
             if (test.getIsEnable().equals(true)) {
                 Results results = new Results(
                         test,
-                        percent,
-                        test.getQuestion().size() - percent,
+                        countCorrectAnswer,
+                        test.getQuestion().size() - countCorrectAnswer,
                         LocalDate.now(),
-                        percent * 10,
+                        countCorrectAnswer * 10,
                         student);
                 resultRepository.save(results);
             } else if (test.getIsEnable().equals(false)) {
@@ -156,7 +162,7 @@ public class ResultService {
         }
         log.info("User pass the test was successfully");
         return new StudentResultResponse("Набрано баллов "
-                + percent + " из " + test.getQuestion().size(), mapper);
+                + countCorrectAnswer + " из " + test.getQuestion().size(), mapper);
     }
 
 
