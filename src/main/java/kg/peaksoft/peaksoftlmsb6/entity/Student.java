@@ -38,6 +38,11 @@ public class Student {
 
     private StudyFormat studyFormat;
 
+    @OneToOne(cascade = {
+            MERGE,
+            DETACH}, mappedBy = "student")
+    private Results result;
+
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
