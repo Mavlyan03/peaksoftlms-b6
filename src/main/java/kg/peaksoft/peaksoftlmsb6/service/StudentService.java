@@ -9,12 +9,14 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.UpdateStudentRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResponse;
 import kg.peaksoft.peaksoftlmsb6.entity.Group;
+import kg.peaksoft.peaksoftlmsb6.entity.Results;
 import kg.peaksoft.peaksoftlmsb6.entity.Student;
 import kg.peaksoft.peaksoftlmsb6.entity.User;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.StudyFormat;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.GroupRepository;
+import kg.peaksoft.peaksoftlmsb6.repository.ResultRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.StudentRepository;
 import kg.peaksoft.peaksoftlmsb6.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +50,7 @@ public class StudentService {
 
     private final UserRepository userRepository;
 
+    private final ResultRepository resultRepository;
     private final JavaMailSender javaMailSender;
 
     public StudentResponse createStudent(StudentRequest studentRequest) throws MessagingException {
@@ -119,6 +122,7 @@ public class StudentService {
                     log.error("Student with id {} not found", id);
                     throw new NotFoundException("Студент не найден");
                 });
+        resultRepository.deleteById(student.getResult().getId());
         studentRepository.delete(student);
         log.info("Delete student by id {} was successfully", id);
         return new SimpleResponse("Студент удалён");
