@@ -35,16 +35,19 @@ public class Student {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-
     private StudyFormat studyFormat;
+
+    @OneToOne(cascade = {
+            MERGE,
+            DETACH}, mappedBy = "student")
+    private Results result;
 
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
-
     private Group group;
-    @OneToOne(cascade = ALL)
 
+    @OneToOne(cascade = ALL)
     private User user;
 
     public Student(StudentRequest request){
@@ -58,7 +61,6 @@ public class Student {
         user1.setRole(Role.STUDENT);
         this.user = user1;
     }
-
 
     public Student(StudentExcelRequest studentExcelRequest, String encode) {
         this.firstName = studentExcelRequest.getName();
