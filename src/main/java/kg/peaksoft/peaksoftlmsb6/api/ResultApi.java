@@ -43,7 +43,7 @@ public class ResultApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get result by id",
             description = "Instructor get result by id")
-//    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
+    @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
     public ResultResponse getResultById(@PathVariable Long id) {
         return resultService.getById(id);
     }
