@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 @Service
@@ -100,13 +102,13 @@ public class LessonService {
         return new SimpleResponse("Урок удалён");
     }
 
-    public List<LessonResponse> getAllLessonsByCourseId(Long id) {
+    public Deque<LessonResponse> getAllLessonsByCourseId(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", id);
                     throw new NotFoundException("Курс не найден");
                 });
-        List<LessonResponse> lessonResponses = new ArrayList<>();
+        Deque<LessonResponse> lessonResponses = new ArrayDeque<>();
         for (Lesson lesson : course.getLessons()) {
             lessonResponses.add(new LessonResponse(lesson));
         }

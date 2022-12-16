@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Deque;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class LessonApi {
     @Operation(summary = "Get all lessons",
             description = "Instructor gets all lessons")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
-    public List<LessonResponse> getAllLessons(@PathVariable Long id){
+    public Deque<LessonResponse> getAllLessons(@PathVariable Long id){
         return lessonService.getAllLessonsByCourseId(id);
     }
 
