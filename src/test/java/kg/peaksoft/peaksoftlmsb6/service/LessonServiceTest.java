@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 
+import java.util.Deque;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -77,7 +78,7 @@ class LessonServiceTest {
         Course course = courseRepository.findById(1L).orElseThrow(
                 () -> new NotFoundException("Course not found"));
 
-        List<LessonResponse> lessons = lessonService.getAllLessonsByCourseId(course.getId());
+        Deque<LessonResponse> lessons = lessonService.getAllLessonsByCourseId(course.getId());
 
         assertEquals(3, lessons.size());
     }

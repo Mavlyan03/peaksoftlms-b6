@@ -110,7 +110,7 @@ public class LessonService {
                 });
         Deque<LessonResponse> lessonResponses = new ArrayDeque<>();
         for (Lesson lesson : course.getLessons()) {
-            lessonResponses.add(new LessonResponse(lesson));
+            lessonResponses.addFirst(new LessonResponse(lesson));
         }
         log.info("Get all lessons by course id {} was successfully", id);
         return lessonResponses;
