@@ -58,9 +58,6 @@ public class ResultService {
                         throw new NotFoundException("Вопрос не найден");
                     });
             Question question1 = new Question(question);
-            question1.setId(question.getId());
-            question1.setQuestion(question.getQuestion());
-            question1.setQuestionType(question.getQuestionType());
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
@@ -146,18 +143,22 @@ public class ResultService {
                         log.error("Student with id {} not found", user1.getId());
                         throw new NotFoundException("Студент не найден");
                     });
-            if (test.getIsEnable().equals(true)) {
-                Results results = new Results(
-                        test,
-                        countCorrectAnswer,
-                        test.getQuestion().size() - countCorrectAnswer,
-                        LocalDate.now(),
-                        countCorrectAnswer * 10,
-                        student);
-                resultRepository.save(results);
-            } else if (test.getIsEnable().equals(false)) {
-                log.error("You couldn't pass the test");
-                throw new BadRequestException("Вы не можете пройти тест");
+            if(resultRepository.existsByStudentId(student.getId()) && resultRepository.existsByTestId(test.getId())) {
+                throw new BadRequestException("Студент уже проходил тест");
+            } else {
+                if (test.getIsEnable().equals(true)) {
+                    Results results = new Results(
+                            test,
+                            countCorrectAnswer,
+                            test.getQuestion().size() - countCorrectAnswer,
+                            LocalDate.now(),
+                            countCorrectAnswer * 10,
+                            student);
+                    resultRepository.save(results);
+                } else if (test.getIsEnable().equals(false)) {
+                    log.error("You couldn't pass the test");
+                    throw new BadRequestException("Вы не можете пройти тест");
+                }
             }
         }
         log.info("User pass the test was successfully");

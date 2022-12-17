@@ -23,4 +23,8 @@ public interface ResultRepository extends JpaRepository<Results, Long> {
 
     @Query("select r from Results r where r.student.id = ?1")
     Results findResultByStudentsId(Long id);
+
+    boolean existsByStudentId(Long id);
+
+    boolean existsByTestId(Long id);
 }
