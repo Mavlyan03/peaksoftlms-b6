@@ -13,8 +13,8 @@ values (1, '2022/11/10', 'Group Description', 'Group image link', 'Group name'),
        (2, '2022/11/15', 'Second group', 'Image', 'Java 6');
 
 insert into courses(id, course_description, course_image, course_name, date_of_start)
-values (1, 'IT language', 'link image', 'Java', '2022/11/10'),
-       (2, 'JS', 'Good language', 'JS', '2022/10/10');
+    values (1, 'https://peaksoftlms-b6.s3.eu-central-1.amazonaws.com/16709318167098. Божья коровка.jpg', 'link image', 'Java', '2022/11/10'),
+       (2, 'JS', 'https://peaksoftlms-b6.s3.eu-central-1.amazonaws.com/16709318167098. Божья коровка.jpg', 'JS', '2022/10/10');
 
 insert into groups_courses(group_id, courses_id)
 values (1, 1),
