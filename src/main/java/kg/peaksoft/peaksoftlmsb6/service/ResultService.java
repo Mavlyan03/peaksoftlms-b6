@@ -50,13 +50,15 @@ public class ResultService {
         List<QuestionResponse> mapper = new ArrayList<>();
         List<Question> map = new ArrayList<>();
         int countCorrectAnswer = 0;
-//        int percent = 0;
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
                     () -> {
                         log.error("Question with id {} not found", answer.getKey());
                         throw new NotFoundException("Вопрос не найден");
                     });
+            if(!test.getQuestion().contains(question)) {
+                throw new BadRequestException("Этот вопрос не относится к другому тесту");
+            }
             Question question1 = new Question(question);
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
                 for (Long optionId : answer.getValue()) {
@@ -67,7 +69,6 @@ public class ResultService {
                             });
                     if (option.getIsTrue().equals(true)) {
                         countCorrectAnswer++;
-//                        percent = 100 % test.getQuestion().size();
                     }
                     question1.addOption(option);
                 }
@@ -85,7 +86,6 @@ public class ResultService {
                         counter++;
                     }
                 }
-//                int point = 100 % test.getQuestion().size();
                 Long duplicate = 0L;
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
@@ -116,14 +116,10 @@ public class ResultService {
                 }
                 if (countOfCorrect == 0) {
                     countCorrectAnswer += 0;
-//                    percent += 0;
                 } else if (countOfCorrect == counter) {
                     countCorrectAnswer++;
-//                    percent += point;
                 } else if (countOfCorrect < counter) {
-                    countCorrectAnswer += 0;
-//                    percent += (point % counter) * countOfCorrect;
-                }
+                    countCorrectAnswer += 0;}
                 map.add(question1);
             }
         }
