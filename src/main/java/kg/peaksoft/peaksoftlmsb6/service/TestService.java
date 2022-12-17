@@ -6,11 +6,13 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.*;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -60,11 +62,15 @@ public class TestService {
         return new TestResponse(test.getId(), test.getTestName());
     }
 
-    public TestInnerPageResponse getTestById(Long id) {
-        log.info("Get test by id was successfully");
-        return convertToResponse(testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Тест не найден")
-        ));
+    public TestInnerPageResponse getTestById(Authentication authentication, Long id) {
+        User user = (User) authentication.getPrincipal();
+        if (user.getRole().equals(Role.INSTRUCTOR)) {
+            log.info("Get test by id was successfully");
+            return convertToResponse(testRepository.findById(id).orElseThrow(
+                    () -> new NotFoundException("Тест не найден")
+            ));
+        }
+        return null;
     }
 
     public SimpleResponse deleteById(Long id) {
@@ -218,6 +224,23 @@ public class TestService {
         }
         testResponse.setQuestions(questionResponses);
         return testResponse;
+    }
+
+    private TestStudentResponse convertToResponses(Test test) {
+        TestStudentResponse testStudentResponse = new TestStudentResponse(test.getId(), test.getTestName());
+        List<QuestionStudentResponse> questionStudentResponses = new ArrayList<>();
+        for(Question question : test.getQuestion()) {
+            QuestionStudentResponse response = new QuestionStudentResponse(question);
+            List<OptionStudentResponse> responses = new ArrayList<>();
+            for(Option option : question.getOptions()) {
+                OptionStudentResponse optionResponse = new OptionStudentResponse(option);
+                responses.add(optionResponse);
+            }
+            response.setOptionResponses(responses);
+            questionStudentResponses.add(response);
+        }
+        testStudentResponse.setQuestions(questionStudentResponses);
+        return testStudentResponse;
     }
 
     private Test convertToEntity(TestRequest request) {

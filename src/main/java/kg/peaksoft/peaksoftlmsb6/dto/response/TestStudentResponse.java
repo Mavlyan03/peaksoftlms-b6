@@ -12,7 +12,7 @@ import java.util.List;
 public class TestStudentResponse {
     private Long id;
     private String name;
-    private List<QuestionResponse> questions;
+    private List<QuestionStudentResponse> questions;
 
     public TestStudentResponse(Long id, String name) {
         this.id = id;
