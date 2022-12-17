@@ -37,10 +37,10 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
 
-    @OneToOne(cascade = {
-            MERGE,
-            DETACH}, mappedBy = "student")
-    private Results result;
+//    @OneToOne(cascade = {
+//            MERGE,
+//            DETACH})
+//    private Results result;
 
     @ManyToOne(cascade = {
             MERGE,
