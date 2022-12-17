@@ -53,7 +53,7 @@ public class GroupService {
                 resultRepository.deleteById(results.getId());
             }
         }
-        groupRepository.delete(group);
+        groupRepository.deleteById(group.getId());
         log.info("Delete group by id {} was successfully", id);
         return new SimpleResponse("Группа удалена");
     }
