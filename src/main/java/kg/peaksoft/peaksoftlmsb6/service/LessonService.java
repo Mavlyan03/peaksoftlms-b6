@@ -102,19 +102,43 @@ public class LessonService {
         return new SimpleResponse("Урок удалён");
     }
 
-    public Deque<LessonResponse> getAllLessonsByCourseId(Long id) {
+    public List<LessonResponse> getAllLessonsByCourseId(Long id) {
         Course course = courseRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("Course with id {} not found", id);
                     throw new NotFoundException("Курс не найден");
                 });
-        Deque<LessonResponse> lessonResponses = new ArrayDeque<>();
+        List<LessonResponse> lessons = new ArrayList<>();
         for (Lesson lesson : course.getLessons()) {
-            lessonResponses.addFirst(new LessonResponse(lesson));
+            lessons.add(new LessonResponse(lesson));
         }
         log.info("Get all lessons by course id {} was successfully", id);
-        return lessonResponses;
+        return lessons;
     }
+//    public Deque<LessonResponse> getAllLessonsByCourseId(Long id) {
+//        Course course = courseRepository.findById(id).orElseThrow(
+//                () -> {
+//                    log.error("Course with id {} not found", id);
+//                    throw new NotFoundException("Курс не найден");
+//                });
+//        List<LessonResponse> lessons = new ArrayList<>();
+//        for (Lesson lesson : course.getLessons()) {
+//            lessons.add(new LessonResponse(lesson));
+//        }
+//        log.info("Get all lessons by course id {} was successfully", id);
+//        Deque<LessonResponse> lessonResponses = new ArrayDeque<>();
+//        for(LessonResponse response : lessons) {
+//            lessonResponses.addLast(new LessonResponse(
+//                            response.getLessonId(),
+//                            response.getLessonName(),
+//                            response.getLinkId(),
+//                            response.getPresentationId(),
+//                            response.getTestId(),
+//                            response.getTaskId(),
+//                            response.getVideoId()));
+//        }
+//        return lessonResponses;
+//    }
 
     public LessonResponse getById(Long id) {
         Lesson lesson = lessonRepository.findById(id).orElseThrow(

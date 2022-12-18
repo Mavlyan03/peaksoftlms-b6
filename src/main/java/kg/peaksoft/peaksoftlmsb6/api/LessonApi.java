@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Deque;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,7 +50,7 @@ public class LessonApi {
     @Operation(summary = "Get all lessons",
             description = "Instructor gets all lessons")
     @PreAuthorize("hasAnyAuthority('INSTRUCTOR','STUDENT')")
-    public Deque<LessonResponse> getAllLessons(@PathVariable Long id){
+    public List<LessonResponse> getAllLessons(@PathVariable Long id){
         return lessonService.getAllLessonsByCourseId(id);
     }
 
