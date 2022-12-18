@@ -4,11 +4,8 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.OptionRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.parameters.P;
 
 import javax.persistence.*;
-
-import static javax.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "options")
