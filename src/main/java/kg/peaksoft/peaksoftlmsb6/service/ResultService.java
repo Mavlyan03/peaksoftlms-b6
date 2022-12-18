@@ -119,7 +119,8 @@ public class ResultService {
                 } else if (countOfCorrect == counter) {
                     countCorrectAnswer++;
                 } else if (countOfCorrect < counter) {
-                    countCorrectAnswer += 0;}
+                    countCorrectAnswer += 0;
+                }
                 map.add(question1);
             }
         }
