@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
-    @Query("select l from Lesson l where l.course.id = ?1")
+    @Query("select l from Lesson l where l.course.id = ?1 order by l.id desc")
     List<Lesson> getAllLessons(Long id);
 }
 

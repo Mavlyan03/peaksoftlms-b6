@@ -108,6 +108,7 @@ public class LessonService {
                     log.error("Course with id {} not found", id);
                     throw new NotFoundException("Курс не найден");
                 });
+        List<Lesson> allLessons = lessonRepository.getAllLessons(course.getId());
         List<LessonResponse> lessons = new ArrayList<>();
         for (Lesson lesson : course.getLessons()) {
             lessons.add(new LessonResponse(lesson));
@@ -115,6 +116,9 @@ public class LessonService {
         log.info("Get all lessons by course id {} was successfully", id);
         return lessons;
     }
+
+
+
 //    public Deque<LessonResponse> getAllLessonsByCourseId(Long id) {
 //        Course course = courseRepository.findById(id).orElseThrow(
 //                () -> {
