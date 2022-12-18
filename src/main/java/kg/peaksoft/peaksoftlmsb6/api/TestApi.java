@@ -6,10 +6,10 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TestInnerPageResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.TestResponse;
+import kg.peaksoft.peaksoftlmsb6.dto.response.TestStudentResponse;
 import kg.peaksoft.peaksoftlmsb6.service.TestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -47,9 +47,17 @@ public class TestApi {
     @GetMapping("/{id}")
     @Operation(summary = "Get test by id",
             description = "Get test by id")
-    @PreAuthorize("hasAnyAuthority('STUDENT','INSTRUCTOR')")
+//    @PreAuthorize("hasAnyAuthority('STUDENT','INSTRUCTOR')")
     public TestInnerPageResponse getById(@PathVariable Long id) {
         return testService.getTestById(id);
+    }
+
+    @GetMapping("/student/{id}")
+    @Operation(summary = "Get test by id",
+            description = "Get test by id")
+    @PreAuthorize("hasAnyAuthority('STUDENT')")
+    public TestStudentResponse getTestById(@PathVariable Long id) {
+        return testService.getTestStudentById(id);
     }
 
     @PutMapping("/enable/{id}")

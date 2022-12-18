@@ -62,19 +62,15 @@ public class TestService {
         return new TestResponse(test.getId(), test.getTestName());
     }
 
-    //    public TestInnerPageResponse getTestById(Authentication authentication, Long id) {
-//        User user = (User) authentication.getPrincipal();
-//        if (user.getRole().equals(Role.INSTRUCTOR)) {
-//            log.info("Get test by id was successfully");
-//            return convertToResponse(testRepository.findById(id).orElseThrow(
-//                    () -> new NotFoundException("Тест не найден")
-//            ));
-//        }
-//        return null;
-//    }
     public TestInnerPageResponse getTestById(Long id) {
         log.info("Get test by id was successfully");
         return convertToResponse(testRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Тест не найден")));
+    }
+
+    public TestStudentResponse getTestStudentById(Long id) {
+        log.info("Get test by id was successfully");
+        return convertToResponses(testRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Тест не найден")));
     }
 
