@@ -48,8 +48,8 @@ public class TestApi {
     @Operation(summary = "Get test by id",
             description = "Get test by id")
     @PreAuthorize("hasAnyAuthority('STUDENT','INSTRUCTOR')")
-    public TestInnerPageResponse getById(Authentication authentication, @PathVariable Long id) {
-        return testService.getTestById(authentication, id);
+    public TestInnerPageResponse getById(@PathVariable Long id) {
+        return testService.getTestById(id);
     }
 
     @PutMapping("/enable/{id}")

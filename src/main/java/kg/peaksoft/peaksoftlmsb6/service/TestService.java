@@ -62,15 +62,20 @@ public class TestService {
         return new TestResponse(test.getId(), test.getTestName());
     }
 
-    public TestInnerPageResponse getTestById(Authentication authentication, Long id) {
-        User user = (User) authentication.getPrincipal();
-        if (user.getRole().equals(Role.INSTRUCTOR)) {
-            log.info("Get test by id was successfully");
-            return convertToResponse(testRepository.findById(id).orElseThrow(
-                    () -> new NotFoundException("Тест не найден")
-            ));
-        }
-        return null;
+    //    public TestInnerPageResponse getTestById(Authentication authentication, Long id) {
+//        User user = (User) authentication.getPrincipal();
+//        if (user.getRole().equals(Role.INSTRUCTOR)) {
+//            log.info("Get test by id was successfully");
+//            return convertToResponse(testRepository.findById(id).orElseThrow(
+//                    () -> new NotFoundException("Тест не найден")
+//            ));
+//        }
+//        return null;
+//    }
+    public TestInnerPageResponse getTestById(Long id) {
+        log.info("Get test by id was successfully");
+        return convertToResponse(testRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Тест не найден")));
     }
 
     public SimpleResponse deleteById(Long id) {
@@ -115,8 +120,8 @@ public class TestService {
                 int j = 0;
                 if (questionRequest.getQuestionType().equals(QuestionType.SINGLETON)) {
                     int counter = 0;
-                    for(OptionRequest request : questionRequest.getOptions()) {
-                        if(request.getIsTrue().equals(true)) {
+                    for (OptionRequest request : questionRequest.getOptions()) {
+                        if (request.getIsTrue().equals(true)) {
                             counter++;
                         }
                     }
@@ -139,15 +144,15 @@ public class TestService {
                     }
                 } else if (questionRequest.getQuestionType().equals(QuestionType.MULTIPLE)) {
                     int counter = 0;
-                    for(OptionRequest request : questionRequest.getOptions()) {
-                        if(request.getIsTrue().equals(true)) {
+                    for (OptionRequest request : questionRequest.getOptions()) {
+                        if (request.getIsTrue().equals(true)) {
                             counter++;
                         }
                     }
                     for (OptionRequest optionRequest : questionRequest.getOptions()) {
                         if (j < question.getOptions().size()) {
                             Option option = question.getOptions().get(j);
-                            if(counter >= 1) {
+                            if (counter >= 1) {
                                 optionRepository.update(
                                         option.getId(),
                                         optionRequest.getOption(),
@@ -229,10 +234,10 @@ public class TestService {
     private TestStudentResponse convertToResponses(Test test) {
         TestStudentResponse testStudentResponse = new TestStudentResponse(test.getId(), test.getTestName());
         List<QuestionStudentResponse> questionStudentResponses = new ArrayList<>();
-        for(Question question : test.getQuestion()) {
+        for (Question question : test.getQuestion()) {
             QuestionStudentResponse response = new QuestionStudentResponse(question);
             List<OptionStudentResponse> responses = new ArrayList<>();
-            for(Option option : question.getOptions()) {
+            for (Option option : question.getOptions()) {
                 OptionStudentResponse optionResponse = new OptionStudentResponse(option);
                 responses.add(optionResponse);
             }
