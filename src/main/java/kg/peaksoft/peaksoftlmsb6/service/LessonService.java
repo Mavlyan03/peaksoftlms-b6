@@ -110,7 +110,7 @@ public class LessonService {
                 });
         List<Lesson> allLessons = lessonRepository.getAllLessons(course.getId());
         List<LessonResponse> lessons = new ArrayList<>();
-        for (Lesson lesson : course.getLessons()) {
+        for (Lesson lesson : allLessons) {
             lessons.add(new LessonResponse(lesson));
         }
         log.info("Get all lessons by course id {} was successfully", id);

@@ -78,7 +78,7 @@ class LessonServiceTest {
         Course course = courseRepository.findById(1L).orElseThrow(
                 () -> new NotFoundException("Course not found"));
 
-        Deque<LessonResponse> lessons = lessonService.getAllLessonsByCourseId(course.getId());
+        List<LessonResponse> lessons = lessonService.getAllLessonsByCourseId(course.getId());
 
         assertEquals(3, lessons.size());
     }
