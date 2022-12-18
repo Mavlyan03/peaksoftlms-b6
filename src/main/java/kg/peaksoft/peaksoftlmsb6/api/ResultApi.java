@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.peaksoft.peaksoftlmsb6.dto.request.PassTestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.ResultResponse;
-import kg.peaksoft.peaksoftlmsb6.dto.response.SimpleResponse;
 import kg.peaksoft.peaksoftlmsb6.dto.response.StudentResultResponse;
 import kg.peaksoft.peaksoftlmsb6.service.ResultService;
 import lombok.RequiredArgsConstructor;
