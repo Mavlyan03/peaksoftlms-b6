@@ -106,12 +106,13 @@ public class LessonService {
                     log.error("Course with id {} not found", id);
                     throw new NotFoundException("Курс не найден");
                 });
-        List<LessonResponse> lessonResponses = new ArrayList<>();
-        for (Lesson lesson : course.getLessons()) {
-            lessonResponses.add(new LessonResponse(lesson));
+        List<Lesson> allLessons = lessonRepository.getAllLessons(course.getId());
+        List<LessonResponse> lessons = new ArrayList<>();
+        for (Lesson lesson : allLessons) {
+            lessons.add(new LessonResponse(lesson));
         }
         log.info("Get all lessons by course id {} was successfully", id);
-        return lessonResponses;
+        return lessons;
     }
 
     public LessonResponse getById(Long id) {
