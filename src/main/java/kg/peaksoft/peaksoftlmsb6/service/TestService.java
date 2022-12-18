@@ -220,7 +220,6 @@ public class TestService {
         return testResponse;
     }
 
-
     private Test convertToEntity(TestRequest request) {
         Test test = new Test(request.getTestName());
         test.setIsEnable(false);

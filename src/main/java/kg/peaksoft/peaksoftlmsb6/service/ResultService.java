@@ -165,7 +165,6 @@ public class ResultService {
                 + countCorrectAnswer + " из " + test.getQuestion().size(), mapper);
     }
 
-
     public List<ResultResponse> getAllResults(Long id) {
         Test test = testRepository.findById(id).orElseThrow(
                 () -> {
