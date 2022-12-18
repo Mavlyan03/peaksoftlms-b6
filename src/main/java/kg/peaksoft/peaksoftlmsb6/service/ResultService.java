@@ -57,7 +57,7 @@ public class ResultService {
                         throw new NotFoundException("Вопрос не найден");
                     });
             if(!test.getQuestion().contains(question)) {
-                throw new BadRequestException("Выьввели неправильный вопрос или вариант");
+                throw new BadRequestException("Вы ввели неправильный вопрос или вариант");
             }
             Question question1 = new Question(question);
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
