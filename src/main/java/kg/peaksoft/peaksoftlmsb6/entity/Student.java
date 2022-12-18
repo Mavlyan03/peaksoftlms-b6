@@ -36,11 +36,6 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
 
-//    @OneToOne(cascade = {
-//            MERGE,
-//            DETACH})
-//    private Results result;
-
     @ManyToOne(cascade = {
             MERGE,
             DETACH})
