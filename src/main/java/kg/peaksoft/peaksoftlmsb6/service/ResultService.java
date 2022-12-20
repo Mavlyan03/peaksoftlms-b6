@@ -50,17 +50,16 @@ public class ResultService {
         List<QuestionResponse> mapper = new ArrayList<>();
         List<Question> map = new ArrayList<>();
         int countCorrectAnswer = 0;
-//        int percent = 0;
         for (Map.Entry<Long, List<Long>> answer : passTestRequest.getAnswers().entrySet()) {
             Question question = questionRepository.findById(answer.getKey()).orElseThrow(
                     () -> {
                         log.error("Question with id {} not found", answer.getKey());
                         throw new NotFoundException("Вопрос не найден");
                     });
+            if(!test.getQuestion().contains(question)) {
+                throw new BadRequestException("Вы ввели неправильный вопрос или вариант");
+            }
             Question question1 = new Question(question);
-            question1.setId(question.getId());
-            question1.setQuestion(question.getQuestion());
-            question1.setQuestionType(question.getQuestionType());
             if (question.getQuestionType().equals(QuestionType.SINGLETON)) {
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
@@ -70,7 +69,6 @@ public class ResultService {
                             });
                     if (option.getIsTrue().equals(true)) {
                         countCorrectAnswer++;
-//                        percent = 100 % test.getQuestion().size();
                     }
                     question1.addOption(option);
                 }
@@ -88,7 +86,6 @@ public class ResultService {
                         counter++;
                     }
                 }
-//                int point = 100 % test.getQuestion().size();
                 Long duplicate = 0L;
                 for (Long optionId : answer.getValue()) {
                     Option option = optionRepository.findById(optionId).orElseThrow(
@@ -119,13 +116,10 @@ public class ResultService {
                 }
                 if (countOfCorrect == 0) {
                     countCorrectAnswer += 0;
-//                    percent += 0;
                 } else if (countOfCorrect == counter) {
                     countCorrectAnswer++;
-//                    percent += point;
                 } else if (countOfCorrect < counter) {
                     countCorrectAnswer += 0;
-//                    percent += (point % counter) * countOfCorrect;
                 }
                 map.add(question1);
             }
@@ -146,18 +140,22 @@ public class ResultService {
                         log.error("Student with id {} not found", user1.getId());
                         throw new NotFoundException("Студент не найден");
                     });
-            if (test.getIsEnable().equals(true)) {
-                Results results = new Results(
-                        test,
-                        countCorrectAnswer,
-                        test.getQuestion().size() - countCorrectAnswer,
-                        LocalDate.now(),
-                        countCorrectAnswer * 10,
-                        student);
-                resultRepository.save(results);
-            } else if (test.getIsEnable().equals(false)) {
-                log.error("You couldn't pass the test");
-                throw new BadRequestException("Вы не можете пройти тест");
+            if(resultRepository.existsByStudentId(student.getId()) && resultRepository.existsByTestId(test.getId())) {
+                throw new BadRequestException("Студент уже проходил тест");
+            } else {
+                if (test.getIsEnable().equals(true)) {
+                    Results results = new Results(
+                            test,
+                            countCorrectAnswer,
+                            test.getQuestion().size() - countCorrectAnswer,
+                            LocalDate.now(),
+                            countCorrectAnswer * 10,
+                            student);
+                    resultRepository.save(results);
+                } else if (test.getIsEnable().equals(false)) {
+                    log.error("You couldn't pass the test");
+                    throw new BadRequestException("Вы не можете пройти тест");
+                }
             }
         }
         log.info("User pass the test was successfully");

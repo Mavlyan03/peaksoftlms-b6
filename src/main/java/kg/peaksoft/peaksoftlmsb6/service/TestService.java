@@ -6,11 +6,13 @@ import kg.peaksoft.peaksoftlmsb6.dto.request.TestRequest;
 import kg.peaksoft.peaksoftlmsb6.dto.response.*;
 import kg.peaksoft.peaksoftlmsb6.entity.*;
 import kg.peaksoft.peaksoftlmsb6.entity.enums.QuestionType;
+import kg.peaksoft.peaksoftlmsb6.entity.enums.Role;
 import kg.peaksoft.peaksoftlmsb6.exception.BadRequestException;
 import kg.peaksoft.peaksoftlmsb6.exception.NotFoundException;
 import kg.peaksoft.peaksoftlmsb6.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -63,8 +65,13 @@ public class TestService {
     public TestInnerPageResponse getTestById(Long id) {
         log.info("Get test by id was successfully");
         return convertToResponse(testRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Тест не найден")
-        ));
+                () -> new NotFoundException("Тест не найден")));
+    }
+
+    public TestStudentResponse getTestStudentById(Long id) {
+        log.info("Get test by id was successfully");
+        return convertToResponses(testRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Тест не найден")));
     }
 
     public SimpleResponse deleteById(Long id) {
@@ -109,8 +116,8 @@ public class TestService {
                 int j = 0;
                 if (questionRequest.getQuestionType().equals(QuestionType.SINGLETON)) {
                     int counter = 0;
-                    for(OptionRequest request : questionRequest.getOptions()) {
-                        if(request.getIsTrue().equals(true)) {
+                    for (OptionRequest request : questionRequest.getOptions()) {
+                        if (request.getIsTrue().equals(true)) {
                             counter++;
                         }
                     }
@@ -133,15 +140,15 @@ public class TestService {
                     }
                 } else if (questionRequest.getQuestionType().equals(QuestionType.MULTIPLE)) {
                     int counter = 0;
-                    for(OptionRequest request : questionRequest.getOptions()) {
-                        if(request.getIsTrue().equals(true)) {
+                    for (OptionRequest request : questionRequest.getOptions()) {
+                        if (request.getIsTrue().equals(true)) {
                             counter++;
                         }
                     }
                     for (OptionRequest optionRequest : questionRequest.getOptions()) {
                         if (j < question.getOptions().size()) {
                             Option option = question.getOptions().get(j);
-                            if(counter >= 1) {
+                            if (counter >= 1) {
                                 optionRepository.update(
                                         option.getId(),
                                         optionRequest.getOption(),
@@ -218,6 +225,23 @@ public class TestService {
         }
         testResponse.setQuestions(questionResponses);
         return testResponse;
+    }
+
+    private TestStudentResponse convertToResponses(Test test) {
+        TestStudentResponse testStudentResponse = new TestStudentResponse(test.getId(), test.getTestName());
+        List<QuestionStudentResponse> questionStudentResponses = new ArrayList<>();
+        for (Question question : test.getQuestion()) {
+            QuestionStudentResponse response = new QuestionStudentResponse(question);
+            List<OptionStudentResponse> responses = new ArrayList<>();
+            for (Option option : question.getOptions()) {
+                OptionStudentResponse optionResponse = new OptionStudentResponse(option);
+                responses.add(optionResponse);
+            }
+            response.setOptionResponses(responses);
+            questionStudentResponses.add(response);
+        }
+        testStudentResponse.setQuestions(questionStudentResponses);
+        return testStudentResponse;
     }
 
     private Test convertToEntity(TestRequest request) {

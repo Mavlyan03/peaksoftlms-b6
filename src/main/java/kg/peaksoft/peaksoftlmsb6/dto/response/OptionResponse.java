@@ -12,11 +12,6 @@ public class OptionResponse {
     private String optionValue;
     private Boolean isTrue;
 
-//    public OptionResponse(Long id, String optionValue) {
-//        this.id = id;
-//        this.optionValue = optionValue;
-//    }
-
     public OptionResponse(OptionRequest option, Long id) {
         this.id = id;
         this.optionValue = option.getOption();

@@ -51,5 +51,4 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "s.phoneNumber," +
             "s.user.email) from Student s where s.group.id = ?1")
     List<StudentResponse> getStudentsByGroupId(Long id);
-
 }

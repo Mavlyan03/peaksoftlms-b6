@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 import static javax.persistence.CascadeType.*;
 
@@ -36,11 +35,6 @@ public class Student {
 
     @Enumerated(EnumType.STRING)
     private StudyFormat studyFormat;
-
-    @OneToOne(cascade = {
-            MERGE,
-            DETACH}, mappedBy = "student")
-    private Results result;
 
     @ManyToOne(cascade = {
             MERGE,
