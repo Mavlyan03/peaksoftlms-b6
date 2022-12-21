@@ -123,7 +123,9 @@ public class StudentService {
                     throw new NotFoundException("Студент не найден");
                 });
         Results result = resultRepository.findResultByStudentsId(student.getId());
-        resultRepository.deleteById(result.getId());
+        if(result != null) {
+            resultRepository.deleteById(result.getId());
+        }
         studentRepository.delete(student);
         log.info("Delete student by id {} was successfully", id);
         return new SimpleResponse("Студент удалён");
